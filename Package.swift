@@ -5,6 +5,11 @@ import PackageDescription
 
 let package = Package(
     name: "SSPhotoKit",
+    platforms: [.macOS(.v11),
+                .iOS(.v12),
+                .tvOS(.v12),
+                .watchOS(.v4),
+                .visionOS(.v1)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(

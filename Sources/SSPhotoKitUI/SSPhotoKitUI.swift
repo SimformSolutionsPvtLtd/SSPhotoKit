@@ -9,5 +9,4 @@ import SSPhotoKitEngine
 
 public struct SSPhotoKitUI {
     public static let textUI = "SSPhotoKitUI!!"
-    public static let textEngine = SSPhotoKitEngine.textEngine
 }
