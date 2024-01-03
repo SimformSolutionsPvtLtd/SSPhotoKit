@@ -6,18 +6,10 @@
 //
 
 import SwiftUI
-import SSPhotoKitUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-        }
-        .padding()
-        
-        Text(SSPhotoKitUI.text2)
+        Text("")
     }
 }
 

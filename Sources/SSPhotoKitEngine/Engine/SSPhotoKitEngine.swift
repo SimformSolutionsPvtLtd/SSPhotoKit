@@ -8,12 +8,13 @@
 import CoreImage
 
 @MainActor
-public class SSPhotoKitEngine {
+public class SSPhotoKitEngine : ObservableObject {
     
     // MARK: - Vars & Lets
     public let originalImage: CIImage
-    @Published var previewImage: CIImage!
-    @Published var previewCGImage: CGImage!
+    @Published public private(set) var previewImage: CIImage!
+    @Published public private(set) var previewCGImage: CGImage!
+    @Published public private(set) var previewPlatformImage: PlatformImage!
     
     public var canUndo: Bool {
         undoManager.canUndo
@@ -39,9 +40,11 @@ public class SSPhotoKitEngine {
     
     
     // MARK: - Public Methods
-    public func apply<C: EditingCommand>(_ command: C) {
+    public func apply<C: EditingCommand>(_ command: C) async {
         editingStack.push(command.asAny())
         
+        previewImage = await command.apply(to: previewImage)
+        updateImages()
         undoManager.registerUndo(withTarget: self) { [weak self] _ in
             guard let self else { return }
 
@@ -67,8 +70,13 @@ public class SSPhotoKitEngine {
     // MARK: - Private Methods
     private func initializeImages(with size: CGSize) {
         previewImage = originalImage.resizing(size)
+        updateImages()
+    }
+    
+    private func updateImages() {
         if let cgImage = previewImage.cgImage ?? ciContext.createCGImage(previewImage, from: previewImage.extent) {
             previewCGImage = cgImage
+            previewPlatformImage = PlatformImage(cgImage: cgImage)
         } else {
             EngineLogger.error("Failed to create CGImage.")
         }
