@@ -25,6 +25,7 @@ let package = Package(
         .target(
             name: "SSPhotoKitEngine",
             dependencies: [],
+            resources: [.process("Resources/")],
             swiftSettings: [.define("SPM")]),
         .target(
             name: "SSPhotoKitUI",
