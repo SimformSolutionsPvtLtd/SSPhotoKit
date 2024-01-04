@@ -56,7 +56,7 @@ extension SSPKEditorView {
             case .crop:
                 CropEditor()
             case .adjustment:
-                EmptyView()//SSAdjustView(currentImage: model.engine.previewImage)
+                AdjustmentEditor(image: model.engine.previewImage)
             case .filter:
                 EmptyView()//SSFilterView(image: model.engine.previewImage)
             case .detail:

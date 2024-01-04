@@ -52,6 +52,10 @@ public class SSPhotoKitEngine : ObservableObject {
         }
     }
     
+//    public func apply<each C: EditingCommand>(commands: repeat (each C)) async {
+//        await repeat apply(each commands)
+//    }
+    
     public func undo() {
         undoManager.undo()
     }

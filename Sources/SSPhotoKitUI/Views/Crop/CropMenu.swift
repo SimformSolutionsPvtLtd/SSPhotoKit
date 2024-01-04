@@ -45,10 +45,10 @@ struct CropMenu: View {
                                 currentRatio = ratio
                             } label: {
                                 VStack {
-                                    getShape(for: ratio.ratio, in: CGSize(width: 18, height: 18))
-                                        .stroke(currentRatio == ratio ? .white : .gray, lineWidth: 2)
-                                        .offset(x: 1, y: 1)
-                                        .frame(width: 20, height: 20, alignment: .center)
+//                                    getShape(for: ratio.ratio, in: CGSize(width: 18, height: 18))
+//                                        .stroke(currentRatio == ratio ? .white : .gray, lineWidth: 2)
+//                                        .offset(x: 1, y: 1)
+//                                        .frame(width: 20, height: 20, alignment: .center)
                                     Text(ratio.ratio.name)
                                         .font(.footnote)
                                 }
