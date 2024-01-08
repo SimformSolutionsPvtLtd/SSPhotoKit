@@ -19,7 +19,11 @@ public struct StickerMarkupItem : MarkupItem {
     
     public private(set) var previewImage: CGImage
     
-    public var size: CGSize = Constants.Markup.size
+    public var size: CGSize = Constants.Markup.size {
+        didSet {
+            updatePreview()
+        }
+    }
     
     public var origin: CGPoint = Constants.Markup.origin
     
@@ -31,7 +35,6 @@ public struct StickerMarkupItem : MarkupItem {
     public mutating func updateScale(_ scale: CGSize) {
         self.scale = scale
         updateExtent()
-        updatePreview()
     }
     
     private mutating func updatePreview() {

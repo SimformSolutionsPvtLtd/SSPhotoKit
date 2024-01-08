@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -10,7 +10,8 @@ import SSPhotoKitEngine
 
 public struct SSPKEditorView: View {
     
-    @StateObject var model: SSPKViewModel
+    @StateObject var model = EditorViewModel()
+    @StateObject var engine: SSPhotoKitEngine
     
     public var body: some View {
         ZStack {
@@ -19,11 +20,13 @@ public struct SSPKEditorView: View {
             editMenuView
         }
         .preferredColorScheme(.dark)
+        .environmentObject(model)
+        .environmentObject(engine)
     }
     
     // MARK: - Initializer
     public init(image: CGImage, previewSize: CGSize) {
-        _model = StateObject(wrappedValue: SSPKViewModel(image: CIImage(cgImage: image), previewSize: CGSize(width: 300, height: 300)))
+        _engine = StateObject(wrappedValue: SSPhotoKitEngine(image: CIImage(cgImage: image), previewSize: previewSize))
     }
 }
 
@@ -54,26 +57,25 @@ extension SSPKEditorView {
             case .crop:
                 CropEditor()
             case .adjustment:
-                AdjustmentEditor(image: model.engine.previewImage)
+                AdjustmentEditor(image: engine.previewImage)
             case .filter:
-                FilterEditor(image: model.engine.previewImage)
+                FilterEditor(image: engine.previewImage)
             case .detail:
-                EmptyView()//SSMetalView(image: $model.engine.previewImage)
+                EmptyView()//SSMetalView(image: $engine.previewImage)
             case .markup:
                 MarkupEditor()
             case .none:
-                Image(platformImage: PlatformImage(cgImage: model.engine.previewCGImage))
+                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
                     .resizable()
                     .scaledToFit()
-                    
             }
         }
-        .environmentObject(model)
     }
-
+    
     @ViewBuilder
     private var headerView: some View {
-        HeaderMenu(menuAction: handleMenuAction)
+        HeaderMenu(disableOptions: getHeaderDisableOptions(),
+                   menuAction: handleMenuAction)
     }
     
     @ViewBuilder
@@ -103,20 +105,44 @@ extension SSPKEditorView {
 // MARK: - Methods
 extension SSPKEditorView {
     
+    private func getHeaderDisableOptions() -> HeaderMenu.DisableOptions {
+        
+        var options: HeaderMenu.DisableOptions = []
+        
+        if !engine.canUndo {
+            options.insert(.undo)
+        }
+        
+        if !engine.canRedo {
+            options.insert(.redo)
+        }
+        
+        if !engine.canSave {
+            options.insert(.save)
+        }
+        
+        if !engine.canDiscard {
+            options.insert(.discard)
+        }
+        
+        return options
+    }
+    
     private func handleMenuAction(action: MenuAction) {
-        switch action {
-        case .undo:
-            print("Undo")
-        case .redo:
-            print("Redo")
-        case .save:
-            Task {
-                let image = await model.engine.createImage()
+        Task {
+            switch action {
+            case .undo:
+                await engine.undo()
+            case .redo:
+                await engine.redo()
+            case .save:
+                let image = await engine.createImage()
                 print(image)
+                
+            case .discard:
+                engine.reset()
+                model.resetEditor()
             }
-        case .discard:
-            model.engine.reset()
-            model.resetEditor()
         }
     }
 }

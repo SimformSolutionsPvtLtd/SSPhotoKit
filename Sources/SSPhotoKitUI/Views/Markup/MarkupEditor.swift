@@ -10,11 +10,12 @@ import SSPhotoKitEngine
 
 struct MarkupEditor: View {
     
-    @EnvironmentObject var model: SSPKViewModel
+    @EnvironmentObject var model: EditorViewModel
+    @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var markupViewModel = MarkupEditorViewModel()
     
     private var previewSize: CGSize {
-        model.engine.previewImage.extent.size
+        engine.previewImage.extent.size
     }
     
     var body: some View {
@@ -32,12 +33,13 @@ struct MarkupEditor: View {
                 Divider()
                     .frame(height: 20)
                 
-                FooterMenu(markupViewModel.currentMarkup.description) {
+                FooterMenu(markupViewModel.currentMarkup.description,
+                           disableOptions: getFooterDisableOptions()) {
                     Task {
                         let command = markupViewModel.createCommand { layers in
                             MarkupLayerView(layers: layers)
                         }
-                        await model.engine.apply(command)
+                        await engine.apply(command)
                         model.resetEditor()
                     }
                 } onDiscard: {
@@ -59,14 +61,14 @@ extension MarkupEditor {
             Button {
                 markupViewModel.arrange(.moveDown)
             } label: {
-                 Image(systemName: "arrow.down.to.line")
+                Image(systemName: "arrow.down.to.line")
             }
             .disabled(!markupViewModel.canArrange(.moveDown))
             
             Button {
                 markupViewModel.arrange(.moveUp)
             } label: {
-                 Image(systemName: "arrow.up.to.line")
+                Image(systemName: "arrow.up.to.line")
             }
             .disabled(!markupViewModel.canArrange(.moveUp))
         }
@@ -80,7 +82,7 @@ extension MarkupEditor {
                           index: $markupViewModel.currentLayerIndex,
                           onSave: handleMarkupSave,
                           onDiscard: handleMarkupDiscard) {
-                Image(platformImage: PlatformImage(cgImage: model.engine.previewCGImage))
+                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
             } menu: {
                 rearrangeMenu
             }
@@ -90,7 +92,7 @@ extension MarkupEditor {
                        index: $markupViewModel.currentLayerIndex,
                        onSave: handleMarkupSave,
                        onDiscard: handleMarkupDiscard) {
-                Image(platformImage: PlatformImage(cgImage: model.engine.previewCGImage))
+                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
             } menu: {
                 rearrangeMenu
             }
@@ -100,13 +102,13 @@ extension MarkupEditor {
                           index: $markupViewModel.currentLayerIndex,
                           onSave: handleMarkupSave,
                           onDiscard: handleMarkupDiscard) {
-                Image(platformImage: PlatformImage(cgImage: model.engine.previewCGImage))
+                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
             } menu: {
                 rearrangeMenu
             }
             
         case .none:
-            Image(platformImage: PlatformImage(cgImage: model.engine.previewCGImage))
+            Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
                 .overlay {
                     MarkupLayerView(layers: markupViewModel.layers, onSelect: handleSelection)
                 }
@@ -148,5 +150,15 @@ extension MarkupEditor {
     private func handleSelection(for markup: Markup, at position: Int) {
         markupViewModel.currentMarkup = markup
         markupViewModel.currentLayerIndex = position
+    }
+    
+    private func getFooterDisableOptions() -> FooterMenu.DisableOption {
+        var options: FooterMenu.DisableOption = []
+        
+        if markupViewModel.layers.isEmpty {
+            options.insert(.save)
+        }
+        
+        return options
     }
 }

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct HeaderMenu: View {
     
+    var disableOptions: DisableOptions = []
     let menuAction: (MenuAction) -> Void
-    var isEnabled: (MenuAction) -> Bool = { _ in true }
     
     var body: some View {
         HStack {
@@ -21,7 +21,7 @@ struct HeaderMenu: View {
             } label: {
                 Text("Undo")
             }
-            .disabled(!isEnabled(.undo))
+            .disabled(disableOptions.contains(.undo))
             
             Spacer()
             
@@ -30,7 +30,7 @@ struct HeaderMenu: View {
             } label: {
                 Text("Redo")
             }
-            .disabled(!isEnabled(.redo))
+            .disabled(disableOptions.contains(.redo))
             
             Spacer()
             
@@ -39,7 +39,7 @@ struct HeaderMenu: View {
             } label: {
                 Image(systemName: "xmark")
             }
-            .disabled(!isEnabled(.discard))
+            .disabled(disableOptions.contains(.discard))
 
             Spacer()
             
@@ -48,7 +48,7 @@ struct HeaderMenu: View {
             } label: {
                 Image(systemName: "checkmark")
             }
-            .disabled(!isEnabled(.save))
+            .disabled(disableOptions.contains(.save))
 
             Spacer()
         }
@@ -60,4 +60,18 @@ struct HeaderMenu: View {
 // MARK: - Header Menu Action
 enum MenuAction {
     case undo, redo, save, discard
+}
+
+// MARK: - Header Menu Options
+extension HeaderMenu {
+    
+    struct DisableOptions : OptionSet {
+        
+        let rawValue: UInt
+        
+        static let undo = DisableOptions(rawValue: 1 << 0)
+        static let redo = DisableOptions(rawValue: 1 << 1)
+        static let save = DisableOptions(rawValue: 1 << 2)
+        static let discard = DisableOptions(rawValue: 1 << 3)
+    }
 }

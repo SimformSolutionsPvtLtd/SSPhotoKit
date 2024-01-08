@@ -10,7 +10,7 @@ import SwiftUI
 struct FooterMenu: View {
     
     let title: String
-    let disable: DisableOption
+    let disableOptions: DisableOption
     let onSave: () -> Void
     let onDiscard: () -> Void
     
@@ -22,8 +22,8 @@ struct FooterMenu: View {
             } label: {
                 Image(systemName: "xmark")
             }
-            .foregroundStyle(disable.contains(.discard) ? .gray : .white)
-            .disabled(disable.contains(.discard))
+            .foregroundStyle(disableOptions.contains(.discard) ? .gray : .white)
+            .disabled(disableOptions.contains(.discard))
             
             Spacer()
             
@@ -37,17 +37,17 @@ struct FooterMenu: View {
             } label: {
                 Image(systemName: "checkmark")
             }
-            .foregroundStyle(disable.contains(.save) ? .gray : .white)
-            .disabled(disable.contains(.save))
+            .foregroundStyle(disableOptions.contains(.save) ? .gray : .white)
+            .disabled(disableOptions.contains(.save))
             
         }
         .font(.system(.headline, weight: .medium))
         .padding(.horizontal, 24)
     }
     
-    init(_ title: String, disable: DisableOption = [], onSave: @escaping () -> Void, onDiscard: @escaping () -> Void) {
+    init(_ title: String, disableOptions: DisableOption = [], onSave: @escaping () -> Void, onDiscard: @escaping () -> Void) {
         self.title = title
-        self.disable = disable
+        self.disableOptions = disableOptions
         self.onSave = onSave
         self.onDiscard = onDiscard
     }

@@ -10,11 +10,12 @@ import SSPhotoKitEngine
 
 struct AdjustmentEditor: View {
     
-    @EnvironmentObject var model: SSPKViewModel
+    @EnvironmentObject var model: EditorViewModel
+    @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var adjustmentViewModel: AdjustmentEditorViewModel
     
     private var imageSize: CGSize {
-        model.engine.previewImage.extent.size
+        engine.previewImage.extent.size
     }
     
     var body: some View {
@@ -35,9 +36,9 @@ struct AdjustmentEditor: View {
             Divider()
                 .frame(height: 20)
             
-            FooterMenu("Adjustments") {
+            FooterMenu(adjustmentViewModel.currentAdjustment.description) {
                 Task {
-                    await model.engine.apply(adjustmentViewModel.createCommand())
+                    await engine.apply(adjustmentViewModel.createCommand())
                     model.resetEditor()
                 }
             } onDiscard: {

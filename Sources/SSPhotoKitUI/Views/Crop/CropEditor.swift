@@ -11,7 +11,8 @@ import SSPhotoKitEngine
 struct CropEditor: View {
     
     // MARK: - Vars & Lets
-    @EnvironmentObject var model: SSPKViewModel
+    @EnvironmentObject var model: EditorViewModel
+    @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var cropViewModel = CropEditorViewModel()
     
     // MARK: - Body
@@ -20,7 +21,7 @@ struct CropEditor: View {
             ZStack {
                 Color.black
                 
-                Image(platformImage: model.engine.previewPlatformImage)
+                Image(platformImage: engine.previewPlatformImage)
                     .rotationEffect(.degrees(cropViewModel.rotation))
                     .scaleEffect(cropViewModel.flipScale)
                     .offset(cropViewModel.offset)
@@ -44,7 +45,7 @@ struct CropEditor: View {
                     
                     FooterMenu("Crop & Rotation") {
                         Task {
-                            await model.engine.apply(cropViewModel.createCommand(for: model.engine.previewCGImage.size))
+                            await engine.apply(cropViewModel.createCommand(for: engine.previewCGImage.size))
                             model.resetEditor()
                         }
                     } onDiscard: {
@@ -124,7 +125,7 @@ extension CropEditor {
             print("redo")
         case .save:
             Task {
-                await model.engine.apply(cropViewModel.createCommand(for: model.engine.previewCGImage.size))
+                await engine.apply(cropViewModel.createCommand(for: engine.previewCGImage.size))
                 model.resetEditor()
             }
         case .discard:

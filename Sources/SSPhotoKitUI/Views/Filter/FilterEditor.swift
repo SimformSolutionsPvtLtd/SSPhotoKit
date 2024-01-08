@@ -10,7 +10,8 @@ import SSPhotoKitEngine
 
 struct FilterEditor: View {
     
-    @EnvironmentObject var model: SSPKViewModel
+    @EnvironmentObject var model: EditorViewModel
+    @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var filterViewModel: FilterEditorViewModel
     @State var task: Task<(), Never>?
     
@@ -39,7 +40,7 @@ struct FilterEditor: View {
             
             FooterMenu(filterViewModel.currentCategory.rawValue) {
                 Task {
-                    await model.engine.apply(filterViewModel.createCommand())
+                    await engine.apply(filterViewModel.createCommand())
                     model.resetEditor()
                 }
             } onDiscard: {
