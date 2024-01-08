@@ -37,6 +37,11 @@ class AdjustmentEditorViewModel : ObservableObject {
             .sink { adjustment in
                 Task { [weak self]  in
                     guard let self else { return }
+                    
+                    Task {
+                        currentImage = await allFilters.apply(to: originalImage)
+                    }
+                    
                     isUpdating = true
                     switch adjustment {
                     case .light:
@@ -53,7 +58,6 @@ class AdjustmentEditorViewModel : ObservableObject {
                     case .none:
                         break
                     }
-                    currentImage = await allFilters.apply(to: originalImage)
                     isUpdating = false
                 }
             }

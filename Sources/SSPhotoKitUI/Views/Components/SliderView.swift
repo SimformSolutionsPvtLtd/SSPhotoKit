@@ -128,12 +128,12 @@ extension SSSlider {
         self.onEditingChanged = onEditingChanged
     }
     
-    init(value: Binding<V>, in range: ClosedRange<V> = 0...1, step: V.Stride = 1, trailingLabel: @escaping () -> EndLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where StartLabel == EmptyView {
-        self._value = value
-        self.range = range
-        self.step = step
-        self.startingLabel = nil
-        self.trailingLabel = trailingLabel()
-        self.onEditingChanged = onEditingChanged
-    }
+//    init(value: Binding<V>, in range: ClosedRange<V> = 0...1, step: V.Stride = 1, trailingLabel: @escaping () -> EndLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where StartLabel == EmptyView {
+//        self._value = value
+//        self.range = range
+//        self.step = step
+//        self.startingLabel = nil
+//        self.trailingLabel = trailingLabel()
+//        self.onEditingChanged = onEditingChanged
+//    }
 }
