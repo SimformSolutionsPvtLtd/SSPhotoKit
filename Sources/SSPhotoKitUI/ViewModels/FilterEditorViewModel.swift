@@ -62,11 +62,11 @@ class FilterEditorViewModel : ObservableObject {
         return ciContext.createCGImage(image, from: image.extent)!
     }
     
-    private func createPreview(for filter: any Filter) async -> CGImage {
-        let image = await filter.apply(to: thumbnailImage)
-        return ciContext.createCGImage(image, from: image.extent)!
-    }
-    
+//    private func createPreview<F: Filter>(for filter: F) async -> CGImage {
+//        let image = await filter.apply(to: thumbnailImage)
+//        return ciContext.createCGImage(image, from: image.extent)!
+//    }
+//    
     
     // MARK: - Initializer
     init(image: CIImage) {

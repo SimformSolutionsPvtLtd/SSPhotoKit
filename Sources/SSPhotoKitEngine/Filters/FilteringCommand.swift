@@ -49,16 +49,28 @@ extension Filter {
 // MARK: - AnyFilteringCommand
 public struct AnyFilter : Filter {
     
-    public var intensity: CGFloat
     public var name: String
+    public var intensity: CGFloat {
+        get {
+            _getIntensity()
+        }
+        set {
+            _setIntensity(newValue)
+        }
+    }
+    
     public let base: AnyHashable
+    private let _getIntensity: () -> CGFloat
+    private let _setIntensity: (CGFloat) -> Void
     private let _apply: (CIImage) async -> CIImage
     
     init<F: Filter>(_ filter: F) {
-        base = filter
-        name = filter.name
-        intensity = filter.intensity
-        _apply = filter.apply
+        var copy = filter
+        base = copy
+        name = copy.name
+        _getIntensity = { copy.intensity }
+        _setIntensity = { value in copy.intensity = value }
+        _apply = { image in await copy.apply(to: image) }
     }
     
     public func apply(to image: CIImage) async -> CIImage {
@@ -78,6 +90,6 @@ public struct AnyFilter : Filter {
 extension Filter {
     
     public func asAny() -> AnyFilter {
-        AnyFilter(self)
+        (self as? AnyFilter) ?? AnyFilter(self)
     }
 }

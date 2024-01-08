@@ -104,7 +104,7 @@ extension CGImage {
             bitsPerComponent: bitsPerComponent,
             bytesPerRow: 0,
             space: colorSpace!,
-            bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue
+            bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrderDefault.rawValue
         )
     }
 }

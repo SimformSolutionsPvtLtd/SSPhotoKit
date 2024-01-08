@@ -14,7 +14,6 @@ public typealias PlatformImage = NSImage
 #endif
 
 #if os(macOS)
-import AppKit
 extension NSImage {
     
     public var cgImage: CGImage? {
@@ -29,7 +28,28 @@ extension NSImage {
     public convenience init(cgImage: CGImage) {
         self.init(cgImage: cgImage, size: cgImage.size)
     }
+    
+    public convenience init?(systemName name: String) {
+        self.init(systemSymbolName: name, accessibilityDescription: nil)
+    }
 }
 #endif
 
+extension PlatformImage {
+    
+    #if os(iOS)
+    public static func load(image name: String, from bundle: Bundle?) -> PlatformImage? {
+        self.init(named: name, in: bundle, compatibleWith: nil)
+    }
+    #elseif os(macOS)
+    public static func load(image name: String, from bundle: Bundle?) -> PlatformImage? {
+        if let bundle {
+            return bundle.image(forResource: name)
+        } else {
+            return self.init(named: name)
+        }
+    }
+    #endif
+    
+}
 

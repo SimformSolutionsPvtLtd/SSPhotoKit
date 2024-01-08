@@ -23,7 +23,7 @@ public struct SSPKEditorView: View {
     
     // MARK: - Initializer
     public init(image: CGImage, previewSize: CGSize) {
-        _model = StateObject(wrappedValue: SSPKViewModel(image: CIImage(cgImage: image), previewSize: previewSize))
+        _model = StateObject(wrappedValue: SSPKViewModel(image: CIImage(cgImage: image), previewSize: CGSize(width: 300, height: 300)))
     }
 }
 
@@ -60,7 +60,7 @@ extension SSPKEditorView {
             case .detail:
                 EmptyView()//SSMetalView(image: $model.engine.previewImage)
             case .markup:
-                EmptyView()//SSMarkupView()
+                MarkupEditor()
             case .none:
                 Image(platformImage: PlatformImage(cgImage: model.engine.previewCGImage))
                     .resizable()
@@ -110,7 +110,10 @@ extension SSPKEditorView {
         case .redo:
             print("Redo")
         case .save:
-            print("save")
+            Task {
+                let image = await model.engine.createImage()
+                print(image)
+            }
         case .discard:
             model.engine.reset()
             model.resetEditor()

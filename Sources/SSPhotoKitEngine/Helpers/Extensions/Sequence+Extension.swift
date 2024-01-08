@@ -7,15 +7,24 @@
 
 import CoreImage
 
+extension Sequence where Element : EditingCommand {
+    
+    public func apply(to image: CIImage) async -> CIImage {
+        var copy = image       
+        await self.asyncForEach { command in
+            copy = await command.apply(to: copy)
+        }
+        return copy
+    }
+}
+
 extension Sequence where Element == any Filter {
     
     public func apply(to image: CIImage) async -> CIImage {
         var copy = image
-                
         await self.asyncForEach { filter in
             copy = await filter.apply(to: copy)
         }
-        
         return copy
     }
 }

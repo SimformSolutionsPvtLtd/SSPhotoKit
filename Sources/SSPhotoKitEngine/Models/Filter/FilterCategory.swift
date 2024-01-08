@@ -14,14 +14,14 @@ public enum FilterCategory : String, Identifiable, CaseIterable {
     
     public var id: String { rawValue }
     
-    public var filters: [any Filter] {
+    public var filters: [AnyFilter] {
         switch self {
         case .blackAndWhite:
             []//BlackAndWhiteFilter()]
         case .sepia:
             []//SepiaFilter()]
         case .creativeArtistic:
-            LUTLoader.load(for: .creativeArtistic)
+            LUTLoader.load(for: .creativeArtistic).map { $0.asAny() }
         }
     }
 }
