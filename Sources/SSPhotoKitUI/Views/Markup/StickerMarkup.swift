@@ -1,6 +1,6 @@
 //
 //  StickerMarkup.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 05/01/24.
 //
@@ -11,35 +11,48 @@ import SSPhotoKitEngine
 
 struct StickerMarkup<Content, Menu>: View where Content : View, Menu : View{
     
-    @Binding var layers: [MarkupLayer]
-    @Binding var index: Int?
-    let onDiscard: () -> Void
-    let onSave: () -> Void
-    let rearrangeMenu: Menu?
-    @ViewBuilder var content: Content
+    @Environment(\.markupConfiguration) private var config: MarkupConfiguration
+    @EnvironmentObject private var model: MarkupEditorViewModel
     
+    // MARK: - Vars & Lets
+    private let rearrangeMenu: Menu?
+    private let content: Content
+    
+    @State private var isPhotoPickerOpen: Bool = false
     @State private var isEditing: Bool = true
     @State private var item: PhotosPickerItem?
     @State private var lastOrigin: CGPoint = .zero
     
+    // MARK: - Body
     var body: some View {
         
         ZStack {
+            Color.black
+            
             content
                 .overlay {
-                    if let index {
-                        MarkupLayerView(layers: layers, selection: index) {
-                            SelectionOverlay(currentRotation: $layers[index].sticker.rotation,
-                                             currentSize: $layers[index].sticker.size, onUpdate: handleUpdate)
+                    if let index = model.currentLayerIndex,
+                       model.canEditCurrentLayer {
+                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex) {
+                            SelectionOverlay(currentRotation: $model.dirtyLayers[index].sticker.rotation,
+                                             currentSize: $model.dirtyLayers[index].sticker.size,
+                                             options: config.stickerOptions.contains(.custom) ? .all.subtracting(.edit) : .all,
+                                             onUpdate: handleUpdate)
                         }
                     }
                 }
         }
         .gesture(dragGesture)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .photosPicker(isPresented: $isEditing, selection: $item)
+        .photosPicker(isPresented: $isPhotoPickerOpen, selection: $item)
         .overlay(alignment: .top) {
             headerMenu
+        }
+        .overlay(alignment: .bottom) {
+            if config.stickerOptions.contains(.custom) {
+                customStickersView
+                    .opacity(isEditing ? 1 : 0)
+            }
         }
         .onChange(of: item) { item in
             if let item {
@@ -47,31 +60,17 @@ struct StickerMarkup<Content, Menu>: View where Content : View, Menu : View{
             }
         }
         .onAppear {
-            isEditing = index == nil
-            
-            if index == nil {
-                index = layers.count
-                layers.append(.sticker(.init()))
-            }
-            lastOrigin = layers[index!].sticker.origin
+            setupLayer()
         }
     }
     
     // MARK: - Initializer
-    init(layers: Binding<[MarkupLayer]>, index: Binding<Int?>, onSave: @escaping () -> Void, onDiscard: @escaping () -> Void, @ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
-        self._layers = layers
-        self._index = index
-        self.onSave = onSave
-        self.onDiscard = onDiscard
+    init(@ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
         self.content = content()
         self.rearrangeMenu = menu()
     }
     
-    init(layers: Binding<[MarkupLayer]>, index: Binding<Int?>, onSave: @escaping () -> Void, onDiscard: @escaping () -> Void, @ViewBuilder content: () -> Content) where Menu == EmptyView {
-        self._layers = layers
-        self._index = index
-        self.onSave = onSave
-        self.onDiscard = onDiscard
+    init(@ViewBuilder content: () -> Content) where Menu == EmptyView {
         self.rearrangeMenu = nil
         self.content = content()
     }
@@ -84,11 +83,11 @@ extension StickerMarkup {
     private var headerMenu: some View {
         HStack {
             Button {
-                onDiscard()
+                discard()
             } label: {
                 Image(systemName: "xmark")
             }
-
+            
             Spacer()
             
             if let rearrangeMenu {
@@ -98,12 +97,43 @@ extension StickerMarkup {
             Spacer()
             
             Button {
-                onSave()
+                save()
             } label: {
                 Image(systemName: "checkmark")
             }
         }
+        .buttonStyle(.primary)
         .padding(.horizontal, 16)
+        .background()
+    }
+    
+    @ViewBuilder
+    private var customStickersView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 24) {
+                if config.stickerOptions.contains(.gallery) {
+                    Button {
+                        isPhotoPickerOpen = true
+                    } label: {
+                        Image(platformImage: PlatformImage(systemName: "photo.on.rectangle")!)
+                            .resizable()
+                            .renderingMode(.template)
+                            .frame(width: 60, height: 60)
+                            .foregroundStyle(.white)
+                    }
+                }
+                
+                ForEach(config.customStickers) { sticker in
+                    Button {
+                        setImage(sticker)
+                    } label: {
+                        Image(platformImage: sticker)
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -113,14 +143,14 @@ extension StickerMarkup {
     private var dragGesture: some Gesture {
         DragGesture(coordinateSpace: .local)
             .onChanged { value in
-                guard let index else { return }
+                guard let index = model.currentLayerIndex else { return }
                 
-                layers[index].sticker.origin = lastOrigin + CGPoint(x: value.translation.width, y: value.translation.height)
+                model.dirtyLayers[index].sticker.origin = (lastOrigin + CGPoint(x: value.translation.width, y: value.translation.height))
             }
             .onEnded { value in
-                guard let index else { return }
+                guard let index = model.currentLayerIndex else { return }
                 
-                lastOrigin = layers[index].sticker.origin
+                lastOrigin = model.dirtyLayers[index].sticker.origin
             }
     }
 }
@@ -128,30 +158,59 @@ extension StickerMarkup {
 // MARK: - Methods
 extension StickerMarkup {
     
+    private func setupLayer() {
+        model.setupEditingLayers()
+        isEditing = model.currentLayerIndex == nil || config.stickerOptions.contains(.custom)
+        
+        if model.currentLayerIndex == nil {
+            model.currentLayerIndex = model.dirtyLayers.count
+            model.dirtyLayers.append(.sticker(.init()))
+        }
+        lastOrigin = model.dirtyLayers[model.currentLayerIndex!].sticker.origin
+        
+        isPhotoPickerOpen = isEditing && config.stickerOptions == .gallery
+    }
+    
     private func loadImage(for item: PhotosPickerItem) {
         Task {
-            guard let index,
-                  let data = try? await item.loadTransferable(type: Data.self),
-                  let image = PlatformImage(data: data)?.cgImage
+            guard let data = try? await item.loadTransferable(type: Data.self),
+                  let image = PlatformImage(data: data)
             else { return }
             
-            await MainActor.run {
-                layers[index].sticker.image = image
-            }
+            setImage(image)
         }
     }
     
-    private func handleUpdate(for action: SelectionAction) {
+    private func setImage(_ image: PlatformImage) {
+        guard let index = model.currentLayerIndex,
+              let cgImage = image.cgImage else { return }
+        
+        model.dirtyLayers[index].sticker.image = cgImage
+    }
+    
+    private func handleUpdate(for action: SelectionOverlay.Action) {
         switch action {
         case .delete:
-            if let index {
-                layers.remove(at: index)
+            if let index = model.currentLayerIndex {
+                model.dirtyLayers.remove(at: index)
             }
-            index = nil
+            model.currentLayerIndex = nil
         case .edit:
             isEditing = true
+            isPhotoPickerOpen = true
         default:
             break
         }
+    }
+    
+    private func discard() {
+        model.reset()
+    }
+    
+    private func save() {
+        guard let index = model.currentLayerIndex else { return }
+        
+        model.commit()
+        model.reset()
     }
 }

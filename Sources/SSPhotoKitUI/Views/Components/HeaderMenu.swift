@@ -1,6 +1,6 @@
 //
-//  SwiftUIView.swift
-//  
+//  HeaderMenu.swift
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 03/01/24.
 //
@@ -9,9 +9,11 @@ import SwiftUI
 
 struct HeaderMenu: View {
     
+    // MARK: - Vars & Lets
     var disableOptions: DisableOptions = []
     let menuAction: (MenuAction) -> Void
     
+    // MARK: - Body
     var body: some View {
         HStack {
             Spacer()
@@ -52,8 +54,7 @@ struct HeaderMenu: View {
 
             Spacer()
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(.white)
+        .buttonStyle(.primary)
     }
 }
 

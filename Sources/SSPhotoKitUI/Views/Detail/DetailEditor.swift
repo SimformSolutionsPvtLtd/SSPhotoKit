@@ -21,34 +21,13 @@ struct DetailEditor: View {
     
     // MARK: - Body
     var body: some View {
-        GeometryReader { proxy in
-            VStack {
-                Spacer()
-                
-                MetalView(image: $detailViewModel.currentImage)
-                    .frame(width: imageSize.width, height: imageSize.height)
-                
-                Spacer()
-                
-                detailMenu
-                
-                detailControls
-                    .frame(height: 130)
-                
-                Divider()
-                    .frame(height: 20)
-                
-                FooterMenu(detailViewModel.currentDetail.description) {
-                    Task {
-                        await engine.apply(detailViewModel.createCommand())
-                        model.resetEditor()
-                    }
-                } onDiscard: {
-                    model.resetEditor()
-                }
-            }
+        
+        ZStack {
+            ImagePreview(imageSource: .coreImage($detailViewModel.currentImage), gesturesEnabled: false)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .bottom) {
+            footerView
+        }
     }
     
     // MARK: - Initializer
@@ -59,6 +38,29 @@ struct DetailEditor: View {
 
 // MARK: - Views
 extension DetailEditor {
+    
+    @ViewBuilder
+    private var footerView: some View {
+        VStack {
+            detailMenu
+            
+            detailControls
+                .frame(height: 130)
+            
+            Divider()
+                .frame(height: 20)
+            
+            FooterMenu(detailViewModel.currentDetail.description) {
+                Task {
+                    await engine.apply(detailViewModel.createCommand())
+                    model.resetEditor()
+                }
+            } onDiscard: {
+                model.resetEditor()
+            }
+        }
+        .background()
+    }
     
     @ViewBuilder
     private var detailControls: some View {

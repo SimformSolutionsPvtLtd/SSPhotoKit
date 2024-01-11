@@ -49,17 +49,19 @@ extension Filter {
 // MARK: - AnyFilteringCommand
 public struct AnyFilter : Filter {
     
+    public let base: AnyHashable
     public var name: String
+    public var scale: CGSize {
+        get { _getScale() }
+        set { _setScale(newValue) }
+    }
     public var intensity: CGFloat {
-        get {
-            _getIntensity()
-        }
-        set {
-            _setIntensity(newValue)
-        }
+        get { _getIntensity() }
+        set { _setIntensity(newValue) }
     }
     
-    public let base: AnyHashable
+    private let _getScale: () -> CGSize
+    private let _setScale: (CGSize) -> Void
     private let _getIntensity: () -> CGFloat
     private let _setIntensity: (CGFloat) -> Void
     private let _apply: (CIImage) async -> CIImage
@@ -68,6 +70,8 @@ public struct AnyFilter : Filter {
         var copy = filter
         base = copy
         name = copy.name
+        _getScale = { copy.scale }
+        _setScale = { value in copy.scale = value }
         _getIntensity = { copy.intensity }
         _setIntensity = { value in copy.intensity = value }
         _apply = { image in await copy.apply(to: image) }

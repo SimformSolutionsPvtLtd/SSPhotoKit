@@ -12,12 +12,12 @@ public struct HueFilter : Filter {
     public var name: String = "Hue"
     let filter = CIFilter.hueAdjust()
     
-    public var hue: FilterAttribute
+    @FilterAttribute public var hue: Float
     
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         
-        filter.angle = hue.value
+        filter.angle = hue
         
         guard let outputImage = filter.outputImage else {
             EngineLogger.error("Can't apply \(String(describing: self))")
@@ -38,7 +38,7 @@ public struct HueFilter : Filter {
     
     // MARK: - Initializer
     public init() {
-        self.hue = filter.makeAttribute(for: kCIInputAngleKey)
+        self._hue = filter.makeAttribute(for: kCIInputAngleKey)
     }
 }
 

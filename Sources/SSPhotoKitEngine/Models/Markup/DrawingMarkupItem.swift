@@ -25,15 +25,31 @@ public struct DrawingMarkupItem : MarkupItem {
     public mutating func updateScale(_ scale: CGSize) {
         self.scale = scale
         updateExtent()
-        updateLines()
+        updateLines(scale: scale, inverting: true)
     }
     
-    public mutating func updateLines() {
+    public mutating func updateLines(scale: CGSize = .one, offset: CGSize = .zero, inverting: Bool = false) {
         for i in lines.indices {
-            lines[i].brush.width *= scale.width
+            
+            if inverting {
+                lines[i].brush.width *= scale.width
+            } else {
+                lines[i].brush.width /= scale.width
+            }
             
             lines[i].path = lines[i].path
-                .map { CGPoint(x: $0.x * scale.width, y: $0.y * scale.height) }
+                .map {
+                    var point: CGPoint = .zero
+                    if inverting {
+                        point.x = ($0.x * scale.width) + offset.width
+                        point.y = ($0.y * scale.height) + offset.height
+                    } else {
+                        point.x = ($0.x - offset.width) / scale.width
+                        point.y = ($0.y - offset.height) / scale.height
+                    }
+                    
+                    return point
+                }
         }
     }
     

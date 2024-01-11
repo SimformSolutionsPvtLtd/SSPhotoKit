@@ -12,15 +12,15 @@ public struct ColorFilter : Filter {
     public var name: String = "Color Correction"
     let filter = CIFilter.colorControls()
     
-    public var contrast: FilterAttribute
-    public var brightness: FilterAttribute
-    public var saturation: FilterAttribute
+    @FilterAttribute public var contrast: Float
+    @FilterAttribute public var brightness: Float
+    @FilterAttribute public var saturation: Float
     
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
-        filter.brightness = brightness.value
-        filter.contrast = contrast.value
-        filter.saturation = saturation.value
+        filter.brightness = brightness
+        filter.contrast = contrast
+        filter.saturation = saturation
         
         guard let outputImage = filter.outputImage else {
             EngineLogger.error("Can't apply \(String(describing: self))")
@@ -40,9 +40,9 @@ public struct ColorFilter : Filter {
     
     // MARK: - Initializer
     public init() {
-        self.contrast = filter.makeAttribute(for: kCIInputContrastKey)
-        self.brightness = filter.makeAttribute(for: kCIInputBrightnessKey)
-        self.saturation = filter.makeAttribute(for: kCIInputSaturationKey)
+        self._contrast = filter.makeAttribute(for: kCIInputContrastKey)
+        self._brightness = filter.makeAttribute(for: kCIInputBrightnessKey)
+        self._saturation = filter.makeAttribute(for: kCIInputSaturationKey)
     }
 }
 

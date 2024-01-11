@@ -5,7 +5,7 @@
 //  Created by Krunal Patel on 08/01/24.
 //
 
-import CoreGraphics
+import SwiftUI
 
 // MARK: - TextMarkupItem
 public struct TextMarkupItem : MarkupItem {
@@ -16,6 +16,8 @@ public struct TextMarkupItem : MarkupItem {
     public var fontName: String = Constants.Markup.fontName
     
     public var fontSize: CGFloat = Constants.Markup.fontSize
+    
+    public var color: Color = .white
     
     public var size: CGSize = Constants.Markup.size {
         didSet {

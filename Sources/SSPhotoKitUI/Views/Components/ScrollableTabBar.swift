@@ -16,17 +16,24 @@ struct ScrollableTabBar<T: Hashable & Identifiable, Content: View>: View {
     @ViewBuilder var content: (T) -> Content
     
     var body: some View {
-        GeometryReader { proxy in
+        
+        ViewThatFits(in: .horizontal) {
+            
+            tabItems
+            
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center, spacing: 16) {
-                    ForEach(items) { item in
-                        getTabItemView(for: item)
-                    }
-                }
-                .frame(width: proxy.size.width, height: proxy.size.height)
+                tabItems
             }
         }
-        .frame(height: Sizes.tabBarHeight)
+    }
+    
+    @ViewBuilder
+    private var tabItems: some View {
+        HStack(alignment: .center, spacing: 16) {
+            ForEach(items) { item in
+                getTabItemView(for: item)
+            }
+        }
     }
     
     @ViewBuilder
@@ -40,7 +47,7 @@ struct ScrollableTabBar<T: Hashable & Identifiable, Content: View>: View {
         } label: {
             content(item)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.primary)
     }
     
     func onItemReselect(action: @escaping (T) -> Void) -> Self {

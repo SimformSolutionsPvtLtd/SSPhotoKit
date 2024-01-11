@@ -11,9 +11,9 @@ public struct CropEditingCommand : EditingCommand {
     
     public var rect: CGRect
     public var angle: CGFloat = .zero
-    public var flipScale: CGSize = CGSize(width: 1, height: 1)
+    public var flipScale: CGSize = .one
     
-    public var scale: CGSize = CGSize(width: 1, height: 1)
+    public var scale: CGSize = .one
     
     public func apply(to image: CIImage) -> CIImage {
         

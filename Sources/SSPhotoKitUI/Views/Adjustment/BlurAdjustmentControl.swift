@@ -15,9 +15,9 @@ struct BlurAdjustmentControl: View {
     
     var body: some View {
         
-        SSSlider(value: $blur.radius.value,
-                 in: blur.radius.range)
-            .onChange(of: blur.radius.value) { _ in
+        SSSlider(value: $blur.radius,
+                 in: blur.$radius)
+            .onChange(of: blur.radius) { _ in
                 onChange()
             }
             .onAppear {

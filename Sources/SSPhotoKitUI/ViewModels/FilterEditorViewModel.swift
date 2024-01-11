@@ -1,6 +1,6 @@
 //
 //  FilterEditorViewModel.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -15,9 +15,9 @@ class FilterEditorViewModel : ObservableObject {
     let originalImage: CIImage
     let thumbnailImage: CIImage
     
-    @Published var currentCategory: FilterCategory = .creativeArtistic
+    @Published var currentCategory: String = ""
     @Published var currentImage: CIImage!
-    @Published var previews: [FilterCategory: [FilterOperation]] = [:]
+    @Published var previews: [String: [FilterOperation]] = [:]
     @Published var currentFilter: FilterOperation
     var original: FilterOperation = .original
     
@@ -31,17 +31,16 @@ class FilterEditorViewModel : ObservableObject {
     }()
     
     // MARK: - Methods
-    func createPreviews() {
-        
-        FilterCategory.allCases.forEach { category in
-            let filters = category.filters.map { filter in
+    func createPreviews(with filters: GroupedFilters) {
+        filters.forEach { category, filters in
+            previews[category] = filters.map { filter in
                 FilterOperation(filter: filter, name: filter.name)
             }
-            previews[category] = filters
         }
     }
     
-    func loadPreview() async {
+    func loadPreview(with filters: GroupedFilters) async {
+        createPreviews(with: filters)
         await original.previewImage = createPreview(for: .original)
         currentFilter = original
         
@@ -62,18 +61,11 @@ class FilterEditorViewModel : ObservableObject {
         return ciContext.createCGImage(image, from: image.extent)!
     }
     
-//    private func createPreview<F: Filter>(for filter: F) async -> CGImage {
-//        let image = await filter.apply(to: thumbnailImage)
-//        return ciContext.createCGImage(image, from: image.extent)!
-//    }
-//    
-    
     // MARK: - Initializer
     init(image: CIImage) {
         self.originalImage = image
+        self.currentImage = image
         self.thumbnailImage = image.resizing(CGSize(width: 80, height: 80))
-        self.currentImage = thumbnailImage
         self.currentFilter = original
-        createPreviews()
     }
 }

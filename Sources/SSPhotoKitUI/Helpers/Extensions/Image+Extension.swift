@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-import SSPhotoKitEngine
+@_exported import typealias SSPhotoKitEngine.PlatformImage
 
 extension Image {
     
-    init(platformImage: PlatformImage) {
+    public init(platformImage: PlatformImage) {
         #if os(iOS)
         self.init(uiImage: platformImage)
         #else
@@ -18,3 +18,4 @@ extension Image {
         #endif
     }
 }
+

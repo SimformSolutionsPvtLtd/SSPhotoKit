@@ -16,15 +16,27 @@ class MarkupEditorViewModel : ObservableObject {
     @Published var currentLayerIndex: Int?
     @Published var dirtyLayers: [MarkupLayer] = []
     
+    var previewFrame: CGRect = .zero
+    var scale: CGSize = .one
+    var offset: CGSize = .zero
+    
+    var canEditCurrentLayer: Bool {
+        dirtyLayers.count > currentLayerIndex ?? 0
+    }
+    
     // MARK: - Methods
+    func setupEditingLayers() {
+        dirtyLayers = scaling(layers: layers, with: scale, offset: offset, inverting: true)
+    }
+    
     func reset() {
         currentLayerIndex = nil
         currentMarkup = .none
-        dirtyLayers = layers
+        dirtyLayers.removeAll()
     }
     
     func commit() {
-        layers = dirtyLayers
+        layers = scaling(layers: dirtyLayers, with: scale, offset: offset)
     }
     
     func canArrange(_ action: ArrangeAction) -> Bool {
@@ -51,7 +63,31 @@ class MarkupEditorViewModel : ObservableObject {
         }
     }
     
+    func scaling(layers: [MarkupLayer], with scale: CGSize, offset: CGSize, inverting: Bool = false) -> [MarkupLayer] {
+        var copy = layers
+        for i in copy.indices {
+            
+            if case let .drawing = copy[i] {
+                copy[i].drawing.updateLines(scale: scale, offset: offset, inverting: inverting)
+            }
+            
+            if inverting {
+                copy[i].item.origin *= scale.toCGPoint()
+                copy[i].item.origin += offset.toCGPoint()
+                copy[i].item.size *= scale
+            } else {
+                copy[i].item.origin -= offset.toCGPoint()
+                copy[i].item.origin /= scale.toCGPoint()
+                copy[i].item.size /= scale
+            }
+        }
+        return copy
+    }
+    
+    
+    
     func createCommand<Content>(@ViewBuilder renderer: @escaping ([MarkupLayer]) -> Content) -> some EditingCommand where Content : View {
+        
         MarkupEditingCommand(layers: layers, renderer: renderer)
     }
 }

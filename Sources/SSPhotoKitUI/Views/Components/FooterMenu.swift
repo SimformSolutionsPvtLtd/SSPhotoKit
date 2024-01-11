@@ -22,6 +22,7 @@ struct FooterMenu: View {
             } label: {
                 Image(systemName: "xmark")
             }
+            .buttonStyle(.primary)
             .foregroundStyle(disableOptions.contains(.discard) ? .gray : .white)
             .disabled(disableOptions.contains(.discard))
             
@@ -37,12 +38,14 @@ struct FooterMenu: View {
             } label: {
                 Image(systemName: "checkmark")
             }
+            .buttonStyle(.primary)
             .foregroundStyle(disableOptions.contains(.save) ? .gray : .white)
             .disabled(disableOptions.contains(.save))
             
         }
         .font(.system(.headline, weight: .medium))
         .padding(.horizontal, 24)
+        .background(.black)
     }
     
     init(_ title: String, disableOptions: DisableOption = [], onSave: @escaping () -> Void, onDiscard: @escaping () -> Void) {

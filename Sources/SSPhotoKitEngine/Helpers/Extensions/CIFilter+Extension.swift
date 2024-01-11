@@ -57,18 +57,21 @@ public typealias CIColorCubeFilter = CIFilter & CIColorCubeWithColorSpace
 // MARK: - CIFilter + Attributes
 extension CIFilter {
     
-    public func getRange(for key: String) -> ClosedRange<Double> {
+    public func getRange<V>(for key: String) -> ClosedRange<V> where V: BinaryFloatingPoint {
         let attr = attributes[key] as! [String: Any]
-        return (attr[kCIAttributeSliderMin] as! Double)...(attr[kCIAttributeSliderMax] as! Double)
+        let upperBound = V(attr[kCIAttributeSliderMin] as! Double)
+        let lowerBound = V(attr[kCIAttributeSliderMax] as! Double)
+        return upperBound...lowerBound
     }
     
-    public func getDefaultValue(for key: String) -> Double {
+    public func getDefaultValue<V>(for key: String) -> V where V: BinaryFloatingPoint {
             let attr = attributes[key] as! [String: Any]
-            return attr[kCIAttributeDefault] as! Double
+            return V(attr[kCIAttributeDefault] as! Double)
     }
     
-    public func makeAttribute(for key: String) -> FilterAttribute {
-        let range = getRange(for: key)
-        return FilterAttribute(Float(getDefaultValue(for: key)), range: Float(range.lowerBound)...Float(range.upperBound))
+    public func makeAttribute<V>(for key: String) -> FilterAttribute<V> where V: BinaryFloatingPoint {
+        let range: ClosedRange<V> = getRange(for: key)
+        
+        return FilterAttribute(wrappedValue: getDefaultValue(for: key), range: range.lowerBound...range.upperBound)
     }
 }

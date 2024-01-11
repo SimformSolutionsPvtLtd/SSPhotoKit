@@ -28,7 +28,7 @@ extension MarkupItem {
     
     public var scale: CGSize {
         get {
-            CGSize(width: 1, height: 1)
+            .one
         }
         set { }
     }
@@ -36,7 +36,7 @@ extension MarkupItem {
     public mutating func updateScale(_ scale: CGSize) { }
     
     public mutating func resetScale() {
-        updateScale(CGSize(width: 1, height: 1))
+        updateScale(.one)
     }
     
     public mutating func updateExtent() {
