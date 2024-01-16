@@ -1,21 +1,22 @@
 //
 //  SharpenFilter.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 08/01/24.
 //
 
-
 import CoreImage.CIFilterBuiltins
 
-public struct SharpenFilter : Filter {
+public struct SharpenFilter: Filter {
     
+    // MARK: - Vars & Lets
     public var name: String = "Sharpen"
     let filter = CIFilter.unsharpMask()
     
     @FilterAttribute public var radius: Float
     @FilterAttribute public var amount: Float
     
+    // MARK: - Methods
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         
@@ -49,6 +50,7 @@ public struct SharpenFilter : Filter {
     }
 }
 
+// MARK: - Extension
 extension Filter where Self == SharpenFilter {
     
     public static var sharpen: Self { .init() }

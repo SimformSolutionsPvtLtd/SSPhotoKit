@@ -1,6 +1,6 @@
 //
 //  CGPoint+Extension.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -8,7 +8,9 @@
 import CoreGraphics
 
 // MARK: - Hashable
-extension CGPoint : Hashable {
+
+// MARK: - CGPoint
+extension CGPoint: Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
@@ -16,6 +18,7 @@ extension CGPoint : Hashable {
     }
 }
 
+// MARK: - CGRect
 extension CGRect: Hashable {
     
     public func hash(into hasher: inout Hasher) {
@@ -26,6 +29,7 @@ extension CGRect: Hashable {
     }
 }
 
+// MARK: - CGSize
 extension CGSize: Hashable {
     
     public func hash(into hasher: inout Hasher) {
@@ -33,4 +37,3 @@ extension CGSize: Hashable {
         hasher.combine(height)
     }
 }
-

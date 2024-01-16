@@ -1,12 +1,14 @@
 //
 //  SelectionOverlay.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct SelectionOverlay: View {
     
@@ -92,7 +94,7 @@ extension SelectionOverlay {
                 onUpdate(.rotate(-value.translation.height + lastRotation))
                 currentRotation = -value.translation.height + lastRotation
             }
-            .onEnded { value in
+            .onEnded { _ in
                 lastRotation = currentRotation
             }
     }
@@ -113,10 +115,9 @@ extension SelectionOverlay {
                     return
                 }
                 
-                
                 currentSize = newSize
             }
-            .onEnded { value in
+            .onEnded { _ in
                 lastSize = currentSize
             }
     }

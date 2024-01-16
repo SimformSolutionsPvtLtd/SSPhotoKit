@@ -1,15 +1,18 @@
 //
-//  File.swift
-//  
+//  CropEditorViewModel.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 03/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-class CropEditorViewModel : ObservableObject {
+class CropEditorViewModel: ObservableObject {
     
+    // MARK: - Vars & Lets
     @Published var size: CGSize = .zero
     @Published var currentEdit: Crop = .aspect
     
@@ -31,19 +34,18 @@ class CropEditorViewModel : ObservableObject {
     }
     
     var flipScale: CGSize {
-        CGSize(width: horizontalFlipped ? -1 : 1,
-               height: verticalFlipped ? -1 : 1)
+        CGSize(width: horizontalFlipped ? -1: 1,
+               height: verticalFlipped ? -1: 1)
     }
     
     // MARK: - Methods
     func updateSize() {
-        let ratio = isInverted ? currentRatio.inverted() : currentRatio
+        let ratio = isInverted ? currentRatio.inverted(): currentRatio
         
         let minSize = min(frameSize.width, frameSize.height)
         
         if ratio.height > ratio.width {
             let scale = CGFloat(ratio.width) / CGFloat(ratio.height)
-            
             
             size = CGSize(width: minSize * scale - 32, height: minSize)
         } else {

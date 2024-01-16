@@ -1,21 +1,22 @@
 //
 //  NoiseFilter.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 08/01/24.
 //
 
-
 import CoreImage.CIFilterBuiltins
 
-public struct NoiseFilter : Filter {
+public struct NoiseFilter: Filter {
     
+    // MARK: - Vars & Lets
     public var name: String = "Noise"
     let filter = CIFilter.noiseReduction()
     
     @FilterAttribute public var noiseLevel: Float
     @FilterAttribute public var sharpness: Float
     
+    // MARK: - Methods
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         
@@ -49,9 +50,11 @@ public struct NoiseFilter : Filter {
     }
 }
 
+// MARK: - Extension
 extension Filter where Self == NoiseFilter {
     
     public static var noise: Self { .init() }
 }
 
+// MARK: - Constant
 public let kCIInputNoiseLevelKey: String = "inputNoiseLevel"

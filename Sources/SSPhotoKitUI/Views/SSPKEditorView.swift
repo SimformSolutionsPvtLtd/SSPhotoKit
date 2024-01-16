@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 public struct SSPKEditorView: View {
     
     // MARK: - Vars & Lets
     @Environment(\.editorConfiguration) var config: EditorConfiguration
+    
     @Binding var image: PlatformImage
     @Binding var isPresented: Bool
     @StateObject var engine: SSPhotoKitEngine
@@ -41,7 +44,7 @@ public struct SSPKEditorView: View {
                 tabBarView
             }
         }
-        .confirmationDialog(engine.canDiscard ? "Discard changes" : "Close Editor",
+        .confirmationDialog(engine.canDiscard ? "Discard changes": "Close Editor",
                             isPresented: $showingConfirmation) {
             discardDialog
         }
@@ -98,11 +101,11 @@ extension SSPKEditorView {
             VStack(spacing: 6) {
                 Image(systemName: item.icon)
                     .font(.system(size: 26, design: .rounded))
-                    .foregroundStyle(.white.opacity(model.currentEditor == item ? 1 : 0.6))
+                    .foregroundStyle(.white.opacity(model.currentEditor == item ? 1: 0.6))
                 
                 Circle()
                     .fill(.white)
-                    .frame(height: model.currentEditor == item ? 6 : 0)
+                    .frame(height: model.currentEditor == item ? 6: 0)
             }
         }
         .onItemReselect { _ in
@@ -111,13 +114,13 @@ extension SSPKEditorView {
         .padding(.horizontal, 16)
         .frame(maxWidth: .infinity)
         .background()
-        .opacity(model.shouldShowTabBar ? 1 : 0)
+        .opacity(model.shouldShowTabBar ? 1: 0)
         .animation(.easeInOut, value: model.shouldShowTabBar)
     }
     
     @ViewBuilder
     private var discardDialog: some View {
-        Button(engine.canDiscard ? "Discard changes" : "Close Editor", role: .destructive) {
+        Button(engine.canDiscard ? "Discard changes": "Close Editor", role: .destructive) {
             if engine.canDiscard {
                 engine.reset()
                 model.resetEditor()

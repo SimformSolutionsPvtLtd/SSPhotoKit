@@ -1,15 +1,17 @@
 //
 //  FilterEditorViewModel.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 @MainActor
-class FilterEditorViewModel : ObservableObject {
+class FilterEditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
     let originalImage: CIImage
@@ -46,8 +48,8 @@ class FilterEditorViewModel : ObservableObject {
         
         for category in previews.keys {
             let filters = previews[category]!
-            for i in filters.indices {
-                previews[category]![i].previewImage = await createPreview(for: filters[i].filter)
+            for index in filters.indices {
+                previews[category]![index].previewImage = await createPreview(for: filters[index].filter)
             }
         }
     }

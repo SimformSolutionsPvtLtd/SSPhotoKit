@@ -1,6 +1,6 @@
 //
 //  CGImage+Extension.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -26,7 +26,6 @@ extension CGImage {
         let absAngle = abs(.pi/2 - abs(angle))
         let rotatedSize = CGSize(width: sin(absAngle) * size.width + cos(absAngle) * size.height,
                                  height: cos(absAngle) * size.width + sin(absAngle) * size.height)
-        
         
         guard let context = makeContext(size: rotatedSize) else { return self }
         
@@ -60,14 +59,14 @@ extension CGImage {
 // MARK: - Resizing
 extension CGImage {
     
-    public func resize(_ size: CGSize) -> CGImage {
+    public func resizing(_ size: CGSize) -> CGImage {
         
         var ratio: CGFloat = 0.0
         let imageWidth = CGFloat(width)
         let imageHeight = CGFloat(height)
         
         // Get ratio (landscape or portrait)
-        if (imageWidth > imageHeight) {
+        if imageWidth > imageHeight {
             ratio = size.width / imageWidth
         } else {
             ratio = size.height / imageHeight
@@ -108,7 +107,6 @@ extension CGImage {
         )
     }
 }
-
 
 // MARK: - Size
 extension CGImage {

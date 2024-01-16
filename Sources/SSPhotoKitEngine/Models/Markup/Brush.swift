@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct Brush: Hashable {
    
+    // MARK: - Vars & Lets
     public let style: Style
     public var width: CGFloat
     public var color: Color
@@ -35,6 +36,7 @@ extension Brush {
     }
 }
 
+// MARK: - Extension
 extension Brush {
     
     public var isAvailable: Bool {
@@ -53,7 +55,6 @@ extension Brush {
             Brush(style: .eraser)
         ]
     }
-      
     
 }
 

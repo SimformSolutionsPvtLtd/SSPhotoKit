@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-public enum MarkupLayer : Identifiable, Hashable {
+public enum MarkupLayer: Identifiable, Hashable {
     
     case text(TextMarkupItem)
     case drawing(DrawingMarkupItem)
@@ -67,7 +67,6 @@ extension MarkupLayer {
     }
 }
 
-
 extension MarkupLayer {
     
     public var scale: CGSize {
@@ -84,11 +83,11 @@ extension MarkupLayer {
         
         mutating set {
             switch self {
-            case .text(_):
+            case .text:
                 text.updateScale(newValue)
-            case .drawing(_):
+            case .drawing:
                 drawing.updateScale(newValue)
-            case .sticker(_):
+            case .sticker:
                 sticker.updateScale(newValue)
             }
         }

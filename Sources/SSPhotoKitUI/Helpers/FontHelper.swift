@@ -1,6 +1,6 @@
 //
 //  FontHelper.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -20,7 +20,7 @@ enum FontHelper {
         UIFont.fontNames(forFamilyName: family)
     }
     
-    static var fontsWithFamily: [String : String] {
+    static var fontsWithFamily: [String: String] {
         [:]
     }
     
@@ -38,5 +38,4 @@ enum FontHelper {
             }
     }
     #endif
-    
 }

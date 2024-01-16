@@ -1,16 +1,18 @@
 //
-//  File.swift
-//  
+//  DetailEditorViewModel.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 08/01/24.
 //
 
 import SwiftUI
 import Combine
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 @MainActor
-class DetailEditorViewModel : ObservableObject {
+class DetailEditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
     let originalImage: CIImage
@@ -28,7 +30,6 @@ class DetailEditorViewModel : ObservableObject {
     private var allFilters: [any Filter] { [sharpenFilter, noiseFilter] }
     private var cancellables: Set<AnyCancellable> = []
     
-    
     // MARK: - Methods
     func createCommand() -> some EditingCommand {
         MultiEditingCommand(sharpenFilter, noiseFilter)
@@ -40,7 +41,8 @@ class DetailEditorViewModel : ObservableObject {
                 Task { [weak self] in
                     guard let self else { return }
                     
-                    Task {
+                    Task { [weak self] in
+                        guard let self else { return }
                         currentImage = await allFilters.apply(to: originalImage)
                     }
                     

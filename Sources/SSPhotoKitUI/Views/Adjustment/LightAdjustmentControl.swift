@@ -1,20 +1,24 @@
 //
 //  LightAdjustmentControl.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct LightAdjustmentControl: View {
     
+    // MARK: - Vars & Lets
     @Environment(\.adjustmentConfiguration) private var config: AdjustmentConfiguration
     @Binding var colorFilter: ColorFilter
     @Binding var hueFilter: HueFilter
     let onEditingChange: (LightAdjustment, Bool) -> Void
     
+    // MARK: - Body
     var body: some View {
         ScrollView {
             

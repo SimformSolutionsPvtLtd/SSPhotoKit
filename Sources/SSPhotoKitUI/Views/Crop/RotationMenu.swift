@@ -1,19 +1,23 @@
 //
 //  RotationMenu.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 03/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct RotationMenu: View {
     
+    // MARK: - Vars & Lets
     @Binding var angle: CGFloat
     @Binding var horizontalFlip: Bool
     @Binding var verticalFlip: Bool
     
+    // MARK: - Body
     var body: some View {
         
         HStack {

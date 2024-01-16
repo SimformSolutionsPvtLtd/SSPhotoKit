@@ -7,14 +7,16 @@
 
 import CoreImage.CIFilterBuiltins
 
-public struct GaussianBlurFilter : Filter {
+public struct GaussianBlurFilter: Filter {
     
+    // MARK: - Vars & Lets
     public var name: String = "Gaussian Blur"
     public var scale: CGSize = .one
     private let filter = CIFilter.gaussianBlur()
     
     @FilterAttribute public var radius: Float
     
+    // MARK: - Methods
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         filter.radius = radius * Float(scale.width)
@@ -26,7 +28,6 @@ public struct GaussianBlurFilter : Filter {
         
         return outputImage.cropped(to: image.extent)
     }
-    
     
     public static func == (lhs: GaussianBlurFilter, rhs: GaussianBlurFilter) -> Bool {
         lhs.radius == rhs.radius && lhs.filter == rhs.filter
@@ -44,6 +45,7 @@ public struct GaussianBlurFilter : Filter {
     }
 }
 
+// MARK: - Extension
 extension Filter where Self == GaussianBlurFilter {
     
     public static var gaussianBlur: Self { .init() }

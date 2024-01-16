@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  EditingCommand.swift
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -8,28 +8,31 @@
 import CoreImage
 
 // MARK: - EditingCommand
-public protocol EditingCommand : Hashable {
+public protocol EditingCommand: Hashable {
     
     var scale: CGSize { get set }
     
     func apply(to image: CIImage) async -> CIImage
 }
 
+// MARK: - Extension
 extension EditingCommand {
     
+    // swiftlint:disable unused_setter_value
     public var scale: CGSize {
         get {
             .one
         }
         set { }
     }
+    // swiftlint:enable unused_setter_value
 }
 
 // MARK: - AnyEditingCommand
-public struct AnyEditingCommand : EditingCommand {
+public struct AnyEditingCommand: EditingCommand {
     
+    // MARK: - Vars & Lets
     public let base: AnyHashable
-//    public let type: (any EditingCommand).Type
     public var scale: CGSize {
         get {
             _getScale()
@@ -39,11 +42,13 @@ public struct AnyEditingCommand : EditingCommand {
         }
     }
     
+    // MARK: - Closures
     private let _getScale: () -> CGSize
     private let _setScale: (CGSize) -> Void
     private let _apply: (CIImage) async -> CIImage
     
-    init<E: EditingCommand>(_ editingCommand: E) {
+    // MARK: - Initializer
+    public init<E: EditingCommand>(_ editingCommand: E) {
         var copy = editingCommand
         base = copy
         
@@ -52,6 +57,7 @@ public struct AnyEditingCommand : EditingCommand {
         _apply = { image in await copy.apply(to: image) }
     }
     
+    // MARK: - Methods
     public func apply(to image: CIImage) async -> CIImage {
         await _apply(image)
     }
@@ -64,11 +70,12 @@ public struct AnyEditingCommand : EditingCommand {
         base.hash(into: &hasher)
     }
     
-    public func isType<T>(of: T.Type) -> Bool {
+    public func isType<T>(of type: T.Type) -> Bool {
         return base is T
     }
 }
 
+// MARK: - Extension
 extension EditingCommand {
     
     public func asAny() -> AnyEditingCommand {

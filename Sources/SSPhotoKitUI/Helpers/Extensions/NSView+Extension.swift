@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  NSView+Extension.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //

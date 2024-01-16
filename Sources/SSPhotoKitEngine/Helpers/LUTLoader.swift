@@ -7,8 +7,8 @@
 
 public enum LUTLoader {
     
-    private static let luts: [String : [String]] = [
-        "Creative Artistic" : ["dropblues", "moonlight", "smokey", "tealorange"]
+    private static let luts: [String: [String]] = [
+        "Creative Artistic": ["dropblues", "moonlight", "smokey", "tealorange"]
     ]
     
     public static func load(for type: String) -> [LUTFilter] {
@@ -33,4 +33,5 @@ public enum LUTLoader {
     }
 }
 
-public typealias GroupedFilters = [String : [LUTFilter]]
+// MARK: - Typealias
+public typealias GroupedFilters = [String: [LUTFilter]]

@@ -1,5 +1,5 @@
 import XCTest
-@testable import SSPhotoKitUI
+@testable import SSPhotoKit
 
 final class SSPhotoKitTests: XCTestCase {
     func testExample() throws {

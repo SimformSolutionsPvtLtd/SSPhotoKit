@@ -1,15 +1,18 @@
 //
 //  FilterEditor.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct FilterEditor: View {
     
+    // MARK: - Vars & Lets
     @Environment(\.filterConfiguration) private var config: FilterConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
@@ -20,6 +23,7 @@ struct FilterEditor: View {
         filterViewModel.currentImage.extent.size
     }
     
+    // MARK: - Body
     var body: some View {
         
         ZStack {
@@ -85,7 +89,7 @@ extension FilterEditor {
     @ViewBuilder
     private var intensityController: some View {
         SSSlider(value: $filterViewModel.currentFilter.filter.intensity)
-            .opacity(filterViewModel.currentFilter == filterViewModel.original ? 0 : 1)
+            .opacity(filterViewModel.currentFilter == filterViewModel.original ? 0: 1)
     }
     
     @ViewBuilder
@@ -100,7 +104,7 @@ extension FilterEditor {
                             .font(.subheadline)
                     }
                     .buttonStyle(.primary)
-                    .foregroundStyle(filterViewModel.currentCategory == category ? .white : .gray)
+                    .foregroundStyle(filterViewModel.currentCategory == category ? .white: .gray)
                 }
             }
         }
@@ -109,7 +113,7 @@ extension FilterEditor {
     @ViewBuilder
     private var filtersPreview: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 12)  {
+            LazyHStack(spacing: 12) {
                 FilterThumbnailPreview(filter: filterViewModel.original, selection: $filterViewModel.currentFilter)
                 
                 ForEach(filterViewModel.previews[filterViewModel.currentCategory] ?? []) { filter in
@@ -120,4 +124,3 @@ extension FilterEditor {
         }
     }
 }
-

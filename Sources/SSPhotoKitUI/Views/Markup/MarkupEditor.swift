@@ -1,12 +1,14 @@
 //
 //  MarkupEditor.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct MarkupEditor: View {
     
@@ -55,7 +57,7 @@ extension MarkupEditor {
             } label: {
                 Image(systemName: "arrow.down.to.line")
             }
-            .foregroundStyle(markupViewModel.canArrange(.moveDown) ? .blue : .gray)
+            .foregroundStyle(markupViewModel.canArrange(.moveDown) ? .blue: .gray)
             .disabled(!markupViewModel.canArrange(.moveDown))
             
             Button {
@@ -63,7 +65,7 @@ extension MarkupEditor {
             } label: {
                 Image(systemName: "arrow.up.to.line")
             }
-            .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue : .gray)
+            .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue: .gray)
             .disabled(!markupViewModel.canArrange(.moveUp))
         }
     }
@@ -145,11 +147,11 @@ extension MarkupEditor {
             VStack(spacing: 6) {
                 Image(systemName: item.icon)
                     .font(.system(size: 26, design: .rounded))
-                    .foregroundStyle(.white.opacity(markupViewModel.currentMarkup == item ? 1 : 0.6))
+                    .foregroundStyle(.white.opacity(markupViewModel.currentMarkup == item ? 1: 0.6))
                 
                 Circle()
                     .fill(.white)
-                    .frame(height: markupViewModel.currentMarkup == item ? 6 : 0)
+                    .frame(height: markupViewModel.currentMarkup == item ? 6: 0)
             }
         }
         .onItemReselect { _ in

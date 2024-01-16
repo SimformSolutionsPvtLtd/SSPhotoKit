@@ -1,14 +1,15 @@
 //
 //  ColorFilter.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import CoreImage.CIFilterBuiltins
 
-public struct ColorFilter : Filter {
+public struct ColorFilter: Filter {
     
+    // MARK: - Vars & Lets
     public var name: String = "Color Correction"
     let filter = CIFilter.colorControls()
     
@@ -16,6 +17,7 @@ public struct ColorFilter : Filter {
     @FilterAttribute public var brightness: Float
     @FilterAttribute public var saturation: Float
     
+    // MARK: - Methods
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         filter.brightness = brightness
@@ -46,6 +48,7 @@ public struct ColorFilter : Filter {
     }
 }
 
+// MARK: - Extension
 extension Filter where Self == ColorFilter {
     
     public static var color: Self { .init() }

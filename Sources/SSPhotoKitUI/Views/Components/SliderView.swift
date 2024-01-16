@@ -1,14 +1,15 @@
 //
-//  SwiftUIView.swift
-//  
+//  SSSlider.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import SwiftUI
 
-struct SSSlider<V, StartLabel, EndLabel>: View where V: BinaryFloatingPoint, V.Stride : BinaryFloatingPoint, StartLabel: View, EndLabel: View {
+struct SSSlider<V, StartLabel, EndLabel>: View where V: BinaryFloatingPoint, V.Stride: BinaryFloatingPoint, StartLabel: View, EndLabel: View {
     
+    // MARK: - Vars & Lets
     @Binding var value: V
     var range: ClosedRange<V>
     let step: V.Stride
@@ -16,12 +17,11 @@ struct SSSlider<V, StartLabel, EndLabel>: View where V: BinaryFloatingPoint, V.S
     @State var dragging: Bool = false
     
     let padding: CGFloat = 16
-    private var height: CGFloat { startingLabel == nil && trailingLabel == nil ? 20 : 40 }
+    private var height: CGFloat { startingLabel == nil && trailingLabel == nil ? 20: 40 }
     
     let onEditingChanged: (Bool) -> Void
     var startingLabel: StartLabel?
     var trailingLabel: EndLabel?
-    
     
     // MARK: - Body
     var body: some View {
@@ -127,13 +127,4 @@ extension SSSlider {
         self.trailingLabel = nil
         self.onEditingChanged = onEditingChanged
     }
-    
-//    init(value: Binding<V>, in range: ClosedRange<V> = 0...1, step: V.Stride = 1, trailingLabel: @escaping () -> EndLabel, onEditingChanged: @escaping (Bool) -> Void = { _ in }) where StartLabel == EmptyView {
-//        self._value = value
-//        self.range = range
-//        self.step = step
-//        self.startingLabel = nil
-//        self.trailingLabel = trailingLabel()
-//        self.onEditingChanged = onEditingChanged
-//    }
 }

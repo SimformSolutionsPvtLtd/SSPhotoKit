@@ -1,12 +1,14 @@
 //
 //  CropConfiguration.swift
-//  
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 12/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 public struct CropConfiguration {
     

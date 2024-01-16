@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E867ED1F2B57A4AC0076E0C7 /* SSPhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = E867ED1E2B57A4AC0076E0C7 /* SSPhotoKit */; };
+		E867ED212B57A4AC0076E0C7 /* SSPhotoKitEngine in Frameworks */ = {isa = PBXBuildFile; productRef = E867ED202B57A4AC0076E0C7 /* SSPhotoKitEngine */; };
 		E8A2283E2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A2283D2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift */; };
 		E8A228402B4D301000BA6B0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A2283F2B4D301000BA6B0D /* ContentView.swift */; };
 		E8A228422B4D301200BA6B0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8A228412B4D301200BA6B0D /* Assets.xcassets */; };
 		E8A228462B4D301200BA6B0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8A228452B4D301200BA6B0D /* Preview Assets.xcassets */; };
-		E8A2284E2B4D30B500BA6B0D /* SSPhotoKitEngine in Frameworks */ = {isa = PBXBuildFile; productRef = E8A2284D2B4D30B500BA6B0D /* SSPhotoKitEngine */; };
-		E8A228502B4D30B500BA6B0D /* SSPhotoKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = E8A2284F2B4D30B500BA6B0D /* SSPhotoKitUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8A228502B4D30B500BA6B0D /* SSPhotoKitUI in Frameworks */,
-				E8A2284E2B4D30B500BA6B0D /* SSPhotoKitEngine in Frameworks */,
+				E867ED212B57A4AC0076E0C7 /* SSPhotoKitEngine in Frameworks */,
+				E867ED1F2B57A4AC0076E0C7 /* SSPhotoKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,8 +90,8 @@
 			);
 			name = SSPhotoKitDemo;
 			packageProductDependencies = (
-				E8A2284D2B4D30B500BA6B0D /* SSPhotoKitEngine */,
-				E8A2284F2B4D30B500BA6B0D /* SSPhotoKitUI */,
+				E867ED1E2B57A4AC0076E0C7 /* SSPhotoKit */,
+				E867ED202B57A4AC0076E0C7 /* SSPhotoKitEngine */,
 			);
 			productName = SSPhotoKitDemo;
 			productReference = E8A2283A2B4D301000BA6B0D /* SSPhotoKitDemo.app */;
@@ -122,7 +122,7 @@
 			);
 			mainGroup = E8A228312B4D301000BA6B0D;
 			packageReferences = (
-				E8A2284C2B4D30B500BA6B0D /* XCLocalSwiftPackageReference ".." */,
+				E867ED1D2B57A4AC0076E0C7 /* XCLocalSwiftPackageReference ".." */,
 			);
 			productRefGroup = E8A2283B2B4D301000BA6B0D /* Products */;
 			projectDirPath = "";
@@ -368,20 +368,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E8A2284C2B4D30B500BA6B0D /* XCLocalSwiftPackageReference ".." */ = {
+		E867ED1D2B57A4AC0076E0C7 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E8A2284D2B4D30B500BA6B0D /* SSPhotoKitEngine */ = {
+		E867ED1E2B57A4AC0076E0C7 /* SSPhotoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SSPhotoKit;
+		};
+		E867ED202B57A4AC0076E0C7 /* SSPhotoKitEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SSPhotoKitEngine;
-		};
-		E8A2284F2B4D30B500BA6B0D /* SSPhotoKitUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SSPhotoKitUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

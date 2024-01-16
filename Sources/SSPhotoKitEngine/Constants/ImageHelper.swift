@@ -1,6 +1,6 @@
 //
-//  Constants.swift
-//
+//  ImageHelper.swift
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -17,12 +17,10 @@ public typealias PlatformImage = NSImage
 extension NSImage {
     
     public var cgImage: CGImage? {
-        get {
-            let imageData = self.tiffRepresentation!
-            let source = CGImageSourceCreateWithData(imageData as CFData, nil).unsafelyUnwrapped
-            let maskRef = CGImageSourceCreateImageAtIndex(source, Int(0), nil)
-            return maskRef
-        }
+        let imageData = self.tiffRepresentation!
+        let source = CGImageSourceCreateWithData(imageData as CFData, nil).unsafelyUnwrapped
+        let maskRef = CGImageSourceCreateImageAtIndex(source, Int(0), nil)
+        return maskRef
     }
     
     public convenience init(cgImage: CGImage) {

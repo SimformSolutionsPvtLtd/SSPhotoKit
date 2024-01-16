@@ -1,5 +1,5 @@
 //
-//  Comparable.swift
+//  Comparable+Extension.swift
 //  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.

@@ -1,13 +1,13 @@
 //
 //  FilterOperation.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import CoreGraphics
 
-public struct FilterOperation : Identifiable, Equatable {
+public struct FilterOperation: Identifiable, Equatable {
     
     // MARK: - Vars & Lets
     public let name: String
@@ -23,6 +23,7 @@ public struct FilterOperation : Identifiable, Equatable {
     }
 }
 
+// MARK: - Extension
 extension FilterOperation {
     
     public static var original: FilterOperation {

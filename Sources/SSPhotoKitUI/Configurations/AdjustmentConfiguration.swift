@@ -1,6 +1,6 @@
 //
 //  AdjustmentConfiguration.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 15/01/24.
 //
@@ -19,7 +19,7 @@ public struct AdjustmentConfiguration {
 // MARK: - Options
 extension AdjustmentConfiguration {
     
-    public struct AllowedAdjustmentOptions : OptionSet {
+    public struct AllowedAdjustmentOptions: OptionSet {
         
         public var rawValue: UInt32
         

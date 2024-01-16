@@ -1,6 +1,6 @@
 //
 //  GeometryHelper.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 12/01/24.
 //
@@ -19,44 +19,42 @@ extension FloatingPoint {
 
 extension BinaryInteger {
     
-    public func toRadian<T>() -> T where T : FloatingPoint {
+    public func toRadian<T>() -> T where T: FloatingPoint {
         T(self) * (.pi / 180)
     }
     
-    public func toAngle<T>() -> T where T : FloatingPoint {
+    public func toAngle<T>() -> T where T: FloatingPoint {
         T(self) * (180 / .pi)
     }
 }
 
 // MARK: - GCD
-public func gcd<T>(_ a: T, _ b: T) -> T where T : BinaryFloatingPoint {
-    let remainder = abs(a).truncatingRemainder(dividingBy: abs(b))
+public func gcd<T>(_ num1: T, _ num2: T) -> T where T: BinaryFloatingPoint {
+    let remainder = abs(num1).truncatingRemainder(dividingBy: abs(num2))
     
     if remainder != 0 {
-        return gcd(abs(b), remainder)
+        return gcd(abs(num2), remainder)
     } else {
-        return abs(b)
+        return abs(num2)
     }
 }
 
-public func gcd<T>(_ a: T, _ b: T) -> T where T : SignedInteger {
-    let remainder = abs(a) % abs(b)
+public func gcd<T>(_ num1: T, _ num2: T) -> T where T: SignedInteger {
+    let remainder = abs(num1) % abs(num2)
     
     if remainder != 0 {
-        return gcd(abs(b), remainder)
+        return gcd(abs(num2), remainder)
     } else {
-        return abs(b)
+        return abs(num2)
     }
 }
 
-public func gcd<T>(_ a: T, _ b: T) -> T where T : BinaryInteger {
-    let remainder = a % b
+public func gcd<T>(_ num1: T, _ num2: T) -> T where T: BinaryInteger {
+    let remainder = num1 % num2
     
     if remainder != 0 {
-        return gcd(b, remainder)
+        return gcd(num2, remainder)
     } else {
-        return b
+        return num2
     }
 }
-
-

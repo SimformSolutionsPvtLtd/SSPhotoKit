@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  Filter.swift
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -10,23 +10,24 @@ import CoreImage.CIFilterBuiltins
 
 /// A protocol that represent filter functionality. For using any filter on
 /// your image the type must confirms this protocol.
-public protocol Filter : EditingCommand {
+public protocol Filter: EditingCommand {
     
     var name: String { get }
     var intensity: CGFloat { get set }
 }
 
+// MARK: - Extension
 extension Filter {
     
+    // swiftlint:disable unused_setter_value
     public var intensity: CGFloat {
         get {
             1.0
         }
-        set {
-            
-        }
+        set { }
     }
-    
+    // swiftlint:enable unused_setter_value
+
     public func composit(source: CIImage, destination: CIImage) -> CIImage {
         let colorMatrix = CIFilter.colorMatrix()
         colorMatrix.setDefaults()
@@ -47,8 +48,9 @@ extension Filter {
 }
 
 // MARK: - AnyFilteringCommand
-public struct AnyFilter : Filter {
+public struct AnyFilter: Filter {
     
+    // MARK: - Vars & Lets
     public let base: AnyHashable
     public var name: String
     public var scale: CGSize {
@@ -60,13 +62,15 @@ public struct AnyFilter : Filter {
         set { _setIntensity(newValue) }
     }
     
+    // MARK: - Closures
     private let _getScale: () -> CGSize
     private let _setScale: (CGSize) -> Void
     private let _getIntensity: () -> CGFloat
     private let _setIntensity: (CGFloat) -> Void
     private let _apply: (CIImage) async -> CIImage
     
-    init<F: Filter>(_ filter: F) {
+    // MARK: - Initializer
+    public init<F: Filter>(_ filter: F) {
         var copy = filter
         base = copy
         name = copy.name
@@ -77,6 +81,7 @@ public struct AnyFilter : Filter {
         _apply = { image in await copy.apply(to: image) }
     }
     
+    // MARK: - Methods
     public func apply(to image: CIImage) async -> CIImage {
         await _apply(image)
     }
@@ -91,6 +96,7 @@ public struct AnyFilter : Filter {
     
 }
 
+// MARK: - Extension
 extension Filter {
     
     public func asAny() -> AnyFilter {

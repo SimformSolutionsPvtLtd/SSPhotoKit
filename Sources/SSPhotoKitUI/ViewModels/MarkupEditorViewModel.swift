@@ -1,14 +1,16 @@
 //
 //  MarkupEditorViewModel.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-class MarkupEditorViewModel : ObservableObject {
+class MarkupEditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
     @Published var layers: [MarkupLayer] = []
@@ -65,28 +67,26 @@ class MarkupEditorViewModel : ObservableObject {
     
     func scaling(layers: [MarkupLayer], with scale: CGSize, offset: CGSize, inverting: Bool = false) -> [MarkupLayer] {
         var copy = layers
-        for i in copy.indices {
+        for index in copy.indices {
             
-            if case let .drawing = copy[i] {
-                copy[i].drawing.updateLines(scale: scale, offset: offset, inverting: inverting)
+            if case .drawing = copy[index] {
+                copy[index].drawing.updateLines(scale: scale, offset: offset, inverting: inverting)
             }
             
             if inverting {
-                copy[i].item.origin *= scale.toCGPoint()
-                copy[i].item.origin += offset.toCGPoint()
-                copy[i].item.size *= scale
+                copy[index].item.origin *= scale.toCGPoint()
+                copy[index].item.origin += offset.toCGPoint()
+                copy[index].item.size *= scale
             } else {
-                copy[i].item.origin -= offset.toCGPoint()
-                copy[i].item.origin /= scale.toCGPoint()
-                copy[i].item.size /= scale
+                copy[index].item.origin -= offset.toCGPoint()
+                copy[index].item.origin /= scale.toCGPoint()
+                copy[index].item.size /= scale
             }
         }
         return copy
     }
     
-    
-    
-    func createCommand<Content>(@ViewBuilder renderer: @escaping ([MarkupLayer]) -> Content) -> some EditingCommand where Content : View {
+    func createCommand<Content>(@ViewBuilder renderer: @escaping ([MarkupLayer]) -> Content) -> some EditingCommand where Content: View {
         
         MarkupEditingCommand(layers: layers, renderer: renderer)
     }

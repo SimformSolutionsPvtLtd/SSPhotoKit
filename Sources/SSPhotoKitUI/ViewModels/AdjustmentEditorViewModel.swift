@@ -1,16 +1,18 @@
 //
-//  File.swift
-//
+//  AdjustmentEditorViewModel.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 03/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 import Combine
 
 @MainActor
-class AdjustmentEditorViewModel : ObservableObject {
+class AdjustmentEditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
     let originalImage: CIImage
@@ -38,7 +40,8 @@ class AdjustmentEditorViewModel : ObservableObject {
                 Task { [weak self]  in
                     guard let self else { return }
                     
-                    Task {
+                    Task { [weak self] in
+                        guard let self else { return }
                         currentImage = await allFilters.apply(to: originalImage)
                     }
                     

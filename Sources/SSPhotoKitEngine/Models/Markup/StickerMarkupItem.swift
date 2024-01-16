@@ -8,7 +8,7 @@
 import CoreGraphics
 
 // MARK: - StickerMarkupItem
-public struct StickerMarkupItem : MarkupItem {
+public struct StickerMarkupItem: MarkupItem {
     
     // MARK: - Vars & Lets
     public var image: CGImage {
@@ -38,13 +38,13 @@ public struct StickerMarkupItem : MarkupItem {
     }
     
     private mutating func updatePreview() {
-        previewImage = image.resize(size)
+        previewImage = image.resizing(size)
     }
     
     // MARK: - Initializer
     public init(_ image: CGImage? = nil) {
         self.image = image ?? Constants.Markup.stickerImage
-        previewImage = self.image.resize(size)
+        previewImage = self.image.resizing(size)
     }
     
     public init(platformImage: PlatformImage) {

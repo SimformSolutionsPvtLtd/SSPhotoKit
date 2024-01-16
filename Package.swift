@@ -16,8 +16,11 @@ let package = Package(
             name: "SSPhotoKitEngine",
             targets: ["SSPhotoKitEngine"]),
         .library(
-            name: "SSPhotoKitUI",
-            targets: ["SSPhotoKitUI"]),
+            name: "SSPhotoKit",
+            targets: ["SSPhotoKit"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/realm/SwiftLint", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -26,14 +29,17 @@ let package = Package(
             name: "SSPhotoKitEngine",
             dependencies: [],
             resources: [.process("Resources/")],
-            swiftSettings: [.define("SPM")]),
+            swiftSettings: [.define("SPM")],
+            plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
         .target(
-            name: "SSPhotoKitUI",
+            name: "SSPhotoKit",
             dependencies: ["SSPhotoKitEngine"],
+            path: "Sources/SSPhotoKitUI",
             resources: [.process("Resources/")],
-            swiftSettings: [.define("SPM")]),
+            swiftSettings: [.define("SPM")],
+            plugins: [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]),
         .testTarget(
             name: "SSPhotoKitTests",
-            dependencies: ["SSPhotoKitEngine", "SSPhotoKitUI"]),
+            dependencies: ["SSPhotoKitEngine", "SSPhotoKit"])
     ]
 )

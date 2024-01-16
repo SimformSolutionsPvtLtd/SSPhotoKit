@@ -1,13 +1,13 @@
 //
-//  File.swift
-//  
+//  Sequence+Extension.swift
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import CoreImage
 
-extension Sequence where Element : EditingCommand {
+extension Sequence where Element: EditingCommand {
     
     public func apply(to image: CIImage) async -> CIImage {
         var copy = image       
@@ -28,7 +28,6 @@ extension Sequence where Element == any Filter {
         return copy
     }
 }
-
 
 extension Sequence {
     
