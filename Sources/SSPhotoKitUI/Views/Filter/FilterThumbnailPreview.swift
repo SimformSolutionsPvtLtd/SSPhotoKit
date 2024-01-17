@@ -27,6 +27,8 @@ struct FilterThumbnailPreview: View {
         } label: {
             if let previewImage = filter.previewImage {
                 Image(platformImage: PlatformImage(cgImage: previewImage))
+                    .resizable()
+                    .scaledToFill()
             } else {
                 ProgressView()
             }

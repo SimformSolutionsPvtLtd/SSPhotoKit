@@ -37,8 +37,8 @@ public struct CropEditingCommand: EditingCommand {
         scaledRect.origin.y *= scale.height
         
         return image
-            .rotating(angle)
             .flipping(scaleX: flipScale.width, scaleY: flipScale.height)
+            .rotating(angle)
             .cropped(to: scaledRect)
             .removingExtentOffset()
     }

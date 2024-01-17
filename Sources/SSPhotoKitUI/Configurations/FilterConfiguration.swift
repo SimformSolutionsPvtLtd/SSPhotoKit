@@ -15,12 +15,12 @@ public struct FilterConfiguration {
     // MARK: - Vars & Lets
     public var customFilterGroups: GroupedFilters
     
-    public var filterOptions: FilterOptions
+    public var options: FilterOptions
     
     public var defaultFilterGroups: GroupedFilters = LUTLoader.loadAll()
 
     public var filterGroups: GroupedFilters {
-        switch filterOptions {
+        switch options {
         case .custom:
             customFilterGroups
         case .default:
@@ -34,9 +34,9 @@ public struct FilterConfiguration {
     
     // MARK: - Initializer
     public init(customFilterGroups: GroupedFilters = [:],
-                filterOptions: FilterOptions = .all) {
+                options: FilterOptions = .all) {
         self.customFilterGroups = customFilterGroups
-        self.filterOptions = filterOptions
+        self.options = options
     }
 }
 

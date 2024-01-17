@@ -25,7 +25,7 @@ struct CropMenu: View {
                 Button {
                     isInverted = false
                 } label: {
-                    Image("verticalCrop", bundle: .module)
+                    Image("vertical_crop", bundle: .module)
                         .resizable()
                         .frame(width: 28, height: 28)
                 }
@@ -34,7 +34,7 @@ struct CropMenu: View {
                 Button {
                     isInverted = true
                 } label: {
-                    Image("verticalCrop", bundle: .module)
+                    Image("vertical_crop", bundle: .module)
                         .resizable()
                         .frame(width: 28, height: 28)
                         .rotationEffect(.degrees(90))

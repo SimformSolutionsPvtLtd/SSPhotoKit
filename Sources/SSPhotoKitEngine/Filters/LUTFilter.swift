@@ -11,7 +11,7 @@ public struct LUTFilter: Filter {
     
     // MARK: - Vars & Lets
     public var name: String
-    public var intensity: CGFloat = 0.5
+    public var intensity: CGFloat = 0.75
     private var filter: CIColorCubeFilter!
     
     // MARK: - Methods

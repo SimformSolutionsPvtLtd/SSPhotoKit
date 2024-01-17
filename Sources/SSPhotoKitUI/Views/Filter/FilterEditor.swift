@@ -33,10 +33,12 @@ struct FilterEditor: View {
             footerView
         }
         .task {
-            await filterViewModel.loadPreview(with: config.filterGroups)
-            if let category = config.filterGroups.first?.key {
+            filterViewModel.createPreviews(with: config.filterGroups)
+            if let category = config.filterGroups.keys.sorted(by: <).first {
                 filterViewModel.currentCategory = category
             }
+            
+            await filterViewModel.loadPreview(with: config.filterGroups)
         }
         .onReceive(filterViewModel.$currentFilter) { _ in
             task?.cancel()
@@ -96,7 +98,7 @@ extension FilterEditor {
     private var categories: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(config.filterGroups.keys.sorted(by: >), id: \.self) { category in
+                ForEach(config.filterGroups.keys.sorted(by: <), id: \.self) { category in
                     Button {
                         filterViewModel.currentCategory = category
                     } label: {

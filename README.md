@@ -13,7 +13,7 @@
 
 <!-- Description -->
 
-SSPhotoKit is an advanced and versatile toolkit tailored for image processing. At its core, SSPhotoKitEngine empowers real-time image editing, preserving a non-destructive workflow. Meanwhile, SSPhotoKitUI offers SwiftUI views enriched with configurable elements, seamlessly integrating with your application for a seamless and intuitive user experience.
+SSPhotoKit is an advanced and versatile toolkit tailored for image processing. At its core, SSPhotoKitEngine empowers real-time image editing, preserving a non-destructive workflow. Meanwhile, SSPhotoKit offers SwiftUI views enriched with configurable elements, seamlessly integrating with your application for a seamless and intuitive user experience.
 
 <!-- Previews -->
 
