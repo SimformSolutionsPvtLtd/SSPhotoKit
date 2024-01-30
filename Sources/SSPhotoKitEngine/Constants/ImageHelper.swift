@@ -14,6 +14,7 @@ public typealias PlatformImage = NSImage
 #endif
 
 #if os(macOS)
+import AppKit
 extension NSImage {
     
     public var cgImage: CGImage? {
@@ -23,6 +24,10 @@ extension NSImage {
             let maskRef = CGImageSourceCreateImageAtIndex(source, Int(0), nil)
             return maskRef
         }
+    }
+    
+    public convenience init(cgImage: CGImage) {
+        self.init(cgImage: cgImage, size: cgImage.size)
     }
 }
 #endif

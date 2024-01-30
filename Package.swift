@@ -5,8 +5,8 @@ import PackageDescription
 
 let package = Package(
     name: "SSPhotoKit",
-    platforms: [.macOS(.v11),
-                .iOS(.v12),
+    platforms: [.macOS(.v12),
+                .iOS(.v15),
                 .tvOS(.v12),
                 .watchOS(.v4),
                 .visionOS(.v1)],
@@ -29,6 +29,7 @@ let package = Package(
         .target(
             name: "SSPhotoKitUI",
             dependencies: ["SSPhotoKitEngine"],
+            resources: [.process("Resources/")],
             swiftSettings: [.define("SPM")]),
         .testTarget(
             name: "SSPhotoKitTests",
