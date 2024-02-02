@@ -27,20 +27,29 @@ struct CropEditor: View {
                     .scaleEffect(cropViewModel.scale)
                 
                 CropMask(size: cropViewModel.size)
-//                    .opacity(cropViewModel.currentEdit == .aspect ? 1 : 0)
             }
             .onAppear {
                 cropViewModel.frameSize = proxy.size
                 cropViewModel.updateSize()
             }
-            .overlay(alignment: .top) {
-                HeaderMenu(menuAction: handleMenuAction)
-            }
             .overlay(alignment: .bottom) {
                 VStack {
                     editTabBar
+                    
                     editMenu(proxy: proxy)
-                        .frame(height: 120)
+                        .frame(height: 60)
+                    
+                    Divider()
+                        .frame(height: 20)
+                    
+                    FooterMenu("Crop & Rotation") {
+                        Task {
+                            await model.engine.apply(cropViewModel.createCommand(for: model.engine.previewCGImage.size))
+                            model.resetEditor()
+                        }
+                    } onDiscard: {
+                        model.resetEditor()
+                    }
                 }
             }
             .gesture(dragGesture)

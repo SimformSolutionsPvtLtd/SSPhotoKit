@@ -5,8 +5,8 @@ import PackageDescription
 
 let package = Package(
     name: "SSPhotoKit",
-    platforms: [.macOS(.v12),
-                .iOS(.v15),
+    platforms: [.macOS(.v13),
+                .iOS(.v16),
                 .tvOS(.v12),
                 .watchOS(.v4),
                 .visionOS(.v1)],
