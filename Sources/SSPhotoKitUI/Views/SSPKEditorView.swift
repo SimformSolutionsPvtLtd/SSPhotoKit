@@ -40,8 +40,6 @@ extension SSPKEditorView {
             
             previewView
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .environmentObject(model)
-                .environmentObject(model.engine)
             
             if model.shouldShowTabBar {
                 tabBarView
@@ -58,7 +56,7 @@ extension SSPKEditorView {
             case .adjustment:
                 AdjustmentEditor(image: model.engine.previewImage)
             case .filter:
-                EmptyView()//SSFilterView(image: model.engine.previewImage)
+                FilterEditor(image: model.engine.previewImage)
             case .detail:
                 EmptyView()//SSMetalView(image: $model.engine.previewImage)
             case .markup:
@@ -70,6 +68,7 @@ extension SSPKEditorView {
                     
             }
         }
+        .environmentObject(model)
     }
 
     @ViewBuilder

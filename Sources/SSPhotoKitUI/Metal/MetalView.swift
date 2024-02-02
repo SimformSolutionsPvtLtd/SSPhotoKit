@@ -40,6 +40,9 @@ final class Renderer: NSObject, MTKViewDelegate, ObservableObject {
     private var image: CIImage
     private let commandQueue: MTLCommandQueue
     private let context: CIContext
+    private lazy var colorSpace: CGColorSpace = {
+        image.colorSpace ?? CGColorSpaceCreateDeviceRGB()
+    }()
     
     // MARK: - Methods
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -56,16 +59,17 @@ final class Renderer: NSObject, MTKViewDelegate, ObservableObject {
             return
         }
         
-        let destination = CIRenderDestination(
-            width: drawable.texture.width,
-            height: drawable.texture.height,
-            pixelFormat: view.colorPixelFormat,
-            commandBuffer: commandBuffer) { () -> MTLTexture in
-                drawable.texture
-            }
-        
         do {
-            try context.startTask(toRender: image, to: destination)
+            // Need to optimize for CPU usage.
+            try context.startTask(toRender: image,
+                                  from: image.extent,
+                                  to: makeRenderDestination(for: view, drawable: drawable, commandBuffer: commandBuffer),
+                                  at: .zero)
+//            context.render(image,
+//                           to: drawable.texture,
+//                           commandBuffer: commandBuffer,
+//                           bounds: image.extent,
+//                           colorSpace: colorSpace)
         } catch {
             print(error.localizedDescription)
             return

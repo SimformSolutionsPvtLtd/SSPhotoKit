@@ -41,7 +41,11 @@ public class SSPhotoKitEngine : ObservableObject {
     
     // MARK: - Public Methods
     public func apply<C: EditingCommand>(_ command: C) async {
-        editingStack.push(command.asAny())
+        if let command = command as? AnyEditingCommand {
+            editingStack.push(command)
+        } else {
+            editingStack.push(command.asAny())
+        }
         
         previewImage = await command.apply(to: previewImage)
         updateImages()

@@ -64,7 +64,6 @@ class CropEditorViewModel : ObservableObject {
         let startX = CGFloat(imageSize.width / 2) - (cropWidth / 2) - offset.width
         let startY = CGFloat(imageSize.height / 2 ) - (cropHeight / 2) + offset.height
         
-        let cropSize = max(cropWidth, cropHeight)
         let rect = CGRect(x: startX, y: startY, width: cropWidth, height: cropHeight)
         var command = CropEditingCommand(rect: rect)
         command.angle = deg2rad(rotation)
