@@ -7,13 +7,14 @@
 
 import SwiftUI
 import SSPhotoKitEngine
+import Combine
 
 @MainActor
-class SSPKViewModel : ObservableObject {
+class EditorViewModel : ObservableObject {
     
     // MARK: - Vars & Lets
-    var engine: SSPhotoKitEngine
     @Published var currentEditor: Editor = .none
+    var can: Set<AnyCancellable> = []
     
     
     var shouldShowTabBar: Bool {
@@ -27,8 +28,8 @@ class SSPKViewModel : ObservableObject {
         currentEditor = .none
     }
     
-    // MARK: - Initializer
-    init(image: CIImage, previewSize: CGSize) {
-        self.engine = SSPhotoKitEngine(image: image, previewSize: previewSize)
-    }
+//    // MARK: - Initializer
+//    init(image: CIImage, previewSize: CGSize) {
+//        self.engine = SSPhotoKitEngine(image: image, previewSize: previewSize)
+//    }
 }

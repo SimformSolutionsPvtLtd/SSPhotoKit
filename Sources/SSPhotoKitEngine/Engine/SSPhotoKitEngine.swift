@@ -17,16 +17,24 @@ public class SSPhotoKitEngine : ObservableObject {
     @Published public private(set) var previewPlatformImage: PlatformImage!
     
     public var canUndo: Bool {
-        undoManager.canUndo
+        !editingStack.isEmpty
     }
     
     public var canRedo: Bool {
-        undoManager.canRedo
+        !redoStack.isEmpty
+    }
+    
+    public var canDiscard: Bool {
+        !editingStack.isEmpty
+    }
+    
+    public var canSave: Bool {
+        !editingStack.isEmpty
     }
     
     private var editingStack = EditingCommandStack()
-    private var redoStack: [AnyEditingCommand] = []
-    private let undoManager = UndoManager()
+    private var redoStack = EditingCommandStack()
+    private var originalPreviewImage: CIImage!
     private let previewSize: CGSize
     
     private lazy var ciContext: CIContext = {
@@ -40,43 +48,33 @@ public class SSPhotoKitEngine : ObservableObject {
     
     
     // MARK: - Public Methods
-    public func apply<C: EditingCommand>(_ command: C) async {
-        if let command = command as? AnyEditingCommand {
-            editingStack.push(command)
-        } else {
-            editingStack.push(command.asAny())
-        }
+    public func apply<each C: EditingCommand>(_ commands: repeat each C) async {
+        redoStack.removeAll()
         
-        previewImage = await command.apply(to: previewImage)
-        updateImages()
-        undoManager.registerUndo(withTarget: self) { [weak self] _ in
-            guard let self else { return }
-
-            redoStack.append(editingStack.pop())
-        }
+        repeat editingStack.push((each commands).asAny())
+        
+        await updatePreviewImage()
     }
     
-    public func apply<each C: EditingCommand>(commands: repeat each C) async {
-        repeat await apply(each commands)
+    public func undo() async {
+        redoStack.push(editingStack.pop())
+        await updatePreviewImage()
     }
     
-    public func undo() {
-        undoManager.undo()
-    }
-    
-    public func redo() {
-        undoManager.redo()
+    public func redo() async {
+        editingStack.push(redoStack.pop())
+        await updatePreviewImage()
     }
     
     public func reset() {
         EngineLogger.info("Reseting engine to initial state.")
         initializeImages(with: previewSize)
-        redoStack = editingStack.commands
+        redoStack.removeAll()
         editingStack.removeAll()
     }
     
     public func createImage() async -> CIImage {
-        let scale = originalImage.size / previewImage.size
+        let scale = originalImage.size / originalPreviewImage.size
         var commands = editingStack.commands
         for i in commands.indices {
             commands[i].scale = scale
@@ -86,7 +84,8 @@ public class SSPhotoKitEngine : ObservableObject {
     
     // MARK: - Private Methods
     private func initializeImages(with size: CGSize) {
-        previewImage = originalImage.resizing(size)
+        originalPreviewImage = originalImage.resizing(size)
+        previewImage = originalPreviewImage
         updateImages()
     }
     
@@ -97,6 +96,14 @@ public class SSPhotoKitEngine : ObservableObject {
         } else {
             EngineLogger.error("Failed to create CGImage.")
         }
+    }
+    
+    private func updatePreviewImage() async {
+        previewImage = originalPreviewImage
+        await editingStack.commands.asyncForEach { command in
+            await previewImage = command.apply(to: previewImage)
+        }
+        updateImages()
     }
     
     // MARK: - Initializer

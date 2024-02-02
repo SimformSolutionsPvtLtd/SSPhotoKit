@@ -36,7 +36,7 @@ public struct MarkupEditingCommand<Content> : EditingCommand where Content : Vie
         
         let image = CIImage(cgImage: viewRenderer.cgImage!)
         
-        return CIImage(cgImage: viewRenderer.cgImage!)//.resize(size))
+        return CIImage(cgImage: viewRenderer.cgImage!)
     }
     
     private func getScaledLayers() -> [MarkupLayer] {

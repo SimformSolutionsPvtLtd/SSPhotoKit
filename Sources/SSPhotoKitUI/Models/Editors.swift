@@ -48,13 +48,14 @@ enum Crop : String, CaseIterable, Identifiable {
     }
 }
 
-enum Adjustment : String, CaseIterable, Identifiable {
+enum Adjustment : String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case light, color, blur, none
     
     var id: String { rawValue }
     
-    var name: String {
+    @inlinable
+    var description: String {
         switch self {
         case .light:
             return "Light"
@@ -63,7 +64,7 @@ enum Adjustment : String, CaseIterable, Identifiable {
         case .blur:
             return "Blur"
         case .none:
-            return "None"
+            return "Adjustment"
         }
     }
     
@@ -131,7 +132,7 @@ enum Markup : String, CustomStringConvertible, CaseIterable, Identifiable {
         case .sticker:
             "Sticker"
         case .none:
-            "None"
+            "Markup"
         }
     }
     
