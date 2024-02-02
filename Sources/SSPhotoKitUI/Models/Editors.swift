@@ -116,6 +116,24 @@ enum LightAdjustment : String, CustomStringConvertible, CaseIterable, Identifiab
     }
 }
 
+
+enum Detail : String, CustomStringConvertible, CaseIterable, Identifiable {
+    
+    case sharpen, noise
+    
+    var id: String { rawValue }
+    
+    @inlinable
+    var description: String {
+        switch self {
+        case .sharpen:
+            return "Sharpen"
+        case .noise:
+            return "Noise"
+        }
+    }
+}
+
 enum Markup : String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case drawing, text, sticker, none

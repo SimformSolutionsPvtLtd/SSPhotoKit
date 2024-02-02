@@ -61,7 +61,7 @@ extension SSPKEditorView {
             case .filter:
                 FilterEditor(image: engine.previewImage)
             case .detail:
-                EmptyView()//SSMetalView(image: $engine.previewImage)
+                DetailEditor(image: engine.previewImage)
             case .markup:
                 MarkupEditor()
             case .none:
