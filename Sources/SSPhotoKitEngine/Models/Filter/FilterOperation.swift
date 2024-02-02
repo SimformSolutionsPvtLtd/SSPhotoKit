@@ -12,19 +12,12 @@ public struct FilterOperation : Identifiable, Equatable {
     // MARK: - Vars & Lets
     public let name: String
     public var id: String { name }
-    public var filter: any Filter
+    public var filter: AnyFilter
     public var previewImage: CGImage?
-    
-    // MARK: - Methods
-    public static func == (lhs: FilterOperation, rhs: FilterOperation) -> Bool {
-        lhs.filter.asAny() == rhs.filter.asAny()
-        && lhs.id == rhs.id
-        && lhs.previewImage == rhs.previewImage
-    }
     
     // MARK: - Initializer
     public init<F: Filter>(filter: F, name: String, previewImage: CGImage? = nil) {
-        self.filter = filter
+        self.filter = filter.asAny()
         self.name = name
         self.previewImage = previewImage
     }

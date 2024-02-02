@@ -16,7 +16,7 @@ enum LUTLoader {
         
         luts[type]?.forEach { imageName in
             
-            if let image = PlatformImage(named: imageName, in: .module, with: nil)?.cgImage {
+            if let image = PlatformImage.load(image: imageName, from: .module)?.cgImage {
                 filters.append(LUTFilter(name: imageName.replacingOccurrences(of: "_", with: " ").capitalized, image: image))
             }
         }

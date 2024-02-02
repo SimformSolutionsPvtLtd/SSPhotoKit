@@ -10,7 +10,7 @@ import SwiftUI
 
 public enum DrawingHelper {
     
-    public static func createPath(for points: [CGPoint]) -> Path {
+    public static func createPath(for points: [CGPoint], with scale: CGSize = CGSize(width: 1, height: 1)) -> Path {
         var path = Path()
         
         guard let firstPoint = points.first else { return path }

@@ -56,9 +56,9 @@ public class SSPhotoKitEngine : ObservableObject {
         }
     }
     
-//    public func apply<each C: EditingCommand>(commands: repeat (each C)) async {
-//        await repeat apply(each commands)
-//    }
+    public func apply<each C: EditingCommand>(commands: repeat each C) async {
+        repeat await apply(each commands)
+    }
     
     public func undo() {
         undoManager.undo()
@@ -73,6 +73,15 @@ public class SSPhotoKitEngine : ObservableObject {
         initializeImages(with: previewSize)
         redoStack = editingStack.commands
         editingStack.removeAll()
+    }
+    
+    public func createImage() async -> CIImage {
+        let scale = originalImage.size / previewImage.size
+        var commands = editingStack.commands
+        for i in commands.indices {
+            commands[i].scale = scale
+        }
+        return await commands.apply(to: originalImage)
     }
     
     // MARK: - Private Methods

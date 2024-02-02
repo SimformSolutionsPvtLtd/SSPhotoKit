@@ -10,18 +10,44 @@ import CoreImage
 // MARK: - EditingCommand
 public protocol EditingCommand : Hashable {
     
+    var scale: CGSize { get set }
+    
     func apply(to image: CIImage) async -> CIImage
+}
+
+extension EditingCommand {
+    
+    public var scale: CGSize {
+        get {
+            CGSize(width: 1, height: 1)
+        }
+        set { }
+    }
 }
 
 // MARK: - AnyEditingCommand
 public struct AnyEditingCommand : EditingCommand {
     
     public let base: AnyHashable
+    public var scale: CGSize {
+        get {
+            _getScale()
+        }
+        set {
+            _setScale(newValue)
+        }
+    }
+    
+    private let _getScale: () -> CGSize
+    private let _setScale: (CGSize) -> Void
     private let _apply: (CIImage) async -> CIImage
     
     init<E: EditingCommand>(_ editingCommand: E) {
-        base = editingCommand
-        _apply = editingCommand.apply
+        var copy = editingCommand
+        base = copy
+        _getScale = { copy.scale }
+        _setScale = { value in copy.scale = value }
+        _apply = { image in await copy.apply(to: image) }
     }
     
     public func apply(to image: CIImage) async -> CIImage {
@@ -40,6 +66,6 @@ public struct AnyEditingCommand : EditingCommand {
 extension EditingCommand {
     
     public func asAny() -> AnyEditingCommand {
-        AnyEditingCommand(self)
+        (self as? AnyEditingCommand) ?? AnyEditingCommand(self)
     }
 }

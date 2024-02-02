@@ -1,17 +1,11 @@
 //
-//  Line.swift
-//  
+//  Brush.swift
+//  SSPhotoKitEngine
 //
-//  Created by Krunal Patel on 02/01/24.
+//  Created by Krunal Patel on 08/01/24.
 //
 
 import SwiftUI
-
-public struct Line: Hashable {
-    
-    public var path: [CGPoint] = []
-    public let brush: Brush
-}
 
 public struct Brush: Hashable {
    
@@ -87,4 +81,3 @@ extension Brush.Style {
         }
     }
 }
-
