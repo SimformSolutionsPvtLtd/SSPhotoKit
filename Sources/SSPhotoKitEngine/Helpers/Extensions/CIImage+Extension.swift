@@ -18,17 +18,11 @@ extension CIImage {
 // MARK: - Resizing
 extension CIImage {
     
-    public func resizing(_ size: CGSize) -> CIImage {
+    public func resizing(_ newSize: CGSize) -> CIImage {
         
-        let imageWidth = self.size.width
-        let imageHeight = self.size.height
-        let scale: CGFloat
-        
-        if (size.width < size.height) {
-            scale = size.width / imageWidth
-        } else {
-            scale = size.height / imageHeight
-        }
+        let widthRatio = newSize.width / size.width
+        let heightRatio = newSize.height / size.height
+        let scale = min(widthRatio, heightRatio)
         
         return self.transformed(by: .init(scaleX: scale, y: scale))
             .removingExtentOffset()
@@ -42,6 +36,7 @@ extension CIImage {
         filter.inputImage = self
         filter.aspectRatio = Float(aspectRatio)
         filter.scale = Float(scale)
+        
         
         guard let outputImage = filter.outputImage else { return self }
         

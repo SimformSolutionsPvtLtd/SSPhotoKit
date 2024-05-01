@@ -19,7 +19,7 @@ extension EditingCommand {
     
     public var scale: CGSize {
         get {
-            CGSize(width: 1, height: 1)
+            .one
         }
         set { }
     }
@@ -29,6 +29,7 @@ extension EditingCommand {
 public struct AnyEditingCommand : EditingCommand {
     
     public let base: AnyHashable
+//    public let type: (any EditingCommand).Type
     public var scale: CGSize {
         get {
             _getScale()
@@ -45,6 +46,7 @@ public struct AnyEditingCommand : EditingCommand {
     init<E: EditingCommand>(_ editingCommand: E) {
         var copy = editingCommand
         base = copy
+        
         _getScale = { copy.scale }
         _setScale = { value in copy.scale = value }
         _apply = { image in await copy.apply(to: image) }
@@ -60,6 +62,10 @@ public struct AnyEditingCommand : EditingCommand {
     
     public func hash(into hasher: inout Hasher) {
         base.hash(into: &hasher)
+    }
+    
+    public func isType<T>(of: T.Type) -> Bool {
+        return base is T
     }
 }
 

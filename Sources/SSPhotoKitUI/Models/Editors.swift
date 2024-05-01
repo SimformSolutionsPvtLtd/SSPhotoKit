@@ -5,6 +5,8 @@
 //  Created by Krunal Patel on 02/01/24.
 //
 
+import SSPhotoKitEngine
+
 enum Editor : String, CaseIterable, Identifiable {
     
     case crop, adjustment, filter, detail, markup, none
@@ -25,6 +27,28 @@ enum Editor : String, CaseIterable, Identifiable {
             return "pencil.tip.crop.circle"
         case .none:
             return ""
+        }
+    }
+}
+
+extension Editor {
+    
+    static func getAllowedEditors(with options: EditorConfiguration.AllowedEditorOptions) -> [Editor] {
+        Editor.allCases.filter { editor in
+            switch editor {
+            case .crop where options.contains(.crop):
+                true
+            case .adjustment where options.contains(.adjustment):
+                true
+            case .filter where options.contains(.filter):
+                true
+            case .detail where options.contains(.detail):
+                true
+            case .markup where options.contains(.markup):
+                true
+            default:
+                false
+            }
         }
     }
 }
@@ -82,6 +106,24 @@ enum Adjustment : String, CustomStringConvertible, CaseIterable, Identifiable {
     }
 }
 
+extension Adjustment {
+    
+    static func getAllowedAdjustments(with options: AdjustmentConfiguration.AllowedAdjustmentOptions) -> [Adjustment] {
+        Adjustment.allCases.filter { adjustment in
+            switch adjustment {
+            case .light where !options.isDisjoint(with: .light):
+                true
+            case .color:
+                false
+            case .blur where options.contains(.blur):
+                true
+            default:
+                false
+            }
+        }
+    }
+}
+
 enum LightAdjustment : String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case brightness, contrast, saturation, hue
@@ -116,6 +158,25 @@ enum LightAdjustment : String, CustomStringConvertible, CaseIterable, Identifiab
     }
 }
 
+extension LightAdjustment {
+    
+    static func getAllowedLightAdjustments(with options: AdjustmentConfiguration.AllowedAdjustmentOptions) -> [LightAdjustment] {
+        LightAdjustment.allCases.filter { adjustment in
+            switch adjustment {
+            case .brightness where options.contains(.brightness):
+                true
+            case .contrast where options.contains(.contrast):
+                true
+            case .saturation where options.contains(.saturation):
+                true
+            case .hue where options.contains(.hue):
+                true
+            default:
+                false
+            }
+        }
+    }
+}
 
 enum Detail : String, CustomStringConvertible, CaseIterable, Identifiable {
     
@@ -164,6 +225,24 @@ enum Markup : String, CustomStringConvertible, CaseIterable, Identifiable {
             "photo.fill"
         case .none:
             ""
+        }
+    }
+}
+
+extension Markup {
+    
+    static func getAllowedMarkups(with options: MarkupConfiguration.AllowedMarkupOptions) -> [Markup] {
+        Markup.allCases.filter { markup in
+            switch markup {
+            case .drawing where options.contains(.drawing):
+                true
+            case .text where options.contains(.text):
+                true
+            case .sticker where options.contains(.sticker):
+                true
+            default:
+                false
+            }
         }
     }
 }

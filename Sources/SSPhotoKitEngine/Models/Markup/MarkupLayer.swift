@@ -94,4 +94,28 @@ extension MarkupLayer {
         }
         
     }
+    
+    public var item: any MarkupItem {
+        get {
+            switch self {
+            case .text(let textMarkupItem):
+                return textMarkupItem
+            case .drawing(let drawingMarkupItem):
+                return drawingMarkupItem
+            case .sticker(let stickerMarkupItem):
+                return stickerMarkupItem
+            }
+        }
+        
+        set {
+            switch self {
+            case .text(let textMarkupItem):
+                text = (newValue as? TextMarkupItem) ?? textMarkupItem
+            case .drawing(let drawingMarkupItem):
+                drawing = (newValue as? DrawingMarkupItem) ?? drawingMarkupItem
+            case .sticker(let stickerMarkupItem):
+                sticker = (newValue as? StickerMarkupItem) ?? stickerMarkupItem
+            }
+        }
+    }
 }

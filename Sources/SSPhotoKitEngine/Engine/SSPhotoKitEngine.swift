@@ -12,9 +12,10 @@ public class SSPhotoKitEngine : ObservableObject {
     
     // MARK: - Vars & Lets
     public let originalImage: CIImage
+    public var configuration: EngineConfiguration
     @Published public private(set) var previewImage: CIImage!
-    @Published public private(set) var previewCGImage: CGImage!
-    @Published public private(set) var previewPlatformImage: PlatformImage!
+    @Published public private(set) var previewCGImage: CGImage?
+    @Published public private(set) var previewPlatformImage: PlatformImage?
     
     public var canUndo: Bool {
         !editingStack.isEmpty
@@ -35,14 +36,13 @@ public class SSPhotoKitEngine : ObservableObject {
     private var editingStack = EditingCommandStack()
     private var redoStack = EditingCommandStack()
     private var originalPreviewImage: CIImage!
-    private let previewSize: CGSize
     
     private lazy var ciContext: CIContext = {
         if let device = MTLCreateSystemDefaultDevice() {
-            return CIContext(mtlDevice: device)
+            return CIContext(mtlDevice: device, options: [.cacheIntermediates: false])
         } else {
             EngineLogger.debug("Can't create Metal device, switching to default context.")
-            return CIContext()
+            return CIContext(options: [.cacheIntermediates: false])
         }
     }()
     
@@ -67,10 +67,11 @@ public class SSPhotoKitEngine : ObservableObject {
     }
     
     public func reset() {
-        EngineLogger.info("Reseting engine to initial state.")
-        initializeImages(with: previewSize)
-        redoStack.removeAll()
-        editingStack.removeAll()
+        Task {
+            await initializeImages(with: configuration.previewSize)
+            redoStack.removeAll()
+            editingStack.removeAll()
+        }
     }
     
     public func createImage() async -> CIImage {
@@ -82,14 +83,23 @@ public class SSPhotoKitEngine : ObservableObject {
         return await commands.apply(to: originalImage)
     }
     
-    // MARK: - Private Methods
-    private func initializeImages(with size: CGSize) {
-        originalPreviewImage = originalImage.resizing(size)
-        previewImage = originalPreviewImage
-        updateImages()
+    public func createPlatformImage() async -> PlatformImage? {
+        let image = await createImage()
+        guard let cgImage = ciContext.createCGImage(image, from: image.extent) else {
+            return nil
+        }
+        
+        return PlatformImage(cgImage: cgImage)
     }
     
-    private func updateImages() {
+    // MARK: - Private Methods
+    private func initializeImages(with size: CGSize) async {
+        originalPreviewImage = originalImage.resizing(size)
+        previewImage = originalPreviewImage
+        await updateImages()
+    }
+    
+    private func updateImages() async {
         if let cgImage = previewImage.cgImage ?? ciContext.createCGImage(previewImage, from: previewImage.extent) {
             previewCGImage = cgImage
             previewPlatformImage = PlatformImage(cgImage: cgImage)
@@ -103,13 +113,16 @@ public class SSPhotoKitEngine : ObservableObject {
         await editingStack.commands.asyncForEach { command in
             await previewImage = command.apply(to: previewImage)
         }
-        updateImages()
+        await updateImages()
     }
     
     // MARK: - Initializer
-    public init(image: CIImage, previewSize: CGSize) {
+    public init(image: CIImage, previewSize: CGSize, configuration: EngineConfiguration = .init(previewSize: .zero)) {
+        self.configuration = configuration
+        self.configuration.previewSize = previewSize
         originalImage = image
-        self.previewSize = previewSize
-        initializeImages(with: previewSize)
+        Task {
+            await initializeImages(with: previewSize)
+        }
     }
 }

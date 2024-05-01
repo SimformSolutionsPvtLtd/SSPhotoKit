@@ -9,6 +9,11 @@ import CoreImage
 
 public struct MultiEditingCommand : EditingCommand {
     
+    public var scale: CGSize = .one {
+        didSet {
+            updateCommandsScale()
+        }
+    }
     public var commands: [AnyEditingCommand] = []
         
     public func apply(to image: CIImage) async -> CIImage {
@@ -22,7 +27,14 @@ public struct MultiEditingCommand : EditingCommand {
             .cropped(to: copy.extent)
     }
     
+    private mutating func updateCommandsScale() {
+        for i in commands.indices {
+            commands[i].scale = scale
+        }
+    }
+    
     public init<each C: EditingCommand>(_ commands: repeat each C) {
         repeat self.commands.append((each commands).asAny())
+        updateCommandsScale()
     }
 }

@@ -10,6 +10,7 @@ import SSPhotoKitEngine
 
 struct LightAdjustmentControl: View {
     
+    @Environment(\.adjustmentConfiguration) private var config: AdjustmentConfiguration
     @Binding var colorFilter: ColorFilter
     @Binding var hueFilter: HueFilter
     let onEditingChange: (LightAdjustment, Bool) -> Void
@@ -18,11 +19,10 @@ struct LightAdjustmentControl: View {
         ScrollView {
             
             VStack {
-                ForEach(LightAdjustment.allCases) { adjustment in
+                ForEach(LightAdjustment.getAllowedLightAdjustments(with: config.allowedAdjustments)) { adjustment in
                     getSlider(for: adjustment)
                 }
-            }
-            
+            }            
         }
     }
 }
@@ -35,41 +35,41 @@ extension LightAdjustmentControl {
         switch adjustment {
             
         case .brightness:
-            SSSlider(value: $colorFilter.brightness.value,
-                     in: colorFilter.brightness.range) {
+            SSSlider(value: $colorFilter.brightness,
+                     in: colorFilter.$brightness) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(colorFilter.brightness.value)")
+                Text("\(colorFilter.brightness)")
             } onEditingChanged: { started in
                 onEditingChange(.brightness, started)
             }
             
         case .contrast:
-            SSSlider(value: $colorFilter.contrast.value,
-                     in: colorFilter.contrast.range) {
+            SSSlider(value: $colorFilter.contrast,
+                     in: colorFilter.$contrast) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(colorFilter.contrast.value)")
+                Text("\(colorFilter.contrast)")
             } onEditingChanged: { started in
                 onEditingChange(.contrast, started)
             }
             
         case .saturation:
-            SSSlider(value: $colorFilter.saturation.value,
-                     in: colorFilter.saturation.range) {
+            SSSlider(value: $colorFilter.saturation,
+                     in: colorFilter.$saturation) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(colorFilter.saturation.value)")
+                Text("\(colorFilter.saturation)")
             } onEditingChanged: { started in
                 onEditingChange(.saturation, started)
             }
             
         case .hue:
-            SSSlider(value: $hueFilter.hue.value,
-                     in: hueFilter.hue.range) {
+            SSSlider(value: $hueFilter.hue,
+                     in: hueFilter.$hue) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(hueFilter.hue.value)")
+                Text("\(hueFilter.hue)")
             } onEditingChanged: { started in
                 onEditingChange(.hue, started)
             }

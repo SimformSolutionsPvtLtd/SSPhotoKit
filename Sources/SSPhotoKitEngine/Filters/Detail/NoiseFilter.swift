@@ -13,14 +13,14 @@ public struct NoiseFilter : Filter {
     public var name: String = "Noise"
     let filter = CIFilter.noiseReduction()
     
-    public var noiseLevel: FilterAttribute
-    public var sharpness: FilterAttribute
+    @FilterAttribute public var noiseLevel: Float
+    @FilterAttribute public var sharpness: Float
     
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         
-        filter.noiseLevel = noiseLevel.value
-        filter.sharpness = sharpness.value
+        filter.noiseLevel = noiseLevel
+        filter.sharpness = sharpness
         
         guard let outputImage = filter.outputImage else {
             EngineLogger.error("Can't apply \(String(describing: self))")
@@ -44,8 +44,8 @@ public struct NoiseFilter : Filter {
     
     // MARK: - Initializer
     public init() {
-        self.noiseLevel = filter.makeAttribute(for: kCIInputNoiseLevelKey)
-        self.sharpness = filter.makeAttribute(for: kCIInputSharpnessKey)
+        self._noiseLevel = filter.makeAttribute(for: kCIInputNoiseLevelKey)
+        self._sharpness = filter.makeAttribute(for: kCIInputSharpnessKey)
     }
 }
 

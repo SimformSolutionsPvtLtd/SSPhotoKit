@@ -1,6 +1,6 @@
 //
 //  MarkupEditor.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -10,45 +10,37 @@ import SSPhotoKitEngine
 
 struct MarkupEditor: View {
     
+    // MARK: - Vars & Lets
+    @Environment(\.markupConfiguration) private var config: MarkupConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var markupViewModel = MarkupEditorViewModel()
+    
+    @State private var isInitial = true
+    private var isMarkupEditor: Bool { markupViewModel.currentMarkup != .none }
     
     private var previewSize: CGSize {
         engine.previewImage.extent.size
     }
     
+    // MARK: - Body
     var body: some View {
         
-        VStack {
-            Spacer()
-            
+        ZStack {
             markupView
-            
-            Spacer()
-            
-            if markupViewModel.currentMarkup == .none {
-                markupMenu
-                
-                Divider()
-                    .frame(height: 20)
-                
-                FooterMenu(markupViewModel.currentMarkup.description,
-                           disableOptions: getFooterDisableOptions()) {
-                    Task {
-                        let command = markupViewModel.createCommand { layers in
-                            MarkupLayerView(layers: layers)
-                        }
-                        await engine.apply(command)
-                        model.resetEditor()
-                    }
-                } onDiscard: {
-                    model.resetEditor()
-                }
+        }
+        .environmentObject(markupViewModel)
+        .overlay(alignment: .bottom) {
+            if !isMarkupEditor {
+                footerMenu
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        
+        .onPreferenceChange(PreviewOffsetPreference.self) { value in
+            markupViewModel.offset = value
+        }
+        .onPreferenceChange(PreviewScalePreference.self) { value in
+            markupViewModel.scale = value
+        }
     }
 }
 
@@ -63,6 +55,7 @@ extension MarkupEditor {
             } label: {
                 Image(systemName: "arrow.down.to.line")
             }
+            .foregroundStyle(markupViewModel.canArrange(.moveDown) ? .blue : .gray)
             .disabled(!markupViewModel.canArrange(.moveDown))
             
             Button {
@@ -70,54 +63,85 @@ extension MarkupEditor {
             } label: {
                 Image(systemName: "arrow.up.to.line")
             }
+            .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue : .gray)
             .disabled(!markupViewModel.canArrange(.moveUp))
         }
+    }
+    
+    @ViewBuilder
+    private var footerMenu: some View {
+        VStack {
+            markupMenu
+                .environmentObject(markupViewModel)
+            
+            Divider()
+                .frame(height: 20)
+            
+            FooterMenu(markupViewModel.currentMarkup.description,
+                       disableOptions: getFooterDisableOptions()) {
+                Task {
+                    let command = markupViewModel.createCommand { layers in
+                        MarkupLayerView(layers: layers)
+                    }
+                    await engine.apply(command)
+                    model.resetEditor()
+                }
+            } onDiscard: {
+                model.resetEditor()
+            }
+        }
+        .background()
     }
     
     @ViewBuilder
     private var markupView: some View {
         switch markupViewModel.currentMarkup {
         case .drawing:
-            DrawingMarkup(layers: $markupViewModel.dirtyLayers,
-                          index: $markupViewModel.currentLayerIndex,
-                          onSave: handleMarkupSave,
-                          onDiscard: handleMarkupDiscard) {
-                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
+            DrawingMarkup {
+                imagePreview
             } menu: {
                 rearrangeMenu
             }
             
         case .text:
-            TextMarkup(layers: $markupViewModel.dirtyLayers,
-                       index: $markupViewModel.currentLayerIndex,
-                       onSave: handleMarkupSave,
-                       onDiscard: handleMarkupDiscard) {
-                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
+            TextMarkup {
+                imagePreview
             } menu: {
                 rearrangeMenu
             }
             
         case .sticker:
-            StickerMarkup(layers: $markupViewModel.dirtyLayers,
-                          index: $markupViewModel.currentLayerIndex,
-                          onSave: handleMarkupSave,
-                          onDiscard: handleMarkupDiscard) {
-                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
+            StickerMarkup {
+                imagePreview
             } menu: {
                 rearrangeMenu
             }
             
         case .none:
-            Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
-                .overlay {
+            imagePreview
+        }
+    }
+    
+    @ViewBuilder
+    private var imagePreview: some View {
+        if let previewImage = engine.previewPlatformImage {
+            ImagePreview(imageSource: .platformImage(previewImage),
+                         gesturesEnabled: !isMarkupEditor) {
+                if !isMarkupEditor {
                     MarkupLayerView(layers: markupViewModel.layers, onSelect: handleSelection)
                 }
+            }.onAppear {
+                isInitial = false
+            }
+        } else {
+            ProgressView()
+            
         }
     }
     
     @ViewBuilder
     private var markupMenu: some View {
-        ScrollableTabBar(selection: $markupViewModel.currentMarkup, items: Markup.allCases.filter { $0 != .none}) { item in
+        ScrollableTabBar(selection: $markupViewModel.currentMarkup, items: Markup.getAllowedMarkups(with: config.allowedMarkups)) { item in
             VStack(spacing: 6) {
                 Image(systemName: item.icon)
                     .font(.system(size: 26, design: .rounded))

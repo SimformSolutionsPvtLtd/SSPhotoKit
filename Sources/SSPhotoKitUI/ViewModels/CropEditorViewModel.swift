@@ -10,29 +10,25 @@ import SSPhotoKitEngine
 
 class CropEditorViewModel : ObservableObject {
     
-    var cropRatio: CropRatio {
-        didSet {
-            updateSize()
-        }
-    }
-    var isInverted: Bool = false {
-        didSet {
-            updateSize()
-        }
-    }
-    
     @Published var size: CGSize = .zero
     @Published var currentEdit: Crop = .aspect
     
-    var frameSize: CGSize = .zero
     @Published var offset: CGSize = .zero
-    @Published var scale: CGSize = CGSize(width: 1, height: 1)
+    @Published var scale: CGSize = .one
     @Published var lastOffset: CGSize = .zero
     @Published var lastScale: CGSize = .zero
     
     @Published var rotation: CGFloat = .zero
     @Published var horizontalFlipped: Bool = false
     @Published var verticalFlipped: Bool = false
+    
+    var frameSize: CGSize = .zero
+    var currentRatio: AspectRatio = .defaults[0] {
+        didSet { updateSize() }
+    }
+    var isInverted: Bool = false {
+        didSet { updateSize() }
+    }
     
     var flipScale: CGSize {
         CGSize(width: horizontalFlipped ? -1 : 1,
@@ -41,7 +37,7 @@ class CropEditorViewModel : ObservableObject {
     
     // MARK: - Methods
     func updateSize() {
-        let ratio = isInverted ? cropRatio.ratio.inverted() : cropRatio.ratio
+        let ratio = isInverted ? currentRatio.inverted() : currentRatio
         
         let minSize = min(frameSize.width, frameSize.height)
         
@@ -66,17 +62,9 @@ class CropEditorViewModel : ObservableObject {
         
         let rect = CGRect(x: startX, y: startY, width: cropWidth, height: cropHeight)
         var command = CropEditingCommand(rect: rect)
-        command.angle = deg2rad(rotation)
+        command.angle = rotation.toRadian()
+        
         command.flipScale = flipScale
         return command
-    }
-    
-    func deg2rad(_ number: Double) -> Double {
-        return number * .pi / 180
-    }
-    
-    // MARK: - Initializer
-    init(cropRatio: CropRatio = .golden) {
-        self.cropRatio = cropRatio
     }
 }

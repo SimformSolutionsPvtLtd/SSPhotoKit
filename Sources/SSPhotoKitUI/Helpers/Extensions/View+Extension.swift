@@ -1,11 +1,47 @@
 //
-//  File.swift
-//  
+//  View+Extension.swift
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import SwiftUI
+import SSPhotoKitEngine
+
+// MARK: - Configurations
+extension View {
+    
+    // MARK: - Editor Configuration
+    public func editorConfig(allowedEditors: EditorConfiguration.AllowedEditorOptions = .all) -> some View {
+        environment(\.editorConfiguration, .init(allowedEditors: allowedEditors))
+    }
+    
+    // MARK: - Crop Configuration
+    public func cropConfig(ratios: [AspectRatio],
+                           options: CropConfiguration.RatioOptions = .all,
+                           labelType: CropConfiguration.LabelType = .text) -> some View {
+        environment(\.cropConfiguration, .init(customRatios: ratios, ratioOptions: options, labelType: labelType))
+    }
+    
+    // MARK: - Adjustment Configuration
+    public func adjustmentConfig(allowedAdjustments: AdjustmentConfiguration.AllowedAdjustmentOptions = .all) -> some View {
+        environment(\.adjustmentConfiguration, .init(allowedAdjustments: allowedAdjustments))
+    }
+    
+    // MARK: - Markup Configuration
+    public func filterConfig(filterGroups: GroupedFilters = [:],
+                             filterOptions: FilterConfiguration.FilterOptions = .all) -> some View {
+        environment(\.filterConfiguration, .init(customFilterGroups: filterGroups, filterOptions: filterOptions))
+    }
+    
+    // MARK: - Markup Configuration
+    public func markupConfig(stickers: [PlatformImage] = [],
+                             stickerOptions: MarkupConfiguration.StickerOptions = .gallery,
+                             allowedMarkups: MarkupConfiguration.AllowedMarkupOptions = .all) -> some View {
+        environment(\.markupConfiguration, .init(customStickers: stickers, stickerOptions: stickerOptions, allowedMarkups: allowedMarkups))
+    }
+}
+
 
 // MARK: - Bounds
 extension View {

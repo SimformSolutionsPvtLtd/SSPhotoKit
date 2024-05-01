@@ -1,6 +1,6 @@
 //
 //  DrawingMarkup.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 05/01/24.
 //
@@ -10,60 +10,51 @@ import SSPhotoKitEngine
 
 struct DrawingMarkup<Content, Menu>: View where Content : View, Menu : View {
     
-    @Binding var layers: [MarkupLayer]
-    @Binding var index: Int?
-    let onDiscard: () -> Void
-    let onSave: () -> Void
-    let rearrangeMenu: Menu?
-    @ViewBuilder var content: Content
+    @EnvironmentObject private var model: MarkupEditorViewModel
     
+    // MARK: - Vars & Lets
+    private let rearrangeMenu: Menu?
+    private let content: Content
+    
+    @State private var frame: CGRect = .zero
     @State private var color: Color = .blue
     @State private var strokeWidth: CGFloat = 10
     @State private var isInitial: Bool = true
     @State private var isEraser: Bool = false
     
+    // MARK: - Body
     var body: some View {
         
-        VStack {
-            Spacer()
-            
+        ZStack {
             content
                 .overlay {
-                    MarkupLayerView(layers: layers)
+                    MarkupLayerView(layers: model.dirtyLayers)
                 }
                 .highPriorityGesture(drawGesture)
-                     
-            Spacer()
-            
-            drawingMenu
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .top) {
             headerMenu
         }
+        .overlay(alignment: .bottom) {
+            drawingMenu
+        }
         .onAppear {
-            if index == nil {
-                index = layers.count
-                layers.append(.drawing(.init()))
+            model.setupEditingLayers()
+            if model.currentLayerIndex == nil {
+                model.currentLayerIndex = model.dirtyLayers.count
+                model.dirtyLayers.append(.drawing(.init()))
             }
         }
     }
     
     // MARK: - Initializer
-    init(layers: Binding<[MarkupLayer]>, index: Binding<Int?>, onSave: @escaping () -> Void, onDiscard: @escaping () -> Void, @ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
-        self._layers = layers
-        self._index = index
-        self.onSave = onSave
-        self.onDiscard = onDiscard
+    init(@ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
         self.content = content()
         self.rearrangeMenu = menu()
     }
     
-    init(layers: Binding<[MarkupLayer]>, index: Binding<Int?>, onSave: @escaping () -> Void, onDiscard: @escaping () -> Void, @ViewBuilder content: () -> Content) where Menu == EmptyView {
-        self._layers = layers
-        self._index = index
-        self.onSave = onSave
-        self.onDiscard = onDiscard
+    init(@ViewBuilder content: () -> Content) where Menu == EmptyView {
         self.rearrangeMenu = nil
         self.content = content()
     }
@@ -85,7 +76,7 @@ extension DrawingMarkup {
             }
             .buttonStyle(.borderedProminent)
             .tint(isEraser ? .blue : .gray)
-                
+            
             SSSlider(value: $strokeWidth, in: 1...100)
         }
         .padding(.horizontal, 16)
@@ -98,11 +89,11 @@ extension DrawingMarkup {
     private var headerMenu: some View {
         HStack {
             Button {
-                onDiscard()
+                discard()
             } label: {
                 Image(systemName: "xmark")
             }
-
+            
             Spacer()
             
             if let rearrangeMenu {
@@ -112,12 +103,14 @@ extension DrawingMarkup {
             Spacer()
             
             Button {
-                onSave()
+                save()
             } label: {
                 Image(systemName: "checkmark")
             }
         }
+        .buttonStyle(.primary)
         .padding(.horizontal, 16)
+        .background()
     }
 }
 
@@ -127,22 +120,32 @@ extension DrawingMarkup {
     private var drawGesture: some Gesture {
         DragGesture(minimumDistance: 1, coordinateSpace: .local)
             .onChanged { drag in
-                guard let index else { return }
-                
-                let newLocation = drag.location
+                guard let index = model.currentLayerIndex else { return }
+                let newLocation = drag.location //- frame.origin
                 
                 if isInitial {
                     var line = Line(brush: Brush(style: isEraser ? .eraser : .brush, width: strokeWidth, color: color))
                     line.path.append(newLocation)
-                    layers[index].drawing.lines.append(line)
+                    model.dirtyLayers[index].drawing.lines.append(line)
                     isInitial = false
-                } else if var line = layers[index].drawing.lines.last {
+                } else if var line = model.dirtyLayers[index].drawing.lines.last {
                     line.path.append(newLocation)
-                    layers[index].drawing.lines[layers[index].drawing.lines.count - 1] = line
+                    model.dirtyLayers[index].drawing.lines[model.dirtyLayers[index].drawing.lines.count - 1] = line
                 }
             }
             .onEnded { drag in
                 isInitial = true
             }
+    }
+    
+    private func discard() {
+        model.reset()
+    }
+    
+    private func save() {
+        guard let index = model.currentLayerIndex else { return }
+        
+        model.commit()
+        model.reset()
     }
 }

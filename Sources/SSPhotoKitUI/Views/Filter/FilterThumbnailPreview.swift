@@ -23,13 +23,10 @@ struct FilterThumbnailPreview: View {
         } label: {
             if let previewImage = filter.previewImage {
                 Image(platformImage: PlatformImage(cgImage: previewImage))
-                    .resizable()
-                    .scaledToFill()
             } else {
                 ProgressView()
             }
         }
-        
         .frame(width: 80, height: 80)
         .overlay(alignment: .bottom) {
             Text(filter.name)

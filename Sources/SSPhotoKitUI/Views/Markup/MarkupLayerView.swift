@@ -1,6 +1,6 @@
 //
 //  MarkupLayerView.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -10,11 +10,13 @@ import SSPhotoKitEngine
 
 struct MarkupLayerView<Overlay: View>: View {
     
-    var layers: [MarkupLayer]
-    var selection: Int? = nil
-    var selectionOverlay: Overlay?
-    var onSelect: ((Markup, Int) -> Void)?
+    // MARK: - Vars & Lets
+    private let layers: [MarkupLayer]
+    private let selection: Int?
+    private let selectionOverlay: Overlay?
+    private let onSelect: ((Markup, Int) -> Void)?
     
+    // MARK: - Body
     var body: some View {
         ZStack {
             ForEach(layers.indices, id: \.self) { index in
@@ -63,6 +65,7 @@ extension MarkupLayerView {
     private func getTextView(_ data: TextMarkupItem, isSelected: Bool = false) -> some View {
         Text(data.text)
             .font(.custom(data.fontName, size: data.fontSize))
+            .foregroundStyle(data.color)
             .minimumScaleFactor(.leastNonzeroMagnitude)
             .foregroundColor(.white)
             .frame(width: data.size.width, height: data.size.height)
@@ -103,5 +106,4 @@ extension MarkupLayerView {
             .rotationEffect(.degrees(data.rotation))
             .position(data.origin)
     }
-    
 }

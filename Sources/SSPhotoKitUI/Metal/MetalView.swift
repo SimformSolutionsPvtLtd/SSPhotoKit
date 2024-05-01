@@ -59,17 +59,20 @@ final class Renderer: NSObject, MTKViewDelegate, ObservableObject {
             return
         }
         
+        let offset = CGPoint(x: (view.drawableSize.width - image.extent.size.width) / 2,
+                             y: (view.drawableSize.height - image.extent.size.height) / 2)
+        
         do {
             // Need to optimize for CPU usage.
             try context.startTask(toRender: image,
                                   from: image.extent,
                                   to: makeRenderDestination(for: view, drawable: drawable, commandBuffer: commandBuffer),
-                                  at: .zero)
-//            context.render(image,
-//                           to: drawable.texture,
-//                           commandBuffer: commandBuffer,
-//                           bounds: image.extent,
-//                           colorSpace: colorSpace)
+                                  at: offset)
+            //            context.render(image,
+            //                           to: drawable.texture,
+            //                           commandBuffer: commandBuffer,
+            //                           bounds: image.extent,
+            //                           colorSpace: colorSpace)
         } catch {
             print(error.localizedDescription)
             return
@@ -83,21 +86,21 @@ final class Renderer: NSObject, MTKViewDelegate, ObservableObject {
     init(image: CIImage, device: MTLDevice? = nil) {
         
         guard let device = device ?? MTLCreateSystemDefaultDevice(),
-        let commandQueue = device.makeCommandQueue() else {
+              let commandQueue = device.makeCommandQueue() else {
             fatalError("Failed to create metal renderer.")
         }
-
+        
         self.device = device
         self.commandQueue = commandQueue
         self.context = CIContext(mtlDevice: device, options: [.cacheIntermediates: false])
-
+        
         self.image = image
         super.init()
     }
 }
 
 extension Renderer {
-        
+    
     func updateImage(_ image: CIImage) {
         self.image = image
     }

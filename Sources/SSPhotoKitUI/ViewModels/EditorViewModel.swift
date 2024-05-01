@@ -14,18 +14,21 @@ class EditorViewModel : ObservableObject {
     
     // MARK: - Vars & Lets
     @Published var currentEditor: Editor = .none
-    var can: Set<AnyCancellable> = []
+    @Published var isLoading: Bool = false
     
+    @Published var previewScale: CGSize = .one
+    @Published var previewOffset: CGSize = .zero
+    @Published var previewFrame: CGRect = .zero
+    @Published var isInitial = true
     
     var shouldShowTabBar: Bool {
         currentEditor == .none
     }
     
-    let editors = Array(Editor.allCases.filter { $0 != .none })
-    
     // MARK: - Methods
     func resetEditor() {
         currentEditor = .none
+        objectWillChange.send()
     }
     
 //    // MARK: - Initializer

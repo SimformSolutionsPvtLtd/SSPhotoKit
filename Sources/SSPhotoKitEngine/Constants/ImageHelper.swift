@@ -53,3 +53,7 @@ extension PlatformImage {
     
 }
 
+extension PlatformImage: Identifiable {
+    
+    public var id: Int { hashValue }
+}

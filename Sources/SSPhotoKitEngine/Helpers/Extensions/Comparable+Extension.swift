@@ -1,6 +1,6 @@
 //
 //  Comparable.swift
-//  
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -13,7 +13,7 @@ extension Comparable {
     ///
     /// - Parameter limits: The range containing upper and lower bound.
     /// - Returns: A new clamped value within given range.
-    func clamped(to limits: ClosedRange<Self>) -> Self {
+    public func clamped(to limits: ClosedRange<Self>) -> Self {
         return min(max(self, limits.lowerBound), limits.upperBound)
     }
 }

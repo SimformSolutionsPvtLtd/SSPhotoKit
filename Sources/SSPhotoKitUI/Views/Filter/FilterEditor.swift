@@ -1,6 +1,6 @@
 //
 //  FilterEditor.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -10,6 +10,7 @@ import SSPhotoKitEngine
 
 struct FilterEditor: View {
     
+    @Environment(\.filterConfiguration) private var config: FilterConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var filterViewModel: FilterEditorViewModel
@@ -21,35 +22,17 @@ struct FilterEditor: View {
     
     var body: some View {
         
-        VStack {
-            Spacer()
-            
-            MetalView(image: $filterViewModel.currentImage)
-                .frame(width: imageSize.width, height: imageSize.height)
-            
-            Spacer()
-            
-            intensityController
-            
-            categories
-            
-            filtersPreview
-            
-            Divider()
-                .frame(height: 20)
-            
-            FooterMenu(filterViewModel.currentCategory.rawValue) {
-                Task {
-                    await engine.apply(filterViewModel.createCommand())
-                    model.resetEditor()
-                }
-            } onDiscard: {
-                model.resetEditor()
-            }
+        ZStack {
+            ImagePreview(imageSource: .coreImage($filterViewModel.currentImage), gesturesEnabled: false)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .bottom) {
+            footerView
+        }
         .task {
-            await filterViewModel.loadPreview()
+            await filterViewModel.loadPreview(with: config.filterGroups)
+            if let category = config.filterGroups.first?.key {
+                filterViewModel.currentCategory = category
+            }
         }
         .onReceive(filterViewModel.$currentFilter) { _ in
             task?.cancel()
@@ -76,6 +59,30 @@ struct FilterEditor: View {
 extension FilterEditor {
     
     @ViewBuilder
+    private var footerView: some View {
+        VStack {
+            intensityController
+            
+            categories
+            
+            filtersPreview
+            
+            Divider()
+                .frame(height: 20)
+            
+            FooterMenu(filterViewModel.currentCategory) {
+                Task {
+                    await engine.apply(filterViewModel.createCommand())
+                    model.resetEditor()
+                }
+            } onDiscard: {
+                model.resetEditor()
+            }
+        }
+        .background()
+    }
+    
+    @ViewBuilder
     private var intensityController: some View {
         SSSlider(value: $filterViewModel.currentFilter.filter.intensity)
             .opacity(filterViewModel.currentFilter == filterViewModel.original ? 0 : 1)
@@ -85,15 +92,15 @@ extension FilterEditor {
     private var categories: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(FilterCategory.allCases) { category in
+                ForEach(config.filterGroups.keys.sorted(by: >), id: \.self) { category in
                     Button {
                         filterViewModel.currentCategory = category
                     } label: {
-                        Text(category.rawValue)
+                        Text(category)
                             .font(.subheadline)
                     }
+                    .buttonStyle(.primary)
                     .foregroundStyle(filterViewModel.currentCategory == category ? .white : .gray)
-
                 }
             }
         }

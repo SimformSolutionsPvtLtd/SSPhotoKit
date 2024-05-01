@@ -7,66 +7,68 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E87CE1592B4411CD00143D5D /* SSPhotoKitEngine in Frameworks */ = {isa = PBXBuildFile; productRef = E87CE1582B4411CD00143D5D /* SSPhotoKitEngine */; };
-		E87CE15B2B4411CD00143D5D /* SSPhotoKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = E87CE15A2B4411CD00143D5D /* SSPhotoKitUI */; };
-		E8C26CB22B43E91D00EC7CDE /* SSPhotoKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C26CB12B43E91D00EC7CDE /* SSPhotoKitDemoApp.swift */; };
-		E8C26CB42B43E91D00EC7CDE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C26CB32B43E91D00EC7CDE /* ContentView.swift */; };
-		E8C26CB62B43E91F00EC7CDE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8C26CB52B43E91F00EC7CDE /* Assets.xcassets */; };
-		E8C26CB92B43E91F00EC7CDE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8C26CB82B43E91F00EC7CDE /* Preview Assets.xcassets */; };
+		E8A2283E2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A2283D2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift */; };
+		E8A228402B4D301000BA6B0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A2283F2B4D301000BA6B0D /* ContentView.swift */; };
+		E8A228422B4D301200BA6B0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8A228412B4D301200BA6B0D /* Assets.xcassets */; };
+		E8A228462B4D301200BA6B0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8A228452B4D301200BA6B0D /* Preview Assets.xcassets */; };
+		E8A2284E2B4D30B500BA6B0D /* SSPhotoKitEngine in Frameworks */ = {isa = PBXBuildFile; productRef = E8A2284D2B4D30B500BA6B0D /* SSPhotoKitEngine */; };
+		E8A228502B4D30B500BA6B0D /* SSPhotoKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = E8A2284F2B4D30B500BA6B0D /* SSPhotoKitUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E8C26CAE2B43E91D00EC7CDE /* SSPhotoKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSPhotoKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E8C26CB12B43E91D00EC7CDE /* SSPhotoKitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSPhotoKitDemoApp.swift; sourceTree = "<group>"; };
-		E8C26CB32B43E91D00EC7CDE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		E8C26CB52B43E91F00EC7CDE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E8C26CB82B43E91F00EC7CDE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E8A2283A2B4D301000BA6B0D /* SSPhotoKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSPhotoKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8A2283D2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSPhotoKitDemoApp.swift; sourceTree = "<group>"; };
+		E8A2283F2B4D301000BA6B0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E8A228412B4D301200BA6B0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E8A228432B4D301200BA6B0D /* SSPhotoKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SSPhotoKitDemo.entitlements; sourceTree = "<group>"; };
+		E8A228452B4D301200BA6B0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E8C26CAB2B43E91D00EC7CDE /* Frameworks */ = {
+		E8A228372B4D301000BA6B0D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E87CE15B2B4411CD00143D5D /* SSPhotoKitUI in Frameworks */,
-				E87CE1592B4411CD00143D5D /* SSPhotoKitEngine in Frameworks */,
+				E8A228502B4D30B500BA6B0D /* SSPhotoKitUI in Frameworks */,
+				E8A2284E2B4D30B500BA6B0D /* SSPhotoKitEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E8C26CA52B43E91D00EC7CDE = {
+		E8A228312B4D301000BA6B0D = {
 			isa = PBXGroup;
 			children = (
-				E8C26CB02B43E91D00EC7CDE /* SSPhotoKitDemo */,
-				E8C26CAF2B43E91D00EC7CDE /* Products */,
+				E8A2283C2B4D301000BA6B0D /* SSPhotoKitDemo */,
+				E8A2283B2B4D301000BA6B0D /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		E8C26CAF2B43E91D00EC7CDE /* Products */ = {
+		E8A2283B2B4D301000BA6B0D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E8C26CAE2B43E91D00EC7CDE /* SSPhotoKitDemo.app */,
+				E8A2283A2B4D301000BA6B0D /* SSPhotoKitDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E8C26CB02B43E91D00EC7CDE /* SSPhotoKitDemo */ = {
+		E8A2283C2B4D301000BA6B0D /* SSPhotoKitDemo */ = {
 			isa = PBXGroup;
 			children = (
-				E8C26CB12B43E91D00EC7CDE /* SSPhotoKitDemoApp.swift */,
-				E8C26CB32B43E91D00EC7CDE /* ContentView.swift */,
-				E8C26CB52B43E91F00EC7CDE /* Assets.xcassets */,
-				E8C26CB72B43E91F00EC7CDE /* Preview Content */,
+				E8A2283D2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift */,
+				E8A2283F2B4D301000BA6B0D /* ContentView.swift */,
+				E8A228412B4D301200BA6B0D /* Assets.xcassets */,
+				E8A228432B4D301200BA6B0D /* SSPhotoKitDemo.entitlements */,
+				E8A228442B4D301200BA6B0D /* Preview Content */,
 			);
 			path = SSPhotoKitDemo;
 			sourceTree = "<group>";
 		};
-		E8C26CB72B43E91F00EC7CDE /* Preview Content */ = {
+		E8A228442B4D301200BA6B0D /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				E8C26CB82B43E91F00EC7CDE /* Preview Assets.xcassets */,
+				E8A228452B4D301200BA6B0D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -74,13 +76,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E8C26CAD2B43E91D00EC7CDE /* SSPhotoKitDemo */ = {
+		E8A228392B4D301000BA6B0D /* SSPhotoKitDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E8C26CBC2B43E91F00EC7CDE /* Build configuration list for PBXNativeTarget "SSPhotoKitDemo" */;
+			buildConfigurationList = E8A228492B4D301200BA6B0D /* Build configuration list for PBXNativeTarget "SSPhotoKitDemo" */;
 			buildPhases = (
-				E8C26CAA2B43E91D00EC7CDE /* Sources */,
-				E8C26CAB2B43E91D00EC7CDE /* Frameworks */,
-				E8C26CAC2B43E91D00EC7CDE /* Resources */,
+				E8A228362B4D301000BA6B0D /* Sources */,
+				E8A228372B4D301000BA6B0D /* Frameworks */,
+				E8A228382B4D301000BA6B0D /* Resources */,
 			);
 			buildRules = (
 			);
@@ -88,29 +90,29 @@
 			);
 			name = SSPhotoKitDemo;
 			packageProductDependencies = (
-				E87CE1582B4411CD00143D5D /* SSPhotoKitEngine */,
-				E87CE15A2B4411CD00143D5D /* SSPhotoKitUI */,
+				E8A2284D2B4D30B500BA6B0D /* SSPhotoKitEngine */,
+				E8A2284F2B4D30B500BA6B0D /* SSPhotoKitUI */,
 			);
 			productName = SSPhotoKitDemo;
-			productReference = E8C26CAE2B43E91D00EC7CDE /* SSPhotoKitDemo.app */;
+			productReference = E8A2283A2B4D301000BA6B0D /* SSPhotoKitDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		E8C26CA62B43E91D00EC7CDE /* Project object */ = {
+		E8A228322B4D301000BA6B0D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1510;
 				TargetAttributes = {
-					E8C26CAD2B43E91D00EC7CDE = {
+					E8A228392B4D301000BA6B0D = {
 						CreatedOnToolsVersion = 15.1;
 					};
 				};
 			};
-			buildConfigurationList = E8C26CA92B43E91D00EC7CDE /* Build configuration list for PBXProject "SSPhotoKitDemo" */;
+			buildConfigurationList = E8A228352B4D301000BA6B0D /* Build configuration list for PBXProject "SSPhotoKitDemo" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -118,45 +120,45 @@
 				en,
 				Base,
 			);
-			mainGroup = E8C26CA52B43E91D00EC7CDE;
+			mainGroup = E8A228312B4D301000BA6B0D;
 			packageReferences = (
-				E87CE1572B4411CD00143D5D /* XCLocalSwiftPackageReference ".." */,
+				E8A2284C2B4D30B500BA6B0D /* XCLocalSwiftPackageReference ".." */,
 			);
-			productRefGroup = E8C26CAF2B43E91D00EC7CDE /* Products */;
+			productRefGroup = E8A2283B2B4D301000BA6B0D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E8C26CAD2B43E91D00EC7CDE /* SSPhotoKitDemo */,
+				E8A228392B4D301000BA6B0D /* SSPhotoKitDemo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		E8C26CAC2B43E91D00EC7CDE /* Resources */ = {
+		E8A228382B4D301000BA6B0D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8C26CB92B43E91F00EC7CDE /* Preview Assets.xcassets in Resources */,
-				E8C26CB62B43E91F00EC7CDE /* Assets.xcassets in Resources */,
+				E8A228462B4D301200BA6B0D /* Preview Assets.xcassets in Resources */,
+				E8A228422B4D301200BA6B0D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E8C26CAA2B43E91D00EC7CDE /* Sources */ = {
+		E8A228362B4D301000BA6B0D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8C26CB42B43E91D00EC7CDE /* ContentView.swift in Sources */,
-				E8C26CB22B43E91D00EC7CDE /* SSPhotoKitDemoApp.swift in Sources */,
+				E8A228402B4D301000BA6B0D /* ContentView.swift in Sources */,
+				E8A2283E2B4D301000BA6B0D /* SSPhotoKitDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		E8C26CBA2B43E91F00EC7CDE /* Debug */ = {
+		E8A228472B4D301200BA6B0D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -208,18 +210,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		E8C26CBB2B43E91F00EC7CDE /* Release */ = {
+		E8A228482B4D301200BA6B0D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -265,66 +265,79 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		E8C26CBD2B43E91F00EC7CDE /* Debug */ = {
+		E8A2284A2B4D301200BA6B0D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SSPhotoKitDemo/SSPhotoKitDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SSPhotoKitDemo/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simform.SSPhotoKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		E8C26CBE2B43E91F00EC7CDE /* Release */ = {
+		E8A2284B2B4D301200BA6B0D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SSPhotoKitDemo/SSPhotoKitDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SSPhotoKitDemo/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simform.SSPhotoKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -334,20 +347,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E8C26CA92B43E91D00EC7CDE /* Build configuration list for PBXProject "SSPhotoKitDemo" */ = {
+		E8A228352B4D301000BA6B0D /* Build configuration list for PBXProject "SSPhotoKitDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E8C26CBA2B43E91F00EC7CDE /* Debug */,
-				E8C26CBB2B43E91F00EC7CDE /* Release */,
+				E8A228472B4D301200BA6B0D /* Debug */,
+				E8A228482B4D301200BA6B0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E8C26CBC2B43E91F00EC7CDE /* Build configuration list for PBXNativeTarget "SSPhotoKitDemo" */ = {
+		E8A228492B4D301200BA6B0D /* Build configuration list for PBXNativeTarget "SSPhotoKitDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E8C26CBD2B43E91F00EC7CDE /* Debug */,
-				E8C26CBE2B43E91F00EC7CDE /* Release */,
+				E8A2284A2B4D301200BA6B0D /* Debug */,
+				E8A2284B2B4D301200BA6B0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -355,22 +368,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E87CE1572B4411CD00143D5D /* XCLocalSwiftPackageReference ".." */ = {
+		E8A2284C2B4D30B500BA6B0D /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E87CE1582B4411CD00143D5D /* SSPhotoKitEngine */ = {
+		E8A2284D2B4D30B500BA6B0D /* SSPhotoKitEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SSPhotoKitEngine;
 		};
-		E87CE15A2B4411CD00143D5D /* SSPhotoKitUI */ = {
+		E8A2284F2B4D30B500BA6B0D /* SSPhotoKitUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SSPhotoKitUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = E8C26CA62B43E91D00EC7CDE /* Project object */;
+	rootObject = E8A228322B4D301000BA6B0D /* Project object */;
 }

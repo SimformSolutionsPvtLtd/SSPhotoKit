@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  SSPKEditorView.swift
 //
 //
 //  Created by Krunal Patel on 02/01/24.
@@ -10,45 +10,56 @@ import SSPhotoKitEngine
 
 public struct SSPKEditorView: View {
     
-    @StateObject var model = EditorViewModel()
+    // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) var config: EditorConfiguration
+    @Binding var image: PlatformImage
+    @Binding var isPresented: Bool
     @StateObject var engine: SSPhotoKitEngine
+    @StateObject var model = EditorViewModel()
+    @State private var showingConfirmation = false
     
+    // MARK: - Body
     public var body: some View {
         ZStack {
             Color.black
             
-            editMenuView
+            previewView
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            if model.isLoading {
+                Color.black.opacity(0.4)
+                ProgressView()
+            }
         }
-        .preferredColorScheme(.dark)
-        .environmentObject(model)
-        .environmentObject(engine)
+        .overlay(alignment: .top) {
+            if model.currentEditor == .none {
+                headerView
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if model.shouldShowTabBar {
+                tabBarView
+            }
+        }
+        .confirmationDialog(engine.canDiscard ? "Discard changes" : "Close Editor",
+                            isPresented: $showingConfirmation) {
+            discardDialog
+        }
+                            .preferredColorScheme(.dark)
+                            .environmentObject(model)
+                            .environmentObject(engine)
     }
     
     // MARK: - Initializer
-    public init(image: CGImage, previewSize: CGSize) {
-        _engine = StateObject(wrappedValue: SSPhotoKitEngine(image: CIImage(cgImage: image), previewSize: previewSize))
+    public init(image: Binding<PlatformImage>, isPresented: Binding<Bool>, previewSize: CGSize) {
+        _image = image
+        _isPresented = isPresented
+        _engine = StateObject(wrappedValue: SSPhotoKitEngine(image: CIImage(cgImage: image.wrappedValue.cgImage!), previewSize: previewSize))
     }
 }
 
 // MARK: - Views
 extension SSPKEditorView {
-    
-    @ViewBuilder
-    private var editMenuView: some View {
-        
-        VStack {
-            if model.currentEditor == .none {
-                headerView
-            }
-            
-            previewView
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-            if model.shouldShowTabBar {
-                tabBarView
-            }
-        }
-    }
     
     @ViewBuilder
     private var previewView: some View {
@@ -65,9 +76,11 @@ extension SSPKEditorView {
             case .markup:
                 MarkupEditor()
             case .none:
-                Image(platformImage: PlatformImage(cgImage: engine.previewCGImage))
-                    .resizable()
-                    .scaledToFit()
+                if let previewImage = engine.previewPlatformImage {
+                    ImagePreview(imageSource: .platformImage(previewImage), centerOptions: [.initial, .imageSizeChange, .frameSizeChange])
+                } else {
+                    ProgressView()
+                }
             }
         }
     }
@@ -76,11 +89,12 @@ extension SSPKEditorView {
     private var headerView: some View {
         HeaderMenu(disableOptions: getHeaderDisableOptions(),
                    menuAction: handleMenuAction)
+        .background()
     }
     
     @ViewBuilder
     private var tabBarView: some View {
-        ScrollableTabBar(selection: $model.currentEditor, items: model.editors) { item in
+        ScrollableTabBar(selection: $model.currentEditor, items: Editor.getAllowedEditors(with: config.allowedEditors)) { item in
             VStack(spacing: 6) {
                 Image(systemName: item.icon)
                     .font(.system(size: 26, design: .rounded))
@@ -95,11 +109,27 @@ extension SSPKEditorView {
             model.resetEditor()
         }
         .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background()
         .opacity(model.shouldShowTabBar ? 1 : 0)
         .animation(.easeInOut, value: model.shouldShowTabBar)
     }
     
-    
+    @ViewBuilder
+    private var discardDialog: some View {
+        Button(engine.canDiscard ? "Discard changes" : "Close Editor", role: .destructive) {
+            if engine.canDiscard {
+                engine.reset()
+                model.resetEditor()
+            } else {
+                isPresented = false
+            }
+        }
+        
+        Button("Cancel", role: .cancel) {
+            showingConfirmation = false
+        }
+    }
 }
 
 // MARK: - Methods
@@ -121,28 +151,26 @@ extension SSPKEditorView {
             options.insert(.save)
         }
         
-        if !engine.canDiscard {
-            options.insert(.discard)
-        }
-        
         return options
     }
     
     private func handleMenuAction(action: MenuAction) {
         Task {
+            model.isLoading = true
             switch action {
             case .undo:
                 await engine.undo()
             case .redo:
                 await engine.redo()
             case .save:
-                let image = await engine.createImage()
-                print(image)
-                
+                if let platformImage = await engine.createPlatformImage() {
+                    image = platformImage
+                }
+                isPresented = false
             case .discard:
-                engine.reset()
-                model.resetEditor()
+                showingConfirmation = true
             }
+            model.isLoading = false
         }
     }
 }

@@ -15,13 +15,13 @@ struct SharpenDetailControl: View {
     
     var body: some View {
         VStack {
-            SSSlider(value: $sharpen.radius.value,
-                     in: sharpen.radius.range) {
+            SSSlider(value: $sharpen.radius,
+                     in: sharpen.$radius) {
                 Text("Radius")
             }
 
-            SSSlider(value: $sharpen.amount.value,
-                     in: sharpen.amount.range) {
+            SSSlider(value: $sharpen.amount,
+                     in: sharpen.$amount) {
                 Text("Amount")
             }
         }

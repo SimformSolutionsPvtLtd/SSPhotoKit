@@ -1,6 +1,6 @@
 //
 //  CropEditor.swift
-//
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 03/01/24.
 //
@@ -11,42 +11,63 @@ import SSPhotoKitEngine
 struct CropEditor: View {
     
     // MARK: - Vars & Lets
-    @EnvironmentObject var model: EditorViewModel
-    @EnvironmentObject var engine: SSPhotoKitEngine
-    @StateObject var cropViewModel = CropEditorViewModel()
+    @Environment(\.cropConfiguration) private var config: CropConfiguration
+    @EnvironmentObject private var model: EditorViewModel
+    @EnvironmentObject private var engine: SSPhotoKitEngine
+    
+    @StateObject private var cropViewModel = CropEditorViewModel()
+    @State private var originalRatio: AspectRatio?
+    
+    private var ratios: [AspectRatio] {
+        var ratios = config.cropRatios
+        if config.ratioOptions.contains(.original), let originalRatio {
+            ratios.insert(originalRatio, at: 0)
+        }
+        return ratios
+    }
     
     // MARK: - Body
     var body: some View {
         GeometryReader { proxy in
             ZStack {
-                Color.black
-                
-                Image(platformImage: engine.previewPlatformImage)
-                    .rotationEffect(.degrees(cropViewModel.rotation))
-                    .scaleEffect(cropViewModel.flipScale)
-                    .offset(cropViewModel.offset)
-                    .scaleEffect(cropViewModel.scale)
-                
-                CropMask(size: cropViewModel.size)
+                if let previewImage = engine.previewPlatformImage {
+                    ImagePreview(imageSource: .platformImage(previewImage), gesturesEnabled: false)
+                        .rotationEffect(.degrees(cropViewModel.rotation))
+                        .scaleEffect(cropViewModel.flipScale)
+                        .offset(cropViewModel.offset)
+                        .scaleEffect(cropViewModel.scale)
+                    
+                    if cropViewModel.currentEdit == .aspect {
+                        CropMask(size: cropViewModel.size)
+                    }
+                } else {
+                    ProgressView()
+                }
             }
             .onAppear {
                 cropViewModel.frameSize = proxy.size
-                cropViewModel.updateSize()
+                if let previewSize = engine.previewPlatformImage?.size {
+                    let ratio = AspectRatio(name: "original", height: UInt(previewSize.height), width: UInt(previewSize.width))
+                    originalRatio = ratio
+                    cropViewModel.currentRatio = ratio
+                }
             }
             .overlay(alignment: .bottom) {
                 VStack {
                     editTabBar
                     
-                    editMenu(proxy: proxy)
-                        .frame(height: 60)
+                    editMenu
                     
                     Divider()
                         .frame(height: 20)
                     
                     FooterMenu("Crop & Rotation") {
-                        Task {
-                            await engine.apply(cropViewModel.createCommand(for: engine.previewCGImage.size))
-                            model.resetEditor()
+                        if let size = engine.previewPlatformImage?.size {
+                            Task {
+                                await engine.apply(cropViewModel.createCommand(for: size))
+                                model.isInitial = true
+                                model.resetEditor()
+                            }
                         }
                     } onDiscard: {
                         model.resetEditor()
@@ -72,10 +93,10 @@ extension CropEditor {
     }
     
     @ViewBuilder
-    private func editMenu(proxy: GeometryProxy) -> some View {
+    private var editMenu: some View {
         switch cropViewModel.currentEdit {
         case .aspect:
-            CropMenu(isInverted: $cropViewModel.isInverted, currentRatio: $cropViewModel.cropRatio)
+            CropMenu(cropRatios: ratios, isInverted: $cropViewModel.isInverted, currentRatio: $cropViewModel.currentRatio)
         case .rotation:
             RotationMenu(angle: $cropViewModel.rotation,
                          horizontalFlip: $cropViewModel.horizontalFlipped,
@@ -85,9 +106,6 @@ extension CropEditor {
                 .background(.gray)
         }
     }
-    
-    
-    
 }
 
 // MARK: - Gestures
@@ -124,9 +142,11 @@ extension CropEditor {
         case .redo:
             print("redo")
         case .save:
-            Task {
-                await engine.apply(cropViewModel.createCommand(for: engine.previewCGImage.size))
-                model.resetEditor()
+            if let size = engine.previewPlatformImage?.size {
+                Task {
+                    await engine.apply(cropViewModel.createCommand(for: size))
+                    model.resetEditor()
+                }
             }
         case .discard:
             model.resetEditor()

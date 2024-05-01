@@ -13,14 +13,14 @@ public struct SharpenFilter : Filter {
     public var name: String = "Sharpen"
     let filter = CIFilter.unsharpMask()
     
-    public var radius: FilterAttribute
-    public var amount: FilterAttribute
+    @FilterAttribute public var radius: Float
+    @FilterAttribute public var amount: Float
     
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         
-        filter.radius = radius.value
-        filter.intensity = amount.value
+        filter.radius = radius
+        filter.intensity = amount
         
         guard let outputImage = filter.outputImage else {
             EngineLogger.error("Can't apply \(String(describing: self))")
@@ -44,8 +44,8 @@ public struct SharpenFilter : Filter {
     
     // MARK: - Initializer
     public init() {
-        self.radius = filter.makeAttribute(for: kCIInputRadiusKey)
-        self.amount = filter.makeAttribute(for: kCIInputIntensityKey)
+        self._radius = filter.makeAttribute(for: kCIInputRadiusKey)
+        self._amount = filter.makeAttribute(for: kCIInputIntensityKey)
     }
 }
 

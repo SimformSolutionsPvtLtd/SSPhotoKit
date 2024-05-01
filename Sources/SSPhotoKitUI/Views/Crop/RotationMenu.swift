@@ -50,6 +50,7 @@ struct RotationMenu: View {
             }
             Spacer()
         }
+        .buttonStyle(.primary)
         .foregroundStyle(.white)
         .font(.system(size: 36, design: .rounded))
         

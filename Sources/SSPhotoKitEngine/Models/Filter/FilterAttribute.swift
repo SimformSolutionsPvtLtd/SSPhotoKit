@@ -5,17 +5,21 @@
 //  Created by Krunal Patel on 02/01/24.
 //
 
-public struct FilterAttribute : Hashable {
-    
+@propertyWrapper
+public struct FilterAttribute<Value>: Equatable where Value : Comparable {
+
     // MARK: - Vars & Lets
-    public var value: Float
-    public let defaultValue: Float
-    public let range: ClosedRange<Float>
+    public var wrappedValue: Value {
+        didSet {
+            wrappedValue = wrappedValue.clamped(to: projectedValue)
+        }
+    }
+    
+    public let projectedValue: ClosedRange<Value>
     
     // MARK: - Initializer
-    public init(_ value: Float, range: ClosedRange<Float>) {
-        self.value = value
-        self.defaultValue = value
-        self.range = range
+    public init(wrappedValue: Value, range: ClosedRange<Value>) {
+        self.wrappedValue = wrappedValue
+        self.projectedValue = range
     }
 }

@@ -10,6 +10,7 @@ import SSPhotoKitEngine
 
 struct AdjustmentEditor: View {
     
+    @Environment(\.adjustmentConfiguration) private var config: AdjustmentConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var adjustmentViewModel: AdjustmentEditorViewModel
@@ -20,14 +21,26 @@ struct AdjustmentEditor: View {
     
     var body: some View {
         
+        ZStack {
+            ImagePreview(imageSource: .coreImage($adjustmentViewModel.currentImage), gesturesEnabled: false)
+        }
+        .overlay(alignment: .bottom) {
+            footerView
+        }
+    }
+    
+    // MARK: - Initializer
+    init(image: CIImage) {
+        _adjustmentViewModel = StateObject(wrappedValue: AdjustmentEditorViewModel(image: image))
+    }
+}
+
+// MARK: - Views
+extension AdjustmentEditor {
+    
+    @ViewBuilder
+    private var footerView: some View {
         VStack {
-            Spacer()
-            
-            MetalView(image: $adjustmentViewModel.currentImage)
-                .frame(width: imageSize.width, height: imageSize.height)
-            
-            Spacer()
-            
             adjustmentControls
                 .frame(height: 130)
             
@@ -45,17 +58,8 @@ struct AdjustmentEditor: View {
                 model.resetEditor()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background()
     }
-    
-    // MARK: - Initializer
-    init(image: CIImage) {
-        _adjustmentViewModel = StateObject(wrappedValue: AdjustmentEditorViewModel(image: image))
-    }
-}
-
-// MARK: - Views
-extension AdjustmentEditor {
     
     @ViewBuilder
     private var adjustmentControls: some View {
@@ -85,7 +89,7 @@ extension AdjustmentEditor {
     
     @ViewBuilder
     private var adjustmentMenu: some View {
-        ScrollableTabBar(selection: $adjustmentViewModel.currentAdjustment, items: Adjustment.allCases.filter { $0 != .none}) { item in
+        ScrollableTabBar(selection: $adjustmentViewModel.currentAdjustment, items: Adjustment.getAllowedAdjustments(with: config.allowedAdjustments)) { item in
             VStack(spacing: 6) {
                 Image(systemName: item.icon)
                     .font(.system(size: 26, design: .rounded))

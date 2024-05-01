@@ -16,13 +16,13 @@ struct NoiseDetailControl: View {
     var body: some View {
         
         VStack {
-            SSSlider(value: $noise.noiseLevel.value,
-                     in: noise.noiseLevel.range) {
+            SSSlider(value: $noise.noiseLevel,
+                     in: noise.$noiseLevel) {
                 Text("Noise Level")
             }
 
-            SSSlider(value: $noise.sharpness.value,
-                     in: noise.sharpness.range) {
+            SSSlider(value: $noise.sharpness,
+                     in: noise.$sharpness) {
                 Text("Sharpness")
             }
         }

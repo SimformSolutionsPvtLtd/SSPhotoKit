@@ -1,6 +1,6 @@
 //
 //  GaussianBlurFilter.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -10,13 +10,14 @@ import CoreImage.CIFilterBuiltins
 public struct GaussianBlurFilter : Filter {
     
     public var name: String = "Gaussian Blur"
+    public var scale: CGSize = .one
     private let filter = CIFilter.gaussianBlur()
     
-    public var radius: FilterAttribute
+    @FilterAttribute public var radius: Float
     
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
-        filter.radius = radius.value
+        filter.radius = radius * Float(scale.width)
         
         guard let outputImage = filter.outputImage else {
             EngineLogger.error("Can't apply \(String(describing: self))")
@@ -38,8 +39,8 @@ public struct GaussianBlurFilter : Filter {
     
     // MARK: - Initializer
     public init(radius: Float = 0) {
-        self.radius = filter.makeAttribute(for: kCIInputRadiusKey)
-        self.radius.value = 0
+        self._radius = filter.makeAttribute(for: kCIInputRadiusKey)
+        self.radius = 0
     }
 }
 

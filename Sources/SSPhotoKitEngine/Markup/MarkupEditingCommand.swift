@@ -57,7 +57,7 @@ public struct MarkupEditingCommand<Content> : EditingCommand where Content : Vie
     }
     
     // MARK: - Initializer
-    public init(layers: [MarkupLayer] = [], scale: CGSize = CGSize(width: 1, height: 1), @ViewBuilder renderer: @escaping ([MarkupLayer]) -> Content) {
+    public init(layers: [MarkupLayer] = [], scale: CGSize = .one, @ViewBuilder renderer: @escaping ([MarkupLayer]) -> Content) {
         self.layers = layers
         self.scale = scale
         self.renderer = renderer

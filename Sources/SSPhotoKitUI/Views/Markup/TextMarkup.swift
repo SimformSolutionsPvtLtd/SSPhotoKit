@@ -1,6 +1,6 @@
 //
 //  TextMarkup.swift
-//  
+//  SSPhotoKitUI
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -10,82 +10,56 @@ import SSPhotoKitEngine
 
 struct TextMarkup<Content, Menu>: View where Content : View, Menu : View {
     
-    @Binding var layers: [MarkupLayer]
-    @Binding var index: Int?
-    let onDiscard: () -> Void
-    let onSave: () -> Void
-    let rearrangeMenu: Menu?
-    @ViewBuilder var content: Content
+    @EnvironmentObject private var model: MarkupEditorViewModel
+    
+    // MARK: - Vars & Lets
+    private let rearrangeMenu: Menu?
+    private let content: Content
     
     @State private var text: String = ""
     @State private var showFonts: Bool = false
     @FocusState private var isFocused: Bool
     @State private var lastOrigin: CGPoint = .zero
     
+    // MARK: - Body
     var body: some View {
         
         ZStack {
+            Color.black
             
             content
                 .overlay {
-                    if let index {
-                        MarkupLayerView(layers: layers, selection: index) {
-                            SelectionOverlay(currentRotation: $layers[index].text.rotation,
-                                             currentSize: $layers[index].text.size,
-                                             keepAspectRatio: false,
-                                             onUpdate: handleUpdate)
+                    if let index = model.currentLayerIndex,
+                       model.canEditCurrentLayer {
+                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex) {
+                            SelectionOverlay(currentRotation: $model.dirtyLayers[index].text.rotation,
+                                             currentSize: $model.dirtyLayers[index].text.size, onUpdate: handleUpdate)
                         }
                     }
                 }
             
-            VStack {
-                Spacer()
-                if showFonts {
-                    fontSelector
-                }
-                
-                Button {
-                    showFonts.toggle()
-                } label: {
-                    Image(systemName: "a.square")
-                }
-                .foregroundStyle(.white)
-            }
-            
             textEditor
         }
         .gesture(dragGesture)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .top) {
             headerMenu
         }
+        .overlay(alignment: .bottom) {
+           footerMenu
+        }
         .onAppear {
-            isFocused = index == nil
-            
-            if let index {
-                text = layers[index].text.text
-            } else {
-                index = layers.count
-                layers.append(.text(.init()))
-            }
-            lastOrigin = layers[index!].text.origin
+            setupLayer()
         }
     }
     
     // MARK: - Initializer
-    init(layers: Binding<[MarkupLayer]>, index: Binding<Int?>, onSave: @escaping () -> Void, onDiscard: @escaping () -> Void, @ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
-        self._layers = layers
-        self._index = index
-        self.onSave = onSave
-        self.onDiscard = onDiscard
+    init(@ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
         self.content = content()
         self.rearrangeMenu = menu()
     }
     
-    init(layers: Binding<[MarkupLayer]>, index: Binding<Int?>, onSave: @escaping () -> Void, onDiscard: @escaping () -> Void, @ViewBuilder content: () -> Content) where Menu == EmptyView {
-        self._layers = layers
-        self._index = index
-        self.onSave = onSave
-        self.onDiscard = onDiscard
+    init(@ViewBuilder content: () -> Content) where Menu == EmptyView {
         self.rearrangeMenu = nil
         self.content = content()
     }
@@ -116,7 +90,7 @@ extension TextMarkup {
     private var headerMenu: some View {
         HStack {
             Button {
-                onDiscard()
+                discard()
             } label: {
                 Image(systemName: "xmark")
             }
@@ -130,21 +104,45 @@ extension TextMarkup {
             Spacer()
             
             Button {
-                if isFocused {
-                    updateText()
-                } else {
-                    onSave()
-                }
+                isFocused ? updateText() : save()
             } label: {
                 Image(systemName: "checkmark")
             }
         }
+        .buttonStyle(.primary)
         .padding(.horizontal, 16)
+        .background()
+    }
+    
+    @ViewBuilder
+    private var footerMenu: some View {
+        VStack {
+            if showFonts {
+                fontSelector
+            }
+            
+            HStack(spacing: 44) {
+                Button {
+                    showFonts.toggle()
+                } label: {
+                    Image(systemName: "a.square")
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.white)
+                
+                if let index = model.currentLayerIndex,
+                   model.canEditCurrentLayer {
+                    ColorPicker("", selection: $model.dirtyLayers[index].text.color)
+                        .labelsHidden()
+                }
+            }
+        }
+        .background()
     }
     
     @ViewBuilder
     private var fontSelector: some View {
-               
+        
         List {
             ForEach(FontHelper.fontFamilies, id: \.self) { family in
                 Section(header: Text(family)) {
@@ -154,8 +152,8 @@ extension TextMarkup {
                             .font(.custom(font, size: 16))
                             .onTapGesture {
                                 showFonts = false
-                                if let index {
-                                    layers[index].text.fontName = font
+                                if let index = model.currentLayerIndex  {
+                                    model.dirtyLayers[index].text.fontName = font
                                 }
                             }
                     }
@@ -163,6 +161,7 @@ extension TextMarkup {
             }
         }
         .frame(height: 200)
+        .contentShape(.rect)
     }
 }
 
@@ -172,39 +171,64 @@ extension TextMarkup {
     private var dragGesture: some Gesture {
         DragGesture(coordinateSpace: .global)
             .onChanged { value in
-                guard let index else { return }
+                guard let index = model.currentLayerIndex else { return }
                 
-                layers[index].text.origin = lastOrigin + CGPoint(x: value.translation.width, y: value.translation.height)
+                model.dirtyLayers[index].text.origin = lastOrigin + value.translation.toCGPoint()
             }
             .onEnded { value in
-                guard let index else { return }
+                guard let index = model.currentLayerIndex else { return }
                 
-                lastOrigin = layers[index].text.origin
+                lastOrigin = model.dirtyLayers[index].text.origin
             }
     }
 }
 
 // MARK: - Methods
 extension TextMarkup {
-
+    
+    private func setupLayer() {
+        model.setupEditingLayers()
+        isFocused = model.currentLayerIndex == nil
+        
+        if let index = model.currentLayerIndex {
+            text = model.dirtyLayers[index].text.text
+        } else {
+            model.currentLayerIndex = model.dirtyLayers.count
+            model.dirtyLayers.append(.text(.init()))
+        }
+        
+        lastOrigin = model.dirtyLayers[model.currentLayerIndex!].text.origin
+    }
+    
     private func updateText() {
-        if let index {
-            layers[index].text.text = text
+        if let index = model.currentLayerIndex {
+            model.dirtyLayers[index].text.text = text
         }
         isFocused = false
     }
     
-    private func handleUpdate(for action: SelectionAction) {
+    private func handleUpdate(for action: SelectionOverlay.Action) {
         switch action {
         case .delete:
-            if let index {
-                layers.remove(at: index)
+            if let index = model.currentLayerIndex {
+                model.dirtyLayers.remove(at: index)
             }
-            index = nil
+            model.currentLayerIndex = nil
         case .edit:
             isFocused = true
         default:
             break
         }
+    }
+    
+    private func discard() {
+        model.reset()
+    }
+    
+    private func save() {
+        guard let index = model.currentLayerIndex else { return }
+        
+        model.commit()
+        model.reset()
     }
 }
