@@ -8,7 +8,7 @@
 import CoreGraphics
 
 // MARK: - DrawingMarkupItem
-public struct DrawingMarkupItem : MarkupItem {
+public struct DrawingMarkupItem: MarkupItem {
     
     // MARK: - Vars & Lets
     public var lines: [Line]
@@ -29,15 +29,15 @@ public struct DrawingMarkupItem : MarkupItem {
     }
     
     public mutating func updateLines(scale: CGSize = .one, offset: CGSize = .zero, inverting: Bool = false) {
-        for i in lines.indices {
+        for index in lines.indices {
             
             if inverting {
-                lines[i].brush.width *= scale.width
+                lines[index].brush.width *= scale.width
             } else {
-                lines[i].brush.width /= scale.width
+                lines[index].brush.width /= scale.width
             }
             
-            lines[i].path = lines[i].path
+            lines[index].path = lines[index].path
                 .map {
                     var point: CGPoint = .zero
                     if inverting {

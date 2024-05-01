@@ -1,13 +1,13 @@
 //
 //  LUTFilteringCommand.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import CoreImage
 
-public struct LUTFilter : Filter {
+public struct LUTFilter: Filter {
     
     // MARK: - Vars & Lets
     public var name: String
@@ -53,5 +53,3 @@ public struct LUTFilter : Filter {
         updateLUT(image: image, dimension: dimension)
     }
 }
-
-

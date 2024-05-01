@@ -7,13 +7,15 @@
 
 import CoreImage.CIFilterBuiltins
 
-public struct HueFilter : Filter {
+public struct HueFilter: Filter {
     
+    // MARK: - Vars & Lets
     public var name: String = "Hue"
     let filter = CIFilter.hueAdjust()
     
     @FilterAttribute public var hue: Float
     
+    // MARK: - Methods
     public func apply(to image: CIImage) -> CIImage {
         filter.inputImage = image.clamped(to: image.extent)
         
@@ -42,6 +44,7 @@ public struct HueFilter : Filter {
     }
 }
 
+// MARK: - Extension
 extension Filter where Self == HueFilter {
     
     public static var hue: Self { .init() }

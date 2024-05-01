@@ -1,6 +1,6 @@
 //
 //  MarkupEditingCommand.swift
-//  
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 05/01/24.
 //
@@ -8,14 +8,16 @@
 import CoreImage
 import SwiftUI
 
-public struct MarkupEditingCommand<Content> : EditingCommand where Content : View {
+public struct MarkupEditingCommand<Content>: EditingCommand where Content: View {
     
+    // MARK: - Vars & Lets
     public var layers: [MarkupLayer]
     public var scale: CGSize
     @ViewBuilder public var renderer: ([MarkupLayer]) -> Content
     
     private let filter = CIFilter.sourceOverCompositing()
         
+    // MARK: - Methods
     public func apply(to image: CIImage) async -> CIImage {
 
         filter.backgroundImage = image
@@ -34,15 +36,13 @@ public struct MarkupEditingCommand<Content> : EditingCommand where Content : Vie
     
         let viewRenderer = ImageRenderer(content: renderer(getScaledLayers()).frame(width: size.width, height: size.height))
         
-        let image = CIImage(cgImage: viewRenderer.cgImage!)
-        
         return CIImage(cgImage: viewRenderer.cgImage!)
     }
     
     private func getScaledLayers() -> [MarkupLayer] {
         var copy = layers
-        for i in copy.indices {
-            copy[i].scale = scale
+        for index in copy.indices {
+            copy[index].scale = scale
         }
         return copy
     }

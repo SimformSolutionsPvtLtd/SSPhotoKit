@@ -1,44 +1,48 @@
 //
-//  SwiftUIView 2.swift
-//
+//  CropMenu.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 03/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct CropMenu: View {
     
+    // MARK: - Vars & Lets
     @Environment(\.cropConfiguration) private var config: CropConfiguration
     let cropRatios: [AspectRatio]
     @Binding var isInverted: Bool
     @Binding var currentRatio: AspectRatio
     
+    // MARK: - Body
     var body: some View {
         VStack(spacing: 4) {
             HStack(spacing: 20) {
                 Button {
                     isInverted = false
                 } label: {
-                    Image(.verticalCrop)
+                    Image("verticalCrop", bundle: .module)
                         .resizable()
                         .frame(width: 28, height: 28)
                 }
-                .foregroundStyle(isInverted ? .gray : .white)
+                .foregroundStyle(isInverted ? .gray: .white)
                 
                 Button {
                     isInverted = true
                 } label: {
-                    Image(.verticalCrop)
+                    Image("verticalCrop", bundle: .module)
                         .resizable()
                         .frame(width: 28, height: 28)
                         .rotationEffect(.degrees(90))
                 }
-                .foregroundStyle(isInverted ? .white : .gray)
+                .foregroundStyle(isInverted ? .white: .gray)
             }
             .buttonStyle(.primary)
-            .opacity(currentRatio.value == 1 ? 0 : 1)
+            .opacity(currentRatio.value == 1 ? 0: 1)
             
             ViewThatFits {
                     cropRatioViews
@@ -64,7 +68,7 @@ extension CropMenu {
                     VStack(spacing: 0) {
                         if config.labelType != .text {
                             getShape(for: ratio, in: CGSize(width: 18, height: 18))
-                                .stroke(currentRatio == ratio ? .white : .gray, lineWidth: 2)
+                                .stroke(currentRatio == ratio ? .white: .gray, lineWidth: 2)
                                 .offset(x: 1, y: 1)
                                 .frame(width: 20, height: 20, alignment: .center)
                         }
@@ -75,7 +79,7 @@ extension CropMenu {
                         }
                     }
                 }
-                .foregroundStyle(currentRatio == ratio ? .white : .gray)
+                .foregroundStyle(currentRatio == ratio ? .white: .gray)
             }
         }
     }

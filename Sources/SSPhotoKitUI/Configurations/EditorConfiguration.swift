@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  EditorConfiguration.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 12/01/24.
 //
@@ -19,7 +19,7 @@ public struct EditorConfiguration {
 // MARK: - Options
 extension EditorConfiguration {
     
-    public struct AllowedEditorOptions : OptionSet {
+    public struct AllowedEditorOptions: OptionSet {
         
         public var rawValue: UInt32
         

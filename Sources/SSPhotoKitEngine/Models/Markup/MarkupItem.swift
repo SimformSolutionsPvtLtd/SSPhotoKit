@@ -8,8 +8,8 @@
 import CoreGraphics
 import Foundation
 
-// MARK: -  MarkupItem
-public protocol MarkupItem : Identifiable, Hashable {
+// MARK: - MarkupItem
+public protocol MarkupItem: Identifiable, Hashable {
     
     var id: String { get }
     
@@ -26,13 +26,15 @@ extension MarkupItem {
     
     public var id: String { UUID().uuidString }
     
+    // swiftlint:disable unused_setter_value
     public var scale: CGSize {
         get {
             .one
         }
         set { }
     }
-    
+    // swiftlint:enable unused_setter_value
+
     public mutating func updateScale(_ scale: CGSize) { }
     
     public mutating func resetScale() {
@@ -47,7 +49,7 @@ extension MarkupItem {
 }
 
 // MARK: - AnyMarkupItem
-public struct AnyMarkupItem : MarkupItem {
+public struct AnyMarkupItem: MarkupItem {
     
     // MARK: - Vars & Lets
     private let base: AnyHashable
@@ -84,7 +86,6 @@ public struct AnyMarkupItem : MarkupItem {
     private let _getScale: () -> CGSize
     private let _setScale: (CGSize) -> Void
     
-    
     // MARK: - Initializer
     public init<M: MarkupItem>(_ markupItem: M) {
         var copy = markupItem
@@ -116,6 +117,7 @@ public struct AnyMarkupItem : MarkupItem {
     }
 }
 
+// MARK: - Extension
 extension MarkupItem {
     public func asAny() -> AnyMarkupItem {
         (self as? AnyMarkupItem) ?? AnyMarkupItem(self)

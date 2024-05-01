@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  EngineLogger.swift
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -37,6 +37,7 @@ enum EngineLogger {
     }
 }
 
+// MARK: - Sequence + Extension
 extension Sequence where Element == Any {
     
     fileprivate func asString(separator: String = " ") -> String {

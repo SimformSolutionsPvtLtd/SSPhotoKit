@@ -1,6 +1,6 @@
 //
 //  FooterMenu.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
@@ -9,11 +9,13 @@ import SwiftUI
 
 struct FooterMenu: View {
     
+    // MARK: - Vars & Lets
     let title: String
     let disableOptions: DisableOption
     let onSave: () -> Void
     let onDiscard: () -> Void
     
+    // MARK: - Body
     var body: some View {
         
         HStack {
@@ -23,7 +25,7 @@ struct FooterMenu: View {
                 Image(systemName: "xmark")
             }
             .buttonStyle(.primary)
-            .foregroundStyle(disableOptions.contains(.discard) ? .gray : .white)
+            .foregroundStyle(disableOptions.contains(.discard) ? .gray: .white)
             .disabled(disableOptions.contains(.discard))
             
             Spacer()
@@ -32,14 +34,13 @@ struct FooterMenu: View {
             
             Spacer()
             
-            
             Button {
                 onSave()
             } label: {
                 Image(systemName: "checkmark")
             }
             .buttonStyle(.primary)
-            .foregroundStyle(disableOptions.contains(.save) ? .gray : .white)
+            .foregroundStyle(disableOptions.contains(.save) ? .gray: .white)
             .disabled(disableOptions.contains(.save))
             
         }
@@ -48,6 +49,7 @@ struct FooterMenu: View {
         .background(.black)
     }
     
+    // MARK: - Initializer
     init(_ title: String, disableOptions: DisableOption = [], onSave: @escaping () -> Void, onDiscard: @escaping () -> Void) {
         self.title = title
         self.disableOptions = disableOptions

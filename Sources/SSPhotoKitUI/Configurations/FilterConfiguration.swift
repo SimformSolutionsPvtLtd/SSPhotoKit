@@ -1,12 +1,14 @@
 //
 //  FilterConfiguration.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 16/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 public struct FilterConfiguration {
     
@@ -32,7 +34,7 @@ public struct FilterConfiguration {
     
     // MARK: - Initializer
     public init(customFilterGroups: GroupedFilters = [:],
-         filterOptions: FilterOptions = .all) {
+                filterOptions: FilterOptions = .all) {
         self.customFilterGroups = customFilterGroups
         self.filterOptions = filterOptions
     }

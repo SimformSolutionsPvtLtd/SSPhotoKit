@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-struct PreviewScalePreference : PreferenceKey {
+struct PreviewScalePreference: PreferenceKey {
     
     static var defaultValue: CGSize = .one
     
@@ -17,7 +19,7 @@ struct PreviewScalePreference : PreferenceKey {
     }
 }
 
-struct PreviewOffsetPreference : PreferenceKey {
+struct PreviewOffsetPreference: PreferenceKey {
     
     static var defaultValue: CGSize = .zero
     
@@ -26,7 +28,7 @@ struct PreviewOffsetPreference : PreferenceKey {
     }
 }
 
-struct PreviewFramePreference : PreferenceKey {
+struct PreviewFramePreference: PreferenceKey {
     
     static var defaultValue: CGRect = .zero
     

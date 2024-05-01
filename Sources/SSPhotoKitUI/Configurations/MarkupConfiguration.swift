@@ -1,11 +1,13 @@
 //
 //  MarkupConfiguration.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 15/01/24.
 //
 
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 public struct MarkupConfiguration {
     
@@ -43,7 +45,7 @@ extension MarkupConfiguration {
         }
     }
     
-    public struct AllowedMarkupOptions : OptionSet {
+    public struct AllowedMarkupOptions: OptionSet {
         
         public var rawValue: UInt32
         

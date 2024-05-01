@@ -1,20 +1,22 @@
 //
 //  StickerMarkup.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 05/01/24.
 //
 
 import SwiftUI
 import PhotosUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-struct StickerMarkup<Content, Menu>: View where Content : View, Menu : View{
+struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
     
+    // MARK: - Vars & Lets
     @Environment(\.markupConfiguration) private var config: MarkupConfiguration
     @EnvironmentObject private var model: MarkupEditorViewModel
     
-    // MARK: - Vars & Lets
     private let rearrangeMenu: Menu?
     private let content: Content
     
@@ -36,7 +38,7 @@ struct StickerMarkup<Content, Menu>: View where Content : View, Menu : View{
                         MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex) {
                             SelectionOverlay(currentRotation: $model.dirtyLayers[index].sticker.rotation,
                                              currentSize: $model.dirtyLayers[index].sticker.size,
-                                             options: config.stickerOptions.contains(.custom) ? .all.subtracting(.edit) : .all,
+                                             options: config.stickerOptions.contains(.custom) ? .all.subtracting(.edit): .all,
                                              onUpdate: handleUpdate)
                         }
                     }
@@ -51,7 +53,7 @@ struct StickerMarkup<Content, Menu>: View where Content : View, Menu : View{
         .overlay(alignment: .bottom) {
             if config.stickerOptions.contains(.custom) {
                 customStickersView
-                    .opacity(isEditing ? 1 : 0)
+                    .opacity(isEditing ? 1: 0)
             }
         }
         .onChange(of: item) { item in
@@ -147,7 +149,7 @@ extension StickerMarkup {
                 
                 model.dirtyLayers[index].sticker.origin = (lastOrigin + CGPoint(x: value.translation.width, y: value.translation.height))
             }
-            .onEnded { value in
+            .onEnded { _ in
                 guard let index = model.currentLayerIndex else { return }
                 
                 lastOrigin = model.dirtyLayers[index].sticker.origin
@@ -208,7 +210,7 @@ extension StickerMarkup {
     }
     
     private func save() {
-        guard let index = model.currentLayerIndex else { return }
+        guard model.currentLayerIndex != nil else { return }
         
         model.commit()
         model.reset()

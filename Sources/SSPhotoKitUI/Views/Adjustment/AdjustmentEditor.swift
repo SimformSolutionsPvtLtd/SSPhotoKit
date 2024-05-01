@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct AdjustmentEditor: View {
     
+    // MARK: - Vars & Lets
     @Environment(\.adjustmentConfiguration) private var config: AdjustmentConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
@@ -19,6 +22,7 @@ struct AdjustmentEditor: View {
         engine.previewImage.extent.size
     }
     
+    // MARK: - Body
     var body: some View {
         
         ZStack {
@@ -89,15 +93,16 @@ extension AdjustmentEditor {
     
     @ViewBuilder
     private var adjustmentMenu: some View {
-        ScrollableTabBar(selection: $adjustmentViewModel.currentAdjustment, items: Adjustment.getAllowedAdjustments(with: config.allowedAdjustments)) { item in
+        ScrollableTabBar(selection: $adjustmentViewModel.currentAdjustment,
+                         items: Adjustment.getAllowedAdjustments(with: config.allowedAdjustments)) { item in
             VStack(spacing: 6) {
                 Image(systemName: item.icon)
                     .font(.system(size: 26, design: .rounded))
-                    .foregroundStyle(.white.opacity(adjustmentViewModel.currentAdjustment == item ? 1 : 0.6))
+                    .foregroundStyle(.white.opacity(adjustmentViewModel.currentAdjustment == item ? 1: 0.6))
                 
                 Circle()
                     .fill(.white)
-                    .frame(height: adjustmentViewModel.currentAdjustment == item ? 6 : 0)
+                    .frame(height: adjustmentViewModel.currentAdjustment == item ? 6: 0)
             }
         }
         .onItemReselect { _ in

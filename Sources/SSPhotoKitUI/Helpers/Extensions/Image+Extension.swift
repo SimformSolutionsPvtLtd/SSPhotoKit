@@ -1,12 +1,14 @@
 //
-//  File.swift
-//  
+//  Image+Extension.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 @_exported import typealias SSPhotoKitEngine.PlatformImage
+#endif
 
 extension Image {
     
@@ -18,4 +20,3 @@ extension Image {
         #endif
     }
 }
-

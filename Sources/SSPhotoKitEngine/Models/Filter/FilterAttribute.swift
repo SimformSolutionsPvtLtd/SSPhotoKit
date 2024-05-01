@@ -1,12 +1,12 @@
 //
 //  FilterAttribute.swift
-//
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 @propertyWrapper
-public struct FilterAttribute<Value>: Equatable where Value : Comparable {
+public struct FilterAttribute<Value>: Equatable where Value: Comparable {
 
     // MARK: - Vars & Lets
     public var wrappedValue: Value {

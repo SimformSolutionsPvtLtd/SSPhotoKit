@@ -8,7 +8,7 @@
 import CoreImage
 
 @MainActor
-public class SSPhotoKitEngine : ObservableObject {
+public class SSPhotoKitEngine: ObservableObject {
     
     // MARK: - Vars & Lets
     public let originalImage: CIImage
@@ -46,7 +46,6 @@ public class SSPhotoKitEngine : ObservableObject {
         }
     }()
     
-    
     // MARK: - Public Methods
     public func apply<each C: EditingCommand>(_ commands: repeat each C) async {
         redoStack.removeAll()
@@ -77,8 +76,8 @@ public class SSPhotoKitEngine : ObservableObject {
     public func createImage() async -> CIImage {
         let scale = originalImage.size / originalPreviewImage.size
         var commands = editingStack.commands
-        for i in commands.indices {
-            commands[i].scale = scale
+        for index in commands.indices {
+            commands[index].scale = scale
         }
         return await commands.apply(to: originalImage)
     }

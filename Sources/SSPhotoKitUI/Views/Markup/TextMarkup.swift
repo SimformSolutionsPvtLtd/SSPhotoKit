@@ -1,14 +1,16 @@
 //
 //  TextMarkup.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-struct TextMarkup<Content, Menu>: View where Content : View, Menu : View {
+struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
     
     @EnvironmentObject private var model: MarkupEditorViewModel
     
@@ -83,7 +85,7 @@ extension TextMarkup {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black.opacity(0.8))
-        .opacity(isFocused ? 1 : 0)
+        .opacity(isFocused ? 1: 0)
     }
     
     @ViewBuilder
@@ -104,7 +106,7 @@ extension TextMarkup {
             Spacer()
             
             Button {
-                isFocused ? updateText() : save()
+                isFocused ? updateText(): save()
             } label: {
                 Image(systemName: "checkmark")
             }
@@ -152,7 +154,7 @@ extension TextMarkup {
                             .font(.custom(font, size: 16))
                             .onTapGesture {
                                 showFonts = false
-                                if let index = model.currentLayerIndex  {
+                                if let index = model.currentLayerIndex {
                                     model.dirtyLayers[index].text.fontName = font
                                 }
                             }
@@ -175,7 +177,7 @@ extension TextMarkup {
                 
                 model.dirtyLayers[index].text.origin = lastOrigin + value.translation.toCGPoint()
             }
-            .onEnded { value in
+            .onEnded { _ in
                 guard let index = model.currentLayerIndex else { return }
                 
                 lastOrigin = model.dirtyLayers[index].text.origin
@@ -226,7 +228,7 @@ extension TextMarkup {
     }
     
     private func save() {
-        guard let index = model.currentLayerIndex else { return }
+        guard model.currentLayerIndex != nil else { return }
         
         model.commit()
         model.reset()

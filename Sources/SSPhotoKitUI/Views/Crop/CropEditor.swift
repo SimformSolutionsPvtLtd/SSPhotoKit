@@ -1,12 +1,14 @@
 //
 //  CropEditor.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 03/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct CropEditor: View {
     
@@ -88,7 +90,7 @@ extension CropEditor {
         ScrollableTabBar(selection: $cropViewModel.currentEdit, items: Crop.allCases) { edit in
             Text(edit.name)
                 .font(.system(size: 16, design: .rounded))
-                .foregroundStyle(.white.opacity(cropViewModel.currentEdit == edit ? 1 : 0.6))
+                .foregroundStyle(.white.opacity(cropViewModel.currentEdit == edit ? 1: 0.6))
         }
     }
     
@@ -116,7 +118,7 @@ extension CropEditor {
             .onChanged { value in
                 cropViewModel.offset = cropViewModel.lastOffset + (value.translation / cropViewModel.scale)
             }
-            .onEnded { value in
+            .onEnded { _ in
                 cropViewModel.lastOffset = cropViewModel.offset
             }
     }

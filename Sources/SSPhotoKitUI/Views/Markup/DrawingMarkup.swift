@@ -1,14 +1,16 @@
 //
 //  DrawingMarkup.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 05/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-struct DrawingMarkup<Content, Menu>: View where Content : View, Menu : View {
+struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
     
     @EnvironmentObject private var model: MarkupEditorViewModel
     
@@ -75,7 +77,7 @@ extension DrawingMarkup {
                 Image(systemName: "eraser.fill")
             }
             .buttonStyle(.borderedProminent)
-            .tint(isEraser ? .blue : .gray)
+            .tint(isEraser ? .blue: .gray)
             
             SSSlider(value: $strokeWidth, in: 1...100)
         }
@@ -121,10 +123,10 @@ extension DrawingMarkup {
         DragGesture(minimumDistance: 1, coordinateSpace: .local)
             .onChanged { drag in
                 guard let index = model.currentLayerIndex else { return }
-                let newLocation = drag.location //- frame.origin
+                let newLocation = drag.location // - frame.origin
                 
                 if isInitial {
-                    var line = Line(brush: Brush(style: isEraser ? .eraser : .brush, width: strokeWidth, color: color))
+                    var line = Line(brush: Brush(style: isEraser ? .eraser: .brush, width: strokeWidth, color: color))
                     line.path.append(newLocation)
                     model.dirtyLayers[index].drawing.lines.append(line)
                     isInitial = false
@@ -133,7 +135,7 @@ extension DrawingMarkup {
                     model.dirtyLayers[index].drawing.lines[model.dirtyLayers[index].drawing.lines.count - 1] = line
                 }
             }
-            .onEnded { drag in
+            .onEnded { _ in
                 isInitial = true
             }
     }
@@ -142,9 +144,7 @@ extension DrawingMarkup {
         model.reset()
     }
     
-    private func save() {
-        guard let index = model.currentLayerIndex else { return }
-        
+    private func save() {        
         model.commit()
         model.reset()
     }

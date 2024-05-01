@@ -1,15 +1,17 @@
 //
-//  SwiftUIView.swift
-//
+//  SSPKImagePicker.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 09/01/24.
 //
 
 import SwiftUI
 import PhotosUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-public struct SSPKImagePicker<Content>: View where Content : View {
+public struct SSPKImagePicker<Content>: View where Content: View {
     
     // MARK: - Vars & Lets
     let label: Content
@@ -17,7 +19,6 @@ public struct SSPKImagePicker<Content>: View where Content : View {
     @State private var pickerItem: PhotosPickerItem?
     @State private var editorPresent = false
     @State private var isPickerPresented = false
-    
     @State private var editingImage = PlatformImage()
     
     // MARK: - Body
@@ -73,26 +74,5 @@ extension SSPKImagePicker {
         SSPKEditorView(image: $editingImage, isPresented: $editorPresent, previewSize: CGSize(width: 500, height: 500))
             .frame(minWidth: 500, minHeight: 800)
         #endif
-    }
-}
-
-struct PresentEditor<Label>: ViewModifier where Label : View {
-    
-    @Binding var isPresented: Bool
-    @ViewBuilder var label: () -> Label
-    
-    func body(content: Content) -> some View {
-        #if os(iOS)
-        content.fullScreenCover(isPresented: $isPresented, content: label)
-        #elseif os(macOS)
-        content.sheet(isPresented: $isPresented, content: label)
-        #endif
-    }
-}
-
-extension View {
-    
-    func presentEditor<Label>(isPresented: Binding<Bool>, @ViewBuilder label: @escaping () -> Label) -> some View where Label : View {
-        modifier(PresentEditor(isPresented: isPresented, label: label))
     }
 }

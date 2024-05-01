@@ -1,13 +1,16 @@
 //
-//  Enums.swift
-//
+//  Editor.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-enum Editor : String, CaseIterable, Identifiable {
+// MARK: - Editor
+enum Editor: String, CaseIterable, Identifiable {
     
     case crop, adjustment, filter, detail, markup, none
     
@@ -31,6 +34,7 @@ enum Editor : String, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Editor + Extension
 extension Editor {
     
     static func getAllowedEditors(with options: EditorConfiguration.AllowedEditorOptions) -> [Editor] {
@@ -53,8 +57,8 @@ extension Editor {
     }
 }
 
-
-enum Crop : String, CaseIterable, Identifiable {
+// MARK: - Crop
+enum Crop: String, CaseIterable, Identifiable {
     
     case aspect, rotation, transform
     
@@ -72,7 +76,8 @@ enum Crop : String, CaseIterable, Identifiable {
     }
 }
 
-enum Adjustment : String, CustomStringConvertible, CaseIterable, Identifiable {
+// MARK: - Adjustment
+enum Adjustment: String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case light, color, blur, none
     
@@ -106,6 +111,7 @@ enum Adjustment : String, CustomStringConvertible, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Adjustment + Extension
 extension Adjustment {
     
     static func getAllowedAdjustments(with options: AdjustmentConfiguration.AllowedAdjustmentOptions) -> [Adjustment] {
@@ -124,7 +130,8 @@ extension Adjustment {
     }
 }
 
-enum LightAdjustment : String, CustomStringConvertible, CaseIterable, Identifiable {
+// MARK: - LightAdjustment
+enum LightAdjustment: String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case brightness, contrast, saturation, hue
     
@@ -158,6 +165,7 @@ enum LightAdjustment : String, CustomStringConvertible, CaseIterable, Identifiab
     }
 }
 
+// MARK: - LightAdjustment + Extension
 extension LightAdjustment {
     
     static func getAllowedLightAdjustments(with options: AdjustmentConfiguration.AllowedAdjustmentOptions) -> [LightAdjustment] {
@@ -178,7 +186,8 @@ extension LightAdjustment {
     }
 }
 
-enum Detail : String, CustomStringConvertible, CaseIterable, Identifiable {
+// MARK: - Detail
+enum Detail: String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case sharpen, noise
     
@@ -195,7 +204,8 @@ enum Detail : String, CustomStringConvertible, CaseIterable, Identifiable {
     }
 }
 
-enum Markup : String, CustomStringConvertible, CaseIterable, Identifiable {
+// MARK: - Markup
+enum Markup: String, CustomStringConvertible, CaseIterable, Identifiable {
     
     case drawing, text, sticker, none
     
@@ -229,6 +239,7 @@ enum Markup : String, CustomStringConvertible, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Markup + Extension
 extension Markup {
     
     static func getAllowedMarkups(with options: MarkupConfiguration.AllowedMarkupOptions) -> [Markup] {

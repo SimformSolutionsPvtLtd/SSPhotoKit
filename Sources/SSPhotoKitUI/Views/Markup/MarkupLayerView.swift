@@ -1,12 +1,14 @@
 //
 //  MarkupLayerView.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 04/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct MarkupLayerView<Overlay: View>: View {
     
@@ -69,7 +71,7 @@ extension MarkupLayerView {
             .minimumScaleFactor(.leastNonzeroMagnitude)
             .foregroundColor(.white)
             .frame(width: data.size.width, height: data.size.height)
-            .border(.blue, width: isSelected ? 1.2 : 0)
+            .border(.blue, width: isSelected ? 1.2: 0)
             .allowsHitTesting(selection == nil)
             .overlay {
                 if isSelected {
@@ -82,11 +84,11 @@ extension MarkupLayerView {
     
     @ViewBuilder
     private func getDrawingView(_ data: DrawingMarkupItem) -> some View {
-        Canvas { ctx, size in
+        Canvas { ctx, _ in
             for line in data.lines {
                 var path = DrawingHelper.createPath(for: line.path)
                 path.addLines(line.path)
-                ctx.blendMode = line.brush.style == .eraser ? .destinationOut : .color
+                ctx.blendMode = line.brush.style == .eraser ? .destinationOut: .color
                 
                 ctx.stroke(path, with: .color(line.brush.color), style: StrokeStyle(lineWidth: line.brush.width, lineCap: .round, lineJoin: .round))
             }
@@ -96,7 +98,7 @@ extension MarkupLayerView {
     @ViewBuilder
     private func getStickerView(_ data: StickerMarkupItem, isSelected: Bool = false) -> some View {
         Image(platformImage: PlatformImage(cgImage: data.previewImage))
-            .border(.blue, width: isSelected ? 1.2 : 0)
+            .border(.blue, width: isSelected ? 1.2: 0)
             .allowsHitTesting(selection == nil)
             .overlay {
                 if isSelected {

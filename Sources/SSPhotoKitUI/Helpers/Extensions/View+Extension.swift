@@ -1,12 +1,14 @@
 //
 //  View+Extension.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 // MARK: - Configurations
 extension View {
@@ -41,7 +43,6 @@ extension View {
         environment(\.markupConfiguration, .init(customStickers: stickers, stickerOptions: stickerOptions, allowedMarkups: allowedMarkups))
     }
 }
-
 
 // MARK: - Bounds
 extension View {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - TextMarkupItem
-public struct TextMarkupItem : MarkupItem {
+public struct TextMarkupItem: MarkupItem {
     
     // MARK: - Vars & Lets
     public var text: String

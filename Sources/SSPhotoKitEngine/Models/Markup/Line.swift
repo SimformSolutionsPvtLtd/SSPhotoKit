@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct Line: Hashable {
     
+    // MARK: - Vars & Lets
     public var path: [CGPoint]
     public var brush: Brush
     

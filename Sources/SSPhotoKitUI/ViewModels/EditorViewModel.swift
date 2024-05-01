@@ -1,16 +1,18 @@
 //
-//  File.swift
-//  
+//  EditorViewModel.swift
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 02/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 import Combine
 
 @MainActor
-class EditorViewModel : ObservableObject {
+class EditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
     @Published var currentEditor: Editor = .none
@@ -31,8 +33,4 @@ class EditorViewModel : ObservableObject {
         objectWillChange.send()
     }
     
-//    // MARK: - Initializer
-//    init(image: CIImage, previewSize: CGSize) {
-//        self.engine = SSPhotoKitEngine(image: image, previewSize: previewSize)
-//    }
 }

@@ -31,6 +31,7 @@ public struct AspectRatio: Identifiable, Hashable, CustomStringConvertible {
         self.width = newWidth
     }
     
+    // MARK: - Methods
     public func inverted() -> AspectRatio {
         AspectRatio(height: width, width: height)
     }

@@ -1,18 +1,19 @@
 //
 //  ImagePreview.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 09/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
-struct ImagePreview<Overlay>: View where Overlay : View {
-    
-    @EnvironmentObject var model: EditorViewModel
+struct ImagePreview<Overlay>: View where Overlay: View {
     
     // MARK: - Vars & Lets
+    @EnvironmentObject private var model: EditorViewModel
     let imageSource: ImageSource
     let centerOptions: CenterOptions
     let gesturesEnabled: Bool
@@ -20,6 +21,7 @@ struct ImagePreview<Overlay>: View where Overlay : View {
     @State private var lastOffset: CGSize = .zero
     @State private var lastScale: CGSize = .zero
     
+    // MARK: - Body
     var body: some View {
         
         GeometryReader { proxy in
@@ -77,6 +79,7 @@ struct ImagePreview<Overlay>: View where Overlay : View {
         Image(platformImage: image)
     }
     
+    // MARK: - Initializer
     init(imageSource: ImageSource, gesturesEnabled: Bool = true, centerOptions: CenterOptions = [], @ViewBuilder overlay: () -> Overlay) {
         self.imageSource = imageSource
         self.centerOptions = centerOptions
@@ -100,7 +103,7 @@ extension ImagePreview {
             .onChanged { value in
                 model.previewOffset = lastOffset + (value.translation)
             }
-            .onEnded { value in
+            .onEnded { _ in
                 lastOffset = model.previewOffset
             }
     }
@@ -152,6 +155,7 @@ struct CenterOptions: OptionSet {
     static let always: CenterOptions = [.initial, .imageSizeChange, .frameSizeChange]
 }
 
+// MARK: - ImagePreview.ImageSource + Extension
 extension ImagePreview.ImageSource {
     
     var size: CGSize {

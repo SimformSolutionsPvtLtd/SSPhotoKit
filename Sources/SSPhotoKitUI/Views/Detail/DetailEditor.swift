@@ -1,12 +1,14 @@
 //
 //  DetailEditor.swift
-//
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 08/01/24.
 //
 
 import SwiftUI
+#if canImport(SSPhotoKitEngine)
 import SSPhotoKitEngine
+#endif
 
 struct DetailEditor: View {
     
@@ -73,8 +75,6 @@ extension DetailEditor {
             NoiseDetailControl(noise: $detailViewModel.noiseFilter) {
                 detailViewModel.currentImage = detailViewModel.noiseFilter.apply(to: detailViewModel.tempImage)
             }
-        default:
-            EmptyView()
         }
     }
     
@@ -83,7 +83,7 @@ extension DetailEditor {
         ScrollableTabBar(selection: $detailViewModel.currentDetail, items: Detail.allCases) { detail in
             Text(detail.description)
                 .font(.system(size: 16, design: .rounded))
-                .foregroundStyle(.white.opacity(detailViewModel.currentDetail == detail ? 1 : 0.6))
+                .foregroundStyle(.white.opacity(detailViewModel.currentDetail == detail ? 1: 0.6))
         }
     }
 }

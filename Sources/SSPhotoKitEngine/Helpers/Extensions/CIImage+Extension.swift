@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  CIImage+Extension.swift
+//  SSPhotoKitEngine
 //
 //  Created by Krunal Patel on 02/01/24.
 //
@@ -26,21 +26,6 @@ extension CIImage {
         
         return self.transformed(by: .init(scaleX: scale, y: scale))
             .removingExtentOffset()
-    }
-    
-    public func resizedSmooth(_ size: CGSize) -> CIImage {
-        let filter = CIFilter.lanczosScaleTransform()
-        let scale = size.height / (extent.height)
-        let aspectRatio = 1//size.width / ((extent.width) * scale)
-        
-        filter.inputImage = self
-        filter.aspectRatio = Float(aspectRatio)
-        filter.scale = Float(scale)
-        
-        
-        guard let outputImage = filter.outputImage else { return self }
-        
-        return outputImage.cropped(to: outputImage.extent)
     }
 }
 
@@ -72,17 +57,16 @@ extension CIImage {
         return transformed(by: transform)
     }
     
-    
-    func flipping(scaleX x: CGFloat, scaleY y: CGFloat) -> CIImage {
+    func flipping(scaleX: CGFloat, scaleY: CGFloat) -> CIImage {
         
-        guard x != 1 || y != 1  else {
+        guard scaleX != 1 || scaleY != 1  else {
             return self
         }
         
         var transform = CGAffineTransform(translationX: size.width / 2,
                                           y: size.height / 2)
         
-        transform = transform.scaledBy(x: x, y: y)
+        transform = transform.scaledBy(x: scaleX, y: scaleY)
         
         transform = transform.translatedBy(x: -CGFloat(size.width) / 2,
                                            y: -CGFloat(size.height) / 2)

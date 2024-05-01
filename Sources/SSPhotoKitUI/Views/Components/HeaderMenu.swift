@@ -1,6 +1,6 @@
 //
 //  HeaderMenu.swift
-//  SSPhotoKitUI
+//  SSPhotoKit
 //
 //  Created by Krunal Patel on 03/01/24.
 //
@@ -66,7 +66,7 @@ enum MenuAction {
 // MARK: - Header Menu Options
 extension HeaderMenu {
     
-    struct DisableOptions : OptionSet {
+    struct DisableOptions: OptionSet {
         
         let rawValue: UInt
         
