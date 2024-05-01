@@ -23,6 +23,7 @@ struct ContentView: View {
         } else {
             Image(platformImage: image)
                 .resizable()
+                .scaledToFit()
         }
     }
 }

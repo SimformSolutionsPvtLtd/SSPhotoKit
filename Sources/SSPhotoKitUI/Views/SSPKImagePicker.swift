@@ -36,6 +36,7 @@ public struct SSPKImagePicker<Content>: View where Content: View {
             if let pickerItem {
                 loadImage(pickerItem)
             }
+            pickerItem = nil
         }
         .onChange(of: editorPresent) { _ in
             image = editingImage

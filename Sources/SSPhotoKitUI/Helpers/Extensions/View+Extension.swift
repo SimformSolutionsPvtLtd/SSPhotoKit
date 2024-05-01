@@ -20,9 +20,10 @@ extension View {
     
     // MARK: - Crop Configuration
     public func cropConfig(ratios: [AspectRatio],
-                           options: CropConfiguration.RatioOptions = .all,
-                           labelType: CropConfiguration.LabelType = .text) -> some View {
-        environment(\.cropConfiguration, .init(customRatios: ratios, ratioOptions: options, labelType: labelType))
+                           ratioOptions: CropConfiguration.RatioOptions = .all,
+                           labelType: CropConfiguration.LabelType = .text,
+                           allowedCrops: CropConfiguration.AllowedCropOptions = .all) -> some View {
+        environment(\.cropConfiguration, .init(customRatios: ratios, ratioOptions: ratioOptions, labelType: labelType, allowedCrops: allowedCrops))
     }
     
     // MARK: - Adjustment Configuration
@@ -32,8 +33,8 @@ extension View {
     
     // MARK: - Markup Configuration
     public func filterConfig(filterGroups: GroupedFilters = [:],
-                             filterOptions: FilterConfiguration.FilterOptions = .all) -> some View {
-        environment(\.filterConfiguration, .init(customFilterGroups: filterGroups, filterOptions: filterOptions))
+                             options: FilterConfiguration.FilterOptions = .all) -> some View {
+        environment(\.filterConfiguration, .init(customFilterGroups: filterGroups, options: options))
     }
     
     // MARK: - Markup Configuration

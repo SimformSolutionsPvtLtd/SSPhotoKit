@@ -55,12 +55,20 @@ class CropEditorViewModel: ObservableObject {
     }
     
     func createCommand(for imageSize: CGSize) -> CropEditingCommand {
-                
-        let cropWidth: CGFloat = size.width / scale.width
-        let cropHeight: CGFloat = size.height / scale.height
         
-        let startX = CGFloat(imageSize.width / 2) - (cropWidth / 2) - offset.width
-        let startY = CGFloat(imageSize.height / 2 ) - (cropHeight / 2) + offset.height
+        let ratio: CGFloat
+        
+        if frameSize.width < frameSize.height {
+            ratio = imageSize.width / frameSize.width
+        } else {
+            ratio = imageSize.height / frameSize.height
+        }
+        
+        let cropWidth: CGFloat = size.width * ratio / scale.width
+        let cropHeight: CGFloat = size.height * ratio / scale.height
+        
+        let startX = CGFloat(imageSize.width / 2) - (cropWidth / 2) - (offset.width * ratio)
+        let startY = CGFloat(imageSize.height / 2 ) - (cropHeight / 2) + (offset.height * ratio)
         
         let rect = CGRect(x: startX, y: startY, width: cropWidth, height: cropHeight)
         var command = CropEditingCommand(rect: rect)

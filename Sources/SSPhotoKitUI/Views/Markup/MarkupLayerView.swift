@@ -45,7 +45,7 @@ struct MarkupLayerView<Overlay: View>: View {
     }
     
     // MARK: - Initializer
-    init(layers: [MarkupLayer], selection: Int? = nil, overlay: @escaping (() -> Overlay), onSelect: ((Markup, Int) -> Void)? = nil) {
+    init(layers: [MarkupLayer], selection: Int? = nil, @ViewBuilder overlay: @escaping (() -> Overlay), onSelect: ((Markup, Int) -> Void)? = nil) {
         self.layers = layers
         self.selection = selection
         self.selectionOverlay = overlay()

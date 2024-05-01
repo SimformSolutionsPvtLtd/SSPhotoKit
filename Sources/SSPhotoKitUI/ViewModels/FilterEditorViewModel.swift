@@ -42,7 +42,6 @@ class FilterEditorViewModel: ObservableObject {
     }
     
     func loadPreview(with filters: GroupedFilters) async {
-        createPreviews(with: filters)
         await original.previewImage = createPreview(for: .original)
         currentFilter = original
         

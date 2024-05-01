@@ -34,18 +34,17 @@ struct CropEditor: View {
             ZStack {
                 if let previewImage = engine.previewPlatformImage {
                     ImagePreview(imageSource: .platformImage(previewImage), gesturesEnabled: false)
-                        .rotationEffect(.degrees(cropViewModel.rotation))
                         .scaleEffect(cropViewModel.flipScale)
+                        .rotationEffect(.degrees(cropViewModel.rotation))
                         .offset(cropViewModel.offset)
                         .scaleEffect(cropViewModel.scale)
                     
-                    if cropViewModel.currentEdit == .aspect {
-                        CropMask(size: cropViewModel.size)
-                    }
+                    CropMask(size: cropViewModel.size)
                 } else {
                     ProgressView()
                 }
             }
+            .clipped()
             .onAppear {
                 cropViewModel.frameSize = proxy.size
                 if let previewSize = engine.previewPlatformImage?.size {
@@ -87,7 +86,7 @@ extension CropEditor {
     
     @ViewBuilder
     private var editTabBar: some View {
-        ScrollableTabBar(selection: $cropViewModel.currentEdit, items: Crop.allCases) { edit in
+        ScrollableTabBar(selection: $cropViewModel.currentEdit, items: Crop.getAllowedCrops(with: config.allowedCrops)) { edit in
             Text(edit.name)
                 .font(.system(size: 16, design: .rounded))
                 .foregroundStyle(.white.opacity(cropViewModel.currentEdit == edit ? 1: 0.6))
@@ -144,12 +143,10 @@ extension CropEditor {
         case .redo:
             print("redo")
         case .save:
-            if let size = engine.previewPlatformImage?.size {
                 Task {
-                    await engine.apply(cropViewModel.createCommand(for: size))
+                    await engine.apply(cropViewModel.createCommand(for: engine.previewImage.extent.size))
                     model.resetEditor()
                 }
-            }
         case .discard:
             model.resetEditor()
         }

@@ -33,13 +33,14 @@ struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
             
             content
                 .overlay {
-                    if let index = model.currentLayerIndex,
-                       model.canEditCurrentLayer {
+                    if model.canEditCurrentLayer {
                         MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex) {
-                            SelectionOverlay(currentRotation: $model.dirtyLayers[index].sticker.rotation,
-                                             currentSize: $model.dirtyLayers[index].sticker.size,
-                                             options: config.stickerOptions.contains(.custom) ? .all.subtracting(.edit): .all,
-                                             onUpdate: handleUpdate)
+                            if let index = model.currentLayerIndex {
+                                SelectionOverlay(currentRotation: $model.dirtyLayers[index].sticker.rotation,
+                                                 currentSize: $model.dirtyLayers[index].sticker.size,
+                                                 options: config.stickerOptions.contains(.custom) ? .all.subtracting(.edit): .all,
+                                                 onUpdate: handleUpdate)
+                            }
                         }
                     }
                 }
@@ -209,9 +210,7 @@ extension StickerMarkup {
         model.reset()
     }
     
-    private func save() {
-        guard model.currentLayerIndex != nil else { return }
-        
+    private func save() {        
         model.commit()
         model.reset()
     }

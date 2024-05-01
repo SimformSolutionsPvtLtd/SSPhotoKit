@@ -76,6 +76,25 @@ enum Crop: String, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Crop + Extension
+extension Crop {
+    
+    static func getAllowedCrops(with options: CropConfiguration.AllowedCropOptions) -> [Crop] {
+        Crop.allCases.filter { crop in
+            switch crop {
+            case .aspect where options.contains(.aspectCrop):
+                true
+            case .rotation where options.contains(.rotation):
+                true
+            case .transform where options.contains(.transform):
+                false
+            default:
+                false
+            }
+        }
+    }
+}
+
 // MARK: - Adjustment
 enum Adjustment: String, CustomStringConvertible, CaseIterable, Identifiable {
     

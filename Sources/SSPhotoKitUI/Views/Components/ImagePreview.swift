@@ -31,7 +31,7 @@ struct ImagePreview<Overlay>: View where Overlay: View {
                     MetalView(image: image)
                         .frame(width: imageSource.size.width, height: imageSource.size.height)
                 case .platformImage(let image):
-                    platformImagePreview(image, with: proxy)
+                    Image(platformImage: image)
                 }
             }
             .preference(key: PreviewOffsetPreference.self, value: model.previewOffset)
@@ -71,12 +71,6 @@ struct ImagePreview<Overlay>: View where Overlay: View {
             .allowsHitTesting(gesturesEnabled)
         }
         .clipped()
-    }
-    
-    @ViewBuilder
-    private func platformImagePreview(_ image: PlatformImage, with proxy: GeometryProxy) -> some View {
-        
-        Image(platformImage: image)
     }
     
     // MARK: - Initializer
