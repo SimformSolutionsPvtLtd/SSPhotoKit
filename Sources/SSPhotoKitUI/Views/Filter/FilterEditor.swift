@@ -27,7 +27,7 @@ struct FilterEditor: View {
     var body: some View {
         
         ZStack {
-            ImagePreview(imageSource: .coreImage($filterViewModel.currentImage), gesturesEnabled: false)
+            ImagePreview(imageSource: .coreImage($filterViewModel.currentImage))
         }
         .overlay(alignment: .bottom) {
             footerView
