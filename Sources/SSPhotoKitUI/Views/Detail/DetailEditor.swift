@@ -25,7 +25,7 @@ struct DetailEditor: View {
     var body: some View {
         
         ZStack {
-            ImagePreview(imageSource: .coreImage($detailViewModel.currentImage), gesturesEnabled: false)
+            ImagePreview(imageSource: .coreImage($detailViewModel.currentImage))
         }
         .overlay(alignment: .bottom) {
             footerView
