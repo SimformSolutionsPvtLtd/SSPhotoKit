@@ -27,7 +27,6 @@ struct MarkupEditor: View {
     
     // MARK: - Body
     var body: some View {
-        
         ZStack {
             markupView
         }
@@ -113,12 +112,11 @@ extension MarkupEditor {
             }
             
         case .sticker:
-            StickerMarkup {
+            StickerMarkup(onSelect: handleSelection(for:at:)) {
                 imagePreview
             } menu: {
                 rearrangeMenu
             }
-            
         case .none:
             imagePreview
         }

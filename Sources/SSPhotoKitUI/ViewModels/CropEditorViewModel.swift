@@ -34,8 +34,8 @@ class CropEditorViewModel: ObservableObject {
     }
     
     var flipScale: CGSize {
-        CGSize(width: horizontalFlipped ? -1: 1,
-               height: verticalFlipped ? -1: 1)
+        CGSize(width: horizontalFlipped ? -1 : 1,
+               height: verticalFlipped ? -1 : 1)
     }
     
     // MARK: - Methods
@@ -46,7 +46,6 @@ class CropEditorViewModel: ObservableObject {
         
         if ratio.height > ratio.width {
             let scale = CGFloat(ratio.width) / CGFloat(ratio.height)
-            
             size = CGSize(width: minSize * scale - 32, height: minSize)
         } else {
             let scale = CGFloat(ratio.height) / CGFloat(ratio.width)
@@ -54,7 +53,7 @@ class CropEditorViewModel: ObservableObject {
         }
     }
     
-    func createCommand(for imageSize: CGSize) -> CropEditingCommand {
+    func createCommand(for imageSize: CGSize, with newSize: CGSize) -> CropEditingCommand {
         
         let ratio: CGFloat
         
@@ -67,8 +66,8 @@ class CropEditorViewModel: ObservableObject {
         let cropWidth: CGFloat = size.width * ratio / scale.width
         let cropHeight: CGFloat = size.height * ratio / scale.height
         
-        let startX = CGFloat(imageSize.width / 2) - (cropWidth / 2) - (offset.width * ratio)
-        let startY = CGFloat(imageSize.height / 2 ) - (cropHeight / 2) + (offset.height * ratio)
+        let startX = CGFloat(newSize.width / 2) - (cropWidth / 2) - (offset.width * ratio)
+        let startY = CGFloat(newSize.height / 2 ) - (cropHeight / 2) + (offset.height * ratio)
         
         let rect = CGRect(x: startX, y: startY, width: cropWidth, height: cropHeight)
         var command = CropEditingCommand(rect: rect)

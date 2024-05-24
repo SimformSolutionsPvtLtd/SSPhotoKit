@@ -27,6 +27,9 @@ struct AdjustmentEditor: View {
         
         ZStack {
             ImagePreview(imageSource: .coreImage($adjustmentViewModel.currentImage))
+                .onTapGesture {
+                    adjustmentViewModel.currentAdjustment = .none
+                }
         }
         .overlay(alignment: .bottom) {
             footerView
@@ -46,12 +49,14 @@ extension AdjustmentEditor {
     private var footerView: some View {
         VStack {
             adjustmentControls
-                .frame(height: 130)
+                .padding(.horizontal, 12)
+                .frame(maxHeight: 130)
+                .background(.red)
             
             adjustmentMenu
             
             Divider()
-                .frame(height: 20)
+                .background(.red)
             
             FooterMenu(adjustmentViewModel.currentAdjustment.description) {
                 Task {
@@ -61,8 +66,9 @@ extension AdjustmentEditor {
             } onDiscard: {
                 model.resetEditor()
             }
+            .background(.red)
         }
-        .background()
+        .background(.black.opacity(0.5))
     }
     
     @ViewBuilder
@@ -108,7 +114,7 @@ extension AdjustmentEditor {
         .onItemReselect { _ in
             adjustmentViewModel.currentAdjustment = .none
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 8)
     }
 }
 
