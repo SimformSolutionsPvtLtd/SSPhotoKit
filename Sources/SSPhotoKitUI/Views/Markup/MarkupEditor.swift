@@ -32,6 +32,9 @@ struct MarkupEditor: View {
                 footerMenu
             }
         }
+        .onAppear {
+            markupViewModel.containerSize = model.previewFrame.size
+        }
         .onPreferenceChange(PreviewOffsetPreference.self) { value in
             markupViewModel.offset = value
         }
@@ -63,6 +66,8 @@ extension MarkupEditor {
             .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue: .gray)
             .disabled(!markupViewModel.canArrange(.moveUp))
         }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 8)
     }
     
     @ViewBuilder
@@ -70,9 +75,9 @@ extension MarkupEditor {
         VStack {
             markupMenu
                 .environmentObject(markupViewModel)
+                .padding(.top, 8)
             
             Divider()
-                .frame(height: 20)
             
             FooterMenu(markupViewModel.currentMarkup.description,
                        disableOptions: getFooterDisableOptions()) {
@@ -94,14 +99,14 @@ extension MarkupEditor {
     private var markupView: some View {
         switch markupViewModel.currentMarkup {
         case .drawing:
-            DrawingMarkup {
+            DrawingMarkup(onSelect: handleSelection(for:at:)) {
                 imagePreview
             } menu: {
                 rearrangeMenu
             }
             
         case .text:
-            TextMarkup {
+            TextMarkup(onSelect: handleSelection(for:at:)) {
                 imagePreview
             } menu: {
                 rearrangeMenu
@@ -168,8 +173,8 @@ extension MarkupEditor {
     }
     
     private func handleSelection(for markup: Markup, at position: Int) {
-        markupViewModel.currentMarkup = markup
         markupViewModel.currentLayerIndex = position
+        markupViewModel.currentMarkup = markup
     }
     
     private func getFooterDisableOptions() -> FooterMenu.DisableOption {

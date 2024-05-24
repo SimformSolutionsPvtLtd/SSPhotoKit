@@ -35,7 +35,7 @@ struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
             content
                 .overlay {
                     if model.canEditCurrentLayer {
-                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex, onSelect: onSelect) {
+                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex, onSelect: handleSelection) {
                             if let index = model.currentLayerIndex {
                                 SelectionOverlay(currentRotation: $model.dirtyLayers[index].sticker.rotation,
                                                  currentSize: $model.dirtyLayers[index].sticker.size,
@@ -150,7 +150,6 @@ extension StickerMarkup {
         DragGesture(coordinateSpace: .local)
             .onChanged { value in
                 guard let index = model.currentLayerIndex else { return }
-                
                 model.dirtyLayers[index].sticker.origin = (lastOrigin + CGPoint(x: value.translation.width, y: value.translation.height))
             }
             .onEnded { _ in
@@ -207,6 +206,11 @@ extension StickerMarkup {
         default:
             break
         }
+    }
+    
+    private func handleSelection(markup: Markup, index: Int) {
+        onSelect(markup, index)
+        lastOrigin = model.dirtyLayers[model.currentLayerIndex!].sticker.origin
     }
     
     private func discard() {

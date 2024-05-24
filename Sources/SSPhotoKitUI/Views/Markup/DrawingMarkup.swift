@@ -16,6 +16,7 @@ struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
     
     // MARK: - Vars & Lets
     private let rearrangeMenu: Menu?
+    private let onSelect: (Markup, Int) -> Void
     private let content: Content
     
     @State private var frame: CGRect = .zero
@@ -30,7 +31,7 @@ struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
         ZStack {
             content
                 .overlay {
-                    MarkupLayerView(layers: model.dirtyLayers)
+                    MarkupLayerView(layers: model.dirtyLayers, onSelect: onSelect)
                 }
                 .highPriorityGesture(drawGesture)
             
@@ -65,14 +66,16 @@ struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
     }
     
     // MARK: - Initializer
-    init(@ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
+    init(onSelect: @escaping (Markup, Int) -> Void, @ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
         self.content = content()
         self.rearrangeMenu = menu()
+        self.onSelect = onSelect
     }
     
-    init(@ViewBuilder content: () -> Content) where Menu == EmptyView {
+    init(onSelect: @escaping (Markup, Int) -> Void, @ViewBuilder content: () -> Content) where Menu == EmptyView {
         self.rearrangeMenu = nil
         self.content = content()
+        self.onSelect = onSelect
     }
 }
 

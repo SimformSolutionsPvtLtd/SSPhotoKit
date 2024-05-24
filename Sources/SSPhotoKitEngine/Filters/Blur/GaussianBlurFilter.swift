@@ -39,8 +39,13 @@ public struct GaussianBlurFilter: Filter {
     }
     
     // MARK: - Initializer
-    public init(radius: Float = 0) {
-        self._radius = filter.makeAttribute(for: kCIInputRadiusKey)
+    public init(radius: Float = 0, imageSize: CGSize? = nil) {
+         if let imageSize {
+            let minSize = min(imageSize.width, imageSize.height)
+             self._radius = FilterAttribute(wrappedValue: 0, range: 0...(Float(minSize) / 20))
+        } else {
+            self._radius = filter.makeAttribute(for: kCIInputRadiusKey)
+        }
         self.radius = 0
     }
 }
