@@ -47,7 +47,7 @@ extension DetailEditor {
             detailMenu
             
             detailControls
-                .frame(height: 130)
+                .frame(maxHeight: 130)
             
             Divider()
                 .frame(height: 20)
@@ -61,7 +61,7 @@ extension DetailEditor {
                 model.resetEditor()
             }
         }
-        .background()
+        .background(.black.opacity(0.5))
     }
     
     @ViewBuilder

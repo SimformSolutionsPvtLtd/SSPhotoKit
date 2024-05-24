@@ -112,6 +112,7 @@ extension SSPKEditorView {
             model.resetEditor()
         }
         .padding(.horizontal, 16)
+        .padding(.top, 8)
         .frame(maxWidth: .infinity)
         .background()
         .opacity(model.shouldShowTabBar ? 1: 0)

@@ -72,14 +72,14 @@ class MarkupEditorViewModel: ObservableObject {
             if case .drawing = copy[index] {
                 copy[index].drawing.updateLines(scale: scale, offset: offset, inverting: inverting)
             }
-            
+            let center = CGSize(width: 195.0, height: 214.5)
             if inverting {
-                copy[index].item.origin *= scale.toCGPoint()
-                copy[index].item.origin += offset.toCGPoint()
+                let newOffset = ((copy[index].item.origin.toCGSize() - center + offset) * scale) + center
+                copy[index].item.origin = newOffset.toCGPoint()
                 copy[index].item.size *= scale
             } else {
-                copy[index].item.origin -= offset.toCGPoint()
-                copy[index].item.origin /= scale.toCGPoint()
+                let newOffset = ((copy[index].item.origin.toCGSize() - center - offset) / scale) + center
+                copy[index].item.origin = newOffset.toCGPoint()
                 copy[index].item.size /= scale
             }
         }
@@ -87,7 +87,6 @@ class MarkupEditorViewModel: ObservableObject {
     }
     
     func createCommand<Content>(@ViewBuilder renderer: @escaping ([MarkupLayer]) -> Content) -> some EditingCommand where Content: View {
-        
         MarkupEditingCommand(layers: layers, renderer: renderer)
     }
 }

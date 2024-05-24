@@ -10,7 +10,7 @@ import CoreImage
 // MARK: - Size
 extension CIImage {
     
-    var size: CGSize {
+    public var size: CGSize {
         extent.size
     }
 }

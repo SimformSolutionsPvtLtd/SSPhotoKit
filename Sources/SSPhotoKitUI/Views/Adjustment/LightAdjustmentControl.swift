@@ -21,8 +21,9 @@ struct LightAdjustmentControl: View {
     // MARK: - Body
     var body: some View {
         ScrollView {
-            
             VStack {
+                Spacer()
+                    .frame(height: 12)
                 ForEach(LightAdjustment.getAllowedLightAdjustments(with: config.allowedAdjustments)) { adjustment in
                     getSlider(for: adjustment)
                 }
@@ -43,7 +44,7 @@ extension LightAdjustmentControl {
                      in: colorFilter.$brightness) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(colorFilter.brightness)")
+                Text("\(colorFilter.brightness.roundedString(to: 2))")
             } onEditingChanged: { started in
                 onEditingChange(.brightness, started)
             }
@@ -53,7 +54,7 @@ extension LightAdjustmentControl {
                      in: colorFilter.$contrast) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(colorFilter.contrast)")
+                Text("\(colorFilter.contrast.roundedString(to: 2))")
             } onEditingChanged: { started in
                 onEditingChange(.contrast, started)
             }
@@ -63,7 +64,7 @@ extension LightAdjustmentControl {
                      in: colorFilter.$saturation) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(colorFilter.saturation)")
+                Text("\(colorFilter.saturation.roundedString(to: 2))")
             } onEditingChanged: { started in
                 onEditingChange(.saturation, started)
             }
@@ -73,7 +74,7 @@ extension LightAdjustmentControl {
                      in: hueFilter.$hue) {
                 Text(adjustment.description)
             } trailingLabel: {
-                Text("\(hueFilter.hue)")
+                Text("\(hueFilter.hue.roundedString(to: 2))")
             } onEditingChanged: { started in
                 onEditingChange(.hue, started)
             }

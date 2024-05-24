@@ -55,6 +55,7 @@ struct HeaderMenu: View {
             Spacer()
         }
         .buttonStyle(.primary)
+        .padding(.bottom, 8)
     }
 }
 

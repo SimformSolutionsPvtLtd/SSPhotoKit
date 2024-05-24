@@ -45,7 +45,7 @@ struct MarkupLayerView<Overlay: View>: View {
     }
     
     // MARK: - Initializer
-    init(layers: [MarkupLayer], selection: Int? = nil, @ViewBuilder overlay: @escaping (() -> Overlay), onSelect: ((Markup, Int) -> Void)? = nil) {
+    init(layers: [MarkupLayer], selection: Int? = nil, onSelect: ((Markup, Int) -> Void)? = nil, @ViewBuilder overlay: @escaping (() -> Overlay)) {
         self.layers = layers
         self.selection = selection
         self.selectionOverlay = overlay()
@@ -89,7 +89,6 @@ extension MarkupLayerView {
                 var path = DrawingHelper.createPath(for: line.path)
                 path.addLines(line.path)
                 ctx.blendMode = line.brush.style == .eraser ? .destinationOut: .color
-                
                 ctx.stroke(path, with: .color(line.brush.color), style: StrokeStyle(lineWidth: line.brush.width, lineCap: .round, lineJoin: .round))
             }
         }

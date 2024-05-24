@@ -35,7 +35,7 @@ public class SSPhotoKitEngine: ObservableObject {
     
     private var editingStack = EditingCommandStack()
     private var redoStack = EditingCommandStack()
-    private var originalPreviewImage: CIImage!
+    public var originalPreviewImage: CIImage!
     
     private lazy var ciContext: CIContext = {
         if let device = MTLCreateSystemDefaultDevice() {

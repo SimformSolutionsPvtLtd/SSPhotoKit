@@ -20,6 +20,7 @@ struct ImagePreview<Overlay>: View where Overlay: View {
     let overlay: Overlay?
     @State private var lastOffset: CGSize = .zero
     @State private var lastScale: CGSize = .zero
+    @State private var containerSize: CGSize = .zero
     
     // MARK: - Body
     var body: some View {
@@ -48,9 +49,10 @@ struct ImagePreview<Overlay>: View where Overlay: View {
             .overlay {
                 overlay
             }
-            .scaleEffect(model.previewScale, anchor: .zero)
+            .scaleEffect(model.previewScale, anchor: .center)
             .offset(model.previewOffset)
             .onAppear {
+                containerSize = proxy.size
                 if centerOptions.contains(.initial) && model.isInitial {
                     resizeAndCenterImage(with: imageSource.size, to: proxy.size)
                     model.isInitial = false
@@ -63,13 +65,15 @@ struct ImagePreview<Overlay>: View where Overlay: View {
                 }
             }
             .onChange(of: proxy.size) { proxySize in
+                containerSize = proxySize
                 if centerOptions.contains(.frameSizeChange) {
                     resizeAndCenterImage(with: imageSource.size, to: proxySize)
                 }
             }
-            .simultaneousGesture(dragGesture.simultaneously(with: magnificationGesture))
-            .allowsHitTesting(gesturesEnabled)
         }
+        .background(.green)
+        .simultaneousGesture(dragGesture.simultaneously(with: magnificationGesture))
+        .allowsHitTesting(gesturesEnabled)
         .clipped()
     }
     
@@ -105,7 +109,9 @@ extension ImagePreview {
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                model.previewScale = lastScale + CGSize(width: value, height: value)
+                let newValue = lastScale + CGSize(width: value, height: value)
+                guard newValue.width > 0.05, newValue.height > 0.05 else { return }
+                model.previewScale = newValue
             }
             .onEnded { _ in
                 lastScale = CGSize(width: model.previewScale.width - 1, height: model.previewScale.height - 1)

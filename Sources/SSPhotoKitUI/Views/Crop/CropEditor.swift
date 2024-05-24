@@ -33,11 +33,11 @@ struct CropEditor: View {
         GeometryReader { proxy in
             ZStack {
                 if let previewImage = engine.previewPlatformImage {
-                    ImagePreview(imageSource: .platformImage(previewImage), gesturesEnabled: false)
+                    Image(platformImage: previewImage)
                         .scaleEffect(cropViewModel.flipScale)
                         .rotationEffect(.degrees(cropViewModel.rotation))
                         .offset(cropViewModel.offset)
-                        .scaleEffect(cropViewModel.scale)
+                        .scaleEffect(cropViewModel.scale, anchor: .center)
                     
                     CropMask(size: cropViewModel.size)
                 } else {
@@ -51,6 +51,8 @@ struct CropEditor: View {
                     let ratio = AspectRatio(name: "original", height: UInt(previewSize.height), width: UInt(previewSize.width))
                     originalRatio = ratio
                     cropViewModel.currentRatio = ratio
+                    cropViewModel.imageSize = previewSize
+                    cropViewModel.resizeAndCenterImage(shouldScale: true)
                 }
             }
             .overlay(alignment: .bottom) {
@@ -63,9 +65,9 @@ struct CropEditor: View {
                         .frame(height: 20)
                     
                     FooterMenu("Crop & Rotation") {
-                        if let size = engine.previewPlatformImage?.size {
+                        if let newSize = engine.previewPlatformImage?.size {
                             Task {
-                                await engine.apply(cropViewModel.createCommand(for: size))
+                                await engine.apply(cropViewModel.createCommand(for: engine.originalPreviewImage.size, with: newSize))
                                 model.isInitial = true
                                 model.resetEditor()
                             }
@@ -113,9 +115,22 @@ extension CropEditor {
 extension CropEditor {
     
     private var dragGesture: some Gesture {
-        DragGesture(coordinateSpace: .local)
+        DragGesture(coordinateSpace: .global)
             .onChanged { value in
-                cropViewModel.offset = cropViewModel.lastOffset + (value.translation / cropViewModel.scale)
+                // Calculation - ((image size - frame size / scale) / 2) - abs(offset) > 0
+                var centerOffset = cropViewModel.lastOffset + (value.translation / cropViewModel.scale)
+                let imageSize = engine.previewPlatformImage!.size
+                let scaledFrameSize = cropViewModel.size / cropViewModel.scale
+                let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
+                
+                if availableOffset.width - abs(centerOffset.width) < 0 {
+                    centerOffset.width = cropViewModel.offset.width
+                }
+                
+                if availableOffset.height - abs(centerOffset.height) < 0 {
+                    centerOffset.height = cropViewModel.offset.height
+                }
+                cropViewModel.offset = centerOffset
             }
             .onEnded { _ in
                 cropViewModel.lastOffset = cropViewModel.offset
@@ -125,30 +140,28 @@ extension CropEditor {
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                cropViewModel.scale = cropViewModel.lastScale + CGSize(width: value, height: value)
+                let newScale = (CGSize(width: value - 1, height: value - 1) * cropViewModel.lastScale)
+                let newValue = cropViewModel.lastScale + newScale
+                // No validation need when zooming in
+                if value > 1 {
+                    cropViewModel.scale = newValue
+                    return
+                }
+                
+                // Validate scaled image boundaries
+                let imageOffset = cropViewModel.lastOffset
+                let imageSize = engine.previewPlatformImage!.size
+                let scaledFrameSize = cropViewModel.size / newValue
+                let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
+                guard availableOffset.width - abs(imageOffset.width) >= 0 ||
+                    availableOffset.height - abs(imageOffset.height) >= 0 else {
+                    return
+                }
+                
+                cropViewModel.scale = newValue
             }
             .onEnded { _ in
-                cropViewModel.lastScale = CGSize(width: cropViewModel.scale.width - 1, height: cropViewModel.scale.height - 1)
+                cropViewModel.lastScale = CGSize(width: cropViewModel.scale.width, height: cropViewModel.scale.height)
             }
-    }
-}
-
-// MARK: - Methods
-extension CropEditor {
-    
-    private func handleMenuAction(action: MenuAction) {
-        switch action {
-        case .undo:
-            print("undo")
-        case .redo:
-            print("redo")
-        case .save:
-                Task {
-                    await engine.apply(cropViewModel.createCommand(for: engine.previewImage.extent.size))
-                    model.resetEditor()
-                }
-        case .discard:
-            model.resetEditor()
-        }
     }
 }
