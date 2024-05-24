@@ -50,13 +50,9 @@ extension AdjustmentEditor {
         VStack {
             adjustmentControls
                 .padding(.horizontal, 12)
-                .frame(maxHeight: 130)
-                .background(.red)
+                .padding(.top, 8)
             
             adjustmentMenu
-            
-            Divider()
-                .background(.red)
             
             FooterMenu(adjustmentViewModel.currentAdjustment.description) {
                 Task {
@@ -66,7 +62,6 @@ extension AdjustmentEditor {
             } onDiscard: {
                 model.resetEditor()
             }
-            .background(.red)
         }
         .background(.black.opacity(0.5))
     }
@@ -80,6 +75,7 @@ extension AdjustmentEditor {
                 hueFilter: $adjustmentViewModel.hueFilter,
                 onEditingChange: handleLightAdjustmentChange
             )
+            .frame(maxHeight: 130)
             .onChange(of: adjustmentViewModel.colorFilter) { _ in
                 guard !adjustmentViewModel.isUpdating else { return }
                 adjustmentViewModel.currentImage = adjustmentViewModel.colorFilter.apply(to: adjustmentViewModel.tempImage)
@@ -115,6 +111,7 @@ extension AdjustmentEditor {
             adjustmentViewModel.currentAdjustment = .none
         }
         .padding(.horizontal, 8)
+        .padding(.top, 8)
     }
 }
 

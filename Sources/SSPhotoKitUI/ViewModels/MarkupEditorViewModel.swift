@@ -18,7 +18,7 @@ class MarkupEditorViewModel: ObservableObject {
     @Published var currentLayerIndex: Int?
     @Published var dirtyLayers: [MarkupLayer] = []
     
-    var previewFrame: CGRect = .zero
+    var containerSize: CGSize = .zero
     var scale: CGSize = .one
     var offset: CGSize = .zero
     
@@ -68,17 +68,19 @@ class MarkupEditorViewModel: ObservableObject {
     func scaling(layers: [MarkupLayer], with scale: CGSize, offset: CGSize, inverting: Bool = false) -> [MarkupLayer] {
         var copy = layers
         for index in copy.indices {
-            
+            let center = containerSize / CGSize(width: 2, height: 2)
+            let scaledOffset = offset * scale
             if case .drawing = copy[index] {
-                copy[index].drawing.updateLines(scale: scale, offset: offset, inverting: inverting)
+                copy[index].drawing.update(scale: scale, offset: scaledOffset, center: center, inverting: inverting)
             }
-            let center = CGSize(width: 195.0, height: 214.5)
+            
+            let origin = copy[index].item.origin.toCGSize()
             if inverting {
-                let newOffset = ((copy[index].item.origin.toCGSize() - center + offset) * scale) + center
+                let newOffset = ((origin - center) * scale) + center + scaledOffset
                 copy[index].item.origin = newOffset.toCGPoint()
                 copy[index].item.size *= scale
             } else {
-                let newOffset = ((copy[index].item.origin.toCGSize() - center - offset) / scale) + center
+                let newOffset = ((origin - center - scaledOffset) / scale) + center
                 copy[index].item.origin = newOffset.toCGPoint()
                 copy[index].item.size /= scale
             }

@@ -36,6 +36,9 @@ struct MarkupEditor: View {
                 footerMenu
             }
         }
+        .onAppear {
+            markupViewModel.containerSize = model.previewFrame.size
+        }
         .onPreferenceChange(PreviewOffsetPreference.self) { value in
             markupViewModel.offset = value
         }
@@ -67,6 +70,8 @@ extension MarkupEditor {
             .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue: .gray)
             .disabled(!markupViewModel.canArrange(.moveUp))
         }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 8)
     }
     
     @ViewBuilder
@@ -74,9 +79,9 @@ extension MarkupEditor {
         VStack {
             markupMenu
                 .environmentObject(markupViewModel)
+                .padding(.top, 8)
             
             Divider()
-                .frame(height: 20)
             
             FooterMenu(markupViewModel.currentMarkup.description,
                        disableOptions: getFooterDisableOptions()) {

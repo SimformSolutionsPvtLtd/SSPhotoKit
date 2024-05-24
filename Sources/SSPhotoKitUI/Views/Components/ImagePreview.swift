@@ -18,9 +18,6 @@ struct ImagePreview<Overlay>: View where Overlay: View {
     let centerOptions: CenterOptions
     let gesturesEnabled: Bool
     let overlay: Overlay?
-    @State private var lastOffset: CGSize = .zero
-    @State private var lastScale: CGSize = .zero
-    @State private var containerSize: CGSize = .zero
     
     // MARK: - Body
     var body: some View {
@@ -38,6 +35,11 @@ struct ImagePreview<Overlay>: View where Overlay: View {
             .preference(key: PreviewOffsetPreference.self, value: model.previewOffset)
             .preference(key: PreviewScalePreference.self, value: model.previewScale)
             .overlay {
+                overlay
+            }
+            .offset(model.previewOffset)
+            .scaleEffect(model.previewScale, anchor: .center)
+            .overlay {
                 GeometryReader { innerProxy in
                     Color.clear
                         .preference(key: PreviewFramePreference.self, value: innerProxy.frame(in: .global))
@@ -46,18 +48,13 @@ struct ImagePreview<Overlay>: View where Overlay: View {
                         }
                 }
             }
-            .overlay {
-                overlay
-            }
-            .scaleEffect(model.previewScale, anchor: .center)
-            .offset(model.previewOffset)
             .onAppear {
-                containerSize = proxy.size
+                model.containerSize = proxy.size
                 if centerOptions.contains(.initial) && model.isInitial {
                     resizeAndCenterImage(with: imageSource.size, to: proxy.size)
                     model.isInitial = false
                 }
-                lastOffset = model.previewOffset
+                model.lastOffset = model.previewOffset
             }
             .onChange(of: imageSource.size) { imageSize in
                 if centerOptions.contains(.imageSizeChange) {
@@ -65,7 +62,7 @@ struct ImagePreview<Overlay>: View where Overlay: View {
                 }
             }
             .onChange(of: proxy.size) { proxySize in
-                containerSize = proxySize
+                model.containerSize = proxySize
                 if centerOptions.contains(.frameSizeChange) {
                     resizeAndCenterImage(with: imageSource.size, to: proxySize)
                 }
@@ -99,22 +96,22 @@ extension ImagePreview {
     private var dragGesture: some Gesture {
         DragGesture(coordinateSpace: .global)
             .onChanged { value in
-                model.previewOffset = lastOffset + (value.translation)
+                model.previewOffset = model.lastOffset + (value.translation / model.previewScale)
             }
             .onEnded { _ in
-                lastOffset = model.previewOffset
+                model.lastOffset = model.previewOffset
             }
     }
     
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                let newValue = lastScale + CGSize(width: value, height: value)
+                let newValue = model.lastScale + CGSize(width: value, height: value)
                 guard newValue.width > 0.05, newValue.height > 0.05 else { return }
                 model.previewScale = newValue
             }
             .onEnded { _ in
-                lastScale = CGSize(width: model.previewScale.width - 1, height: model.previewScale.height - 1)
+                model.lastScale = CGSize(width: model.previewScale.width - 1, height: model.previewScale.height - 1)
             }
         
     }
@@ -130,7 +127,7 @@ extension ImagePreview {
         model.previewScale = CGSize(width: minScale, height: minScale)
         let newSize = imageSize * model.previewScale
         model.previewOffset = (proxySize - newSize) / CGSize(width: 2, height: 2)
-        lastOffset = model.previewOffset
+        model.lastOffset = model.previewOffset
     }
 }
 
