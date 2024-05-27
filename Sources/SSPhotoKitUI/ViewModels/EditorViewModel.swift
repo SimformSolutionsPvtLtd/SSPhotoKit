@@ -24,7 +24,7 @@ class EditorViewModel: ObservableObject {
     @Published var previewSize: CGSize = .zero
     @Published var isInitial = true
     var lastOffset: CGSize = .zero
-    var lastScale: CGSize = .zero
+    var lastScale: CGSize = .one
     var containerSize: CGSize = .zero
     
     var shouldShowTabBar: Bool {

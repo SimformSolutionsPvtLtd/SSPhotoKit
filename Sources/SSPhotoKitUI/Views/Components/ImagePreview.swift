@@ -106,16 +106,15 @@ extension ImagePreview {
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                let newValue = model.lastScale + CGSize(width: value, height: value)
+                let newScale = (CGSize(width: value - 1, height: value - 1) * model.lastScale)
+                let newValue = model.lastScale + newScale
                 guard newValue.width > 0.05, newValue.height > 0.05 else { return }
                 model.previewScale = newValue
             }
             .onEnded { _ in
-                model.lastScale = CGSize(width: model.previewScale.width - 1, height: model.previewScale.height - 1)
+                model.lastScale = CGSize(width: model.previewScale.width, height: model.previewScale.height)
             }
-        
     }
-    
 }
 
 // MARK: - Methods

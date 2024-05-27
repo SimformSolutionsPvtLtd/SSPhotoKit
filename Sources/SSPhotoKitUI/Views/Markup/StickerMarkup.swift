@@ -46,7 +46,7 @@ struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
                     }
                 }
         }
-        .gesture(dragGesture)
+        .simultaneousGesture(dragGesture)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .photosPicker(isPresented: $isPhotoPickerOpen, selection: $item)
         .overlay(alignment: .top) {
@@ -173,7 +173,6 @@ extension StickerMarkup {
             model.dirtyLayers.append(.sticker(.init()))
         }
         lastOrigin = model.dirtyLayers[model.currentLayerIndex!].sticker.origin
-        
         isPhotoPickerOpen = isEditing && config.stickerOptions == .gallery
     }
     
@@ -199,8 +198,11 @@ extension StickerMarkup {
         case .delete:
             if let index = model.currentLayerIndex {
                 model.dirtyLayers.remove(at: index)
+                model.currentLayerIndex = nil
+                if model.dirtyLayers.count == model.layers.count {
+                    model.reset()
+                }
             }
-            model.currentLayerIndex = nil
         case .edit:
             isEditing = true
             isPhotoPickerOpen = true
@@ -213,7 +215,7 @@ extension StickerMarkup {
         model.reset()
     }
     
-    private func save() {        
+    private func save() {
         model.commit()
         model.reset()
     }
