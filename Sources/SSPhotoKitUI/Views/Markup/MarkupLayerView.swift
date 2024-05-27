@@ -72,7 +72,7 @@ extension MarkupLayerView {
             .foregroundColor(.white)
             .frame(width: data.size.width, height: data.size.height)
             .border(.blue, width: isSelected ? 1.2: 0)
-            .allowsHitTesting(selection == nil)
+            // .allowsHitTesting(selection == nil)
             .overlay {
                 if isSelected {
                     selectionOverlay
@@ -98,7 +98,7 @@ extension MarkupLayerView {
     private func getStickerView(_ data: StickerMarkupItem, isSelected: Bool = false) -> some View {
         Image(platformImage: PlatformImage(cgImage: data.previewImage))
             .border(.blue, width: isSelected ? 1.2: 0)
-            .allowsHitTesting(selection == nil)
+            // .allowsHitTesting(selection == nil)
             .overlay {
                 if isSelected {
                     selectionOverlay

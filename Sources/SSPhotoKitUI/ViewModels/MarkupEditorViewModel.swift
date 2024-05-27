@@ -16,7 +16,11 @@ class MarkupEditorViewModel: ObservableObject {
     @Published var layers: [MarkupLayer] = []
     @Published var currentMarkup: Markup = .none
     @Published var currentLayerIndex: Int?
-    @Published var dirtyLayers: [MarkupLayer] = []
+    @Published var dirtyLayers: [MarkupLayer] = [] {
+        didSet {
+            print(dirtyLayers)
+        }
+    }
     
     var containerSize: CGSize = .zero
     var scale: CGSize = .one
@@ -27,8 +31,10 @@ class MarkupEditorViewModel: ObservableObject {
     }
     
     // MARK: - Methods
-    func setupEditingLayers() {
-        dirtyLayers = scaling(layers: layers, with: scale, offset: offset, inverting: true)
+    func setupEditingLayers(forced: Bool = false) {
+        if dirtyLayers.isEmpty || forced {
+            dirtyLayers = scaling(layers: layers, with: scale, offset: offset, inverting: true)
+        }
     }
     
     func reset() {
@@ -39,6 +45,7 @@ class MarkupEditorViewModel: ObservableObject {
     
     func commit() {
         layers = scaling(layers: dirtyLayers, with: scale, offset: offset)
+        dirtyLayers.removeAll()
     }
     
     func canArrange(_ action: ArrangeAction) -> Bool {

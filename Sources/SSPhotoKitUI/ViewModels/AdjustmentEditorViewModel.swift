@@ -27,7 +27,7 @@ class AdjustmentEditorViewModel: ObservableObject {
     @Published var hueFilter = HueFilter()
     
     // MARK: - Blur Adjustment
-    @Published var blurFilter = GaussianBlurFilter()
+    @Published var blurFilter: GaussianBlurFilter
     
     var allFilters: [any Filter] { [colorFilter, hueFilter, blurFilter] }
     
@@ -82,7 +82,7 @@ class AdjustmentEditorViewModel: ObservableObject {
         originalImage = image
         currentImage = image
         tempImage = image
-        
+        self.blurFilter = GaussianBlurFilter(imageSize: originalImage.size)
         observeAdjustment()
     }
 }

@@ -16,6 +16,7 @@ struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
     
     // MARK: - Vars & Lets
     private let rearrangeMenu: Menu?
+    private let onSelect: (Markup, Int) -> Void
     private let content: Content
     
     @State private var text: String = ""
@@ -34,7 +35,7 @@ struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
             content
                 .overlay {
                     if model.canEditCurrentLayer {
-                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex) {
+                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex, onSelect: handleSelection) {
                             if let index = model.currentLayerIndex {
                                 SelectionOverlay(currentRotation: $model.dirtyLayers[index].text.rotation,
                                                  currentSize: $model.dirtyLayers[index].text.size, onUpdate: handleUpdate)
@@ -58,14 +59,16 @@ struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
     }
     
     // MARK: - Initializer
-    init(@ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
+    init(onSelect: @escaping (Markup, Int) -> Void, @ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
         self.content = content()
         self.rearrangeMenu = menu()
+        self.onSelect = onSelect
     }
     
-    init(@ViewBuilder content: () -> Content) where Menu == EmptyView {
+    init(onSelect: @escaping (Markup, Int) -> Void, @ViewBuilder content: () -> Content) where Menu == EmptyView {
         self.rearrangeMenu = nil
         self.content = content()
+        self.onSelect = onSelect
     }
 }
 
@@ -147,6 +150,7 @@ extension TextMarkup {
                 }
             }
         }
+        .frame(maxWidth: .infinity, minHeight: 56)
         .background()
     }
     
@@ -230,6 +234,11 @@ extension TextMarkup {
         default:
             break
         }
+    }
+    
+    private func handleSelection(markup: Markup, index: Int) {
+        onSelect(markup, index)
+        lastOrigin = model.dirtyLayers[model.currentLayerIndex!].text.origin
     }
     
     private func discard() {

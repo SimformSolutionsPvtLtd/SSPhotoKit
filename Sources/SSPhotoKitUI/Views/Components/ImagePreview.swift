@@ -68,7 +68,6 @@ struct ImagePreview<Overlay>: View where Overlay: View {
                 }
             }
         }
-        .background(.green)
         .simultaneousGesture(dragGesture.simultaneously(with: magnificationGesture))
         .allowsHitTesting(gesturesEnabled)
         .clipped()

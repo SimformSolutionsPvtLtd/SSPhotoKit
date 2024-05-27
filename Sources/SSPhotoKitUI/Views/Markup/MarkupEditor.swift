@@ -103,14 +103,14 @@ extension MarkupEditor {
     private var markupView: some View {
         switch markupViewModel.currentMarkup {
         case .drawing:
-            DrawingMarkup {
+            DrawingMarkup(onSelect: handleSelection(for:at:)) {
                 imagePreview
             } menu: {
                 rearrangeMenu
             }
             
         case .text:
-            TextMarkup {
+            TextMarkup(onSelect: handleSelection(for:at:)) {
                 imagePreview
             } menu: {
                 rearrangeMenu
@@ -177,8 +177,8 @@ extension MarkupEditor {
     }
     
     private func handleSelection(for markup: Markup, at position: Int) {
-        markupViewModel.currentMarkup = markup
         markupViewModel.currentLayerIndex = position
+        markupViewModel.currentMarkup = markup
     }
     
     private func getFooterDisableOptions() -> FooterMenu.DisableOption {
