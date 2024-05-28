@@ -5,6 +5,8 @@
 //  Created by Krunal Patel on 12/01/24.
 //
 
+import Foundation
+
 // MARK: - Angle & Radian
 extension FloatingPoint {
     
@@ -57,4 +59,9 @@ public func gcd<T>(_ num1: T, _ num2: T) -> T where T: BinaryInteger {
     } else {
         return num2
     }
+}
+
+// MARK: - Absolute
+public func abs(_ size: CGSize) -> CGSize {
+    CGSize(width: abs(size.width), height: abs(size.height))
 }

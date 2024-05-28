@@ -150,7 +150,7 @@ extension CropEditor {
                 let imageSize = engine.previewPlatformImage!.size
                 let scaledFrameSize = cropViewModel.size / scale
                 let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
-                guard availableOffset.width - abs(imageOffset.width) >= 0 ||
+                guard availableOffset.width - abs(imageOffset.width) >= 0 &&
                     availableOffset.height - abs(imageOffset.height) >= 0 else {
                     return
                 }

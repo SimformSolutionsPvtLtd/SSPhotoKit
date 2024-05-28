@@ -68,6 +68,7 @@ struct ImagePreview<Overlay>: View where Overlay: View {
                 }
             }
         }
+        .contentShape(.rect)
         .simultaneousGesture(dragGesture.simultaneously(with: magnificationGesture))
         .allowsHitTesting(gesturesEnabled)
         .clipped()
@@ -93,9 +94,25 @@ struct ImagePreview<Overlay>: View where Overlay: View {
 extension ImagePreview {
     
     private var dragGesture: some Gesture {
-        DragGesture(coordinateSpace: .global)
+        DragGesture(coordinateSpace: .local)
             .onChanged { value in
-                model.previewOffset = model.lastOffset + (value.translation / model.previewScale)
+                // Calculation - ((image size - frame size / scale) / 2) - abs(offset) > 0
+                var centerOffset = model.lastOffset + (value.translation / model.previewScale)
+                let imageSize = imageSource.size
+                let scaledFrameSize = model.containerSize / model.previewScale
+                // Initial height offset. Same way used to center the image.
+                let initialCenteringOffset = (scaledFrameSize - (imageSource.size / model.previewScale)) / CGSize(width: 2, height: 2)
+                let availableOffset = abs(scaledFrameSize - imageSize) / CGSize(width: 2, height: 2)
+                let offsetFromCenter = abs(centerOffset - initialCenteringOffset)
+                print(offsetFromCenter)
+                if availableOffset.width - offsetFromCenter.width < -40 {
+                    centerOffset.width = model.previewOffset.width
+                }
+
+                if availableOffset.height - offsetFromCenter.height < -40 {
+                    centerOffset.height = model.previewOffset.height
+                }
+                model.previewOffset = centerOffset
             }
             .onEnded { _ in
                 model.lastOffset = model.previewOffset
@@ -123,8 +140,8 @@ extension ImagePreview {
         let ratio = proxySize / imageSize
         let minScale = min(ratio.width, ratio.height)
         model.previewScale = CGSize(width: minScale, height: minScale)
-        let newSize = imageSize * model.previewScale
-        model.previewOffset = (proxySize - newSize) / CGSize(width: 2, height: 2)
+        model.lastScale = model.previewScale
+        model.previewOffset = (proxySize - imageSize) / model.previewScale / CGSize(width: 2, height: 2)
         model.lastOffset = model.previewOffset
     }
 }
