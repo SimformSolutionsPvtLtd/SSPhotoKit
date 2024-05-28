@@ -13,13 +13,14 @@ import SSPhotoKitEngine
 class CropEditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
+    var imageSize: CGSize = .zero
     @Published var size: CGSize = .zero
     @Published var currentEdit: Crop = .aspect
     
     @Published var offset: CGSize = .zero
     @Published var scale: CGSize = .one
     @Published var lastOffset: CGSize = .zero
-    @Published var lastScale: CGSize = .zero
+    @Published var lastScale: CGSize = .one
     
     @Published var rotation: CGFloat = .zero
     @Published var horizontalFlipped: Bool = false
@@ -27,10 +28,16 @@ class CropEditorViewModel: ObservableObject {
     
     var frameSize: CGSize = .zero
     var currentRatio: AspectRatio = .defaults[0] {
-        didSet { updateSize() }
+        didSet {
+            updateSize()
+            resizeAndCenterImage()
+        }
     }
     var isInverted: Bool = false {
-        didSet { updateSize() }
+        didSet {
+            updateSize()
+            resizeAndCenterImage()
+        }
     }
     
     var flipScale: CGSize {
@@ -46,11 +53,29 @@ class CropEditorViewModel: ObservableObject {
         
         if ratio.height > ratio.width {
             let scale = CGFloat(ratio.width) / CGFloat(ratio.height)
-            size = CGSize(width: minSize * scale - 32, height: minSize)
+            size = CGSize(width: minSize * scale /*- 32*/, height: minSize)
         } else {
             let scale = CGFloat(ratio.height) / CGFloat(ratio.width)
-            size = CGSize(width: minSize - 32, height: minSize * scale)
+            size = CGSize(width: minSize /*- 32*/, height: minSize * scale)
         }
+    }
+    
+    func resizeAndCenterImage(shouldScale: Bool = false) {
+        if shouldScale {
+            let ratio = frameSize / imageSize
+            let minScale = min(ratio.width, ratio.height)
+            scale = CGSize(width: minScale, height: minScale)
+            lastScale = scale
+        }
+        
+        // Validate scaled image boundaries
+        let imageOffset = lastOffset
+        let imageSize = imageSize
+        let scaledFrameSize = size / scale
+        let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 4, height: 4)
+        
+        offset += (availableOffset - imageOffset)
+        lastOffset = offset
     }
     
     func createCommand(for imageSize: CGSize, with newSize: CGSize) -> CropEditingCommand {

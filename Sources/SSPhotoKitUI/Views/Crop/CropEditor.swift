@@ -37,7 +37,7 @@ struct CropEditor: View {
                         .scaleEffect(cropViewModel.flipScale)
                         .rotationEffect(.degrees(cropViewModel.rotation))
                         .offset(cropViewModel.offset)
-                        .scaleEffect(cropViewModel.scale)
+                        .scaleEffect(cropViewModel.scale, anchor: .center)
                     
                     CropMask(size: cropViewModel.size)
                 } else {
@@ -51,6 +51,8 @@ struct CropEditor: View {
                     let ratio = AspectRatio(name: "original", height: UInt(previewSize.height), width: UInt(previewSize.width))
                     originalRatio = ratio
                     cropViewModel.currentRatio = ratio
+                    cropViewModel.imageSize = previewSize
+                    cropViewModel.resizeAndCenterImage(shouldScale: true)
                 }
             }
             .overlay(alignment: .bottom) {
@@ -138,27 +140,28 @@ extension CropEditor {
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                let scale = cropViewModel.lastScale + CGSize(width: value, height: value)
+                let newScale = (CGSize(width: value - 1, height: value - 1) * cropViewModel.lastScale)
+                let newValue = cropViewModel.lastScale + newScale
                 // No validation need when zooming in
                 if value > 1 {
-                    cropViewModel.scale = scale
+                    cropViewModel.scale = newValue
                     return
                 }
                 
                 // Validate scaled image boundaries
                 let imageOffset = cropViewModel.lastOffset
                 let imageSize = engine.previewPlatformImage!.size
-                let scaledFrameSize = cropViewModel.size / scale
+                let scaledFrameSize = cropViewModel.size / newValue
                 let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
                 guard availableOffset.width - abs(imageOffset.width) >= 0 &&
                     availableOffset.height - abs(imageOffset.height) >= 0 else {
                     return
                 }
                 
-                cropViewModel.scale = scale
+                cropViewModel.scale = newValue
             }
             .onEnded { _ in
-                cropViewModel.lastScale = CGSize(width: cropViewModel.scale.width - 1, height: cropViewModel.scale.height - 1)
+                cropViewModel.lastScale = CGSize(width: cropViewModel.scale.width, height: cropViewModel.scale.height)
             }
     }
 }
