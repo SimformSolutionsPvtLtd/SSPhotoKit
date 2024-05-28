@@ -24,10 +24,14 @@ struct LightAdjustmentControl: View {
             VStack {
                 Spacer()
                     .frame(height: 12)
+                
                 ForEach(LightAdjustment.getAllowedLightAdjustments(with: config.allowedAdjustments)) { adjustment in
                     getSlider(for: adjustment)
                 }
-            }            
+                
+                Spacer()
+                    .frame(height: 12)
+            }
         }
     }
 }
