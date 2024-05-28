@@ -104,7 +104,6 @@ extension ImagePreview {
                 let initialCenteringOffset = (scaledFrameSize - (imageSource.size / model.previewScale)) / CGSize(width: 2, height: 2)
                 let availableOffset = abs(scaledFrameSize - imageSize) / CGSize(width: 2, height: 2)
                 let offsetFromCenter = abs(centerOffset - initialCenteringOffset)
-                print(offsetFromCenter)
                 if availableOffset.width - offsetFromCenter.width < -40 {
                     centerOffset.width = model.previewOffset.width
                 }
