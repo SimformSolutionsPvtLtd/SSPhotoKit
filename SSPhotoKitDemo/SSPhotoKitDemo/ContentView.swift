@@ -10,20 +10,8 @@ import SSPhotoKit
 
 struct ContentView: View {
     
-    // MARK: - Vars & Lets
-    @State var image: PlatformImage = .snape
-    @State var isPresented: Bool = true
-    
     // MARK: - Body
     var body: some View {
-        if isPresented {
-            GeometryReader { proxy in
-                SSPKEditorView(image: $image, isPresented: $isPresented, previewSize: proxy.size)
-            }
-        } else {
-            Image(platformImage: image)
-                .resizable()
-                .scaledToFit()
-        }
+        EditorDemo()
     }
 }
