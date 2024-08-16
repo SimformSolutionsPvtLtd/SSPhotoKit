@@ -99,16 +99,17 @@ extension ImagePreview {
                 // Calculation - ((image size - frame size / scale) / 2) - abs(offset) > 0
                 var centerOffset = model.lastOffset + (value.translation / model.previewScale)
                 let imageSize = imageSource.size
-                let scaledFrameSize = model.containerSize / model.previewScale
+                let scaledFrameSize = model.containerSize
+                
                 // Initial height offset. Same way used to center the image.
-                let initialCenteringOffset = (scaledFrameSize - (imageSource.size / model.previewScale)) / CGSize(width: 2, height: 2)
-                let availableOffset = abs(scaledFrameSize - imageSize) / CGSize(width: 2, height: 2)
+                let initialCenteringOffset = (scaledFrameSize - imageSource.size) / (model.previewScale * CGSize(width: 2, height: 2))
                 let offsetFromCenter = abs(centerOffset - initialCenteringOffset)
-                if availableOffset.width - offsetFromCenter.width < -40 {
+                
+                if imageSize.width / 2 - offsetFromCenter.width < 0 {
                     centerOffset.width = model.previewOffset.width
                 }
 
-                if availableOffset.height - offsetFromCenter.height < -40 {
+                if imageSize.height / 2 - offsetFromCenter.height < 0 {
                     centerOffset.height = model.previewOffset.height
                 }
                 model.previewOffset = centerOffset
