@@ -13,6 +13,7 @@ import SSPhotoKitEngine
 struct AdjustmentEditor: View {
     
     // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @Environment(\.adjustmentConfiguration) private var config: AdjustmentConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
@@ -59,7 +60,8 @@ extension AdjustmentEditor {
                 model.resetEditor()
             }
         }
-        .background(.black.opacity(0.5))
+        .background(editorConfig.theme.menuBackground.opacity(0.6))
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder

@@ -13,6 +13,7 @@ import SSPhotoKitEngine
 struct FilterEditor: View {
     
     // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @Environment(\.filterConfiguration) private var config: FilterConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
@@ -85,13 +86,14 @@ extension FilterEditor {
                 model.resetEditor()
             }
         }
-        .background()
+        .background(editorConfig.theme.menuBackground.opacity(0.6))
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder
     private var intensityController: some View {
         SSSlider(value: $filterViewModel.currentFilter.filter.intensity)
-            .opacity(filterViewModel.currentFilter == filterViewModel.original ? 0: 1)
+            .opacity(filterViewModel.currentFilter == filterViewModel.original ? 0 : 1)
     }
     
     @ViewBuilder
@@ -106,7 +108,7 @@ extension FilterEditor {
                             .font(.subheadline)
                     }
                     .buttonStyle(.primary)
-                    .foregroundStyle(filterViewModel.currentCategory == category ? .white: .gray)
+                    .opacity(filterViewModel.currentCategory == category ? 1 : 0.6)
                 }
             }
         }

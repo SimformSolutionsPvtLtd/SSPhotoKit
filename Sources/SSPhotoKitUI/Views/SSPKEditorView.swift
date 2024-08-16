@@ -92,7 +92,8 @@ extension SSPKEditorView {
     private var headerView: some View {
         HeaderMenu(disableOptions: getHeaderDisableOptions(),
                    menuAction: handleMenuAction)
-        .background()
+        .background(config.theme.menuBackground)
+        .foregroundStyle(config.theme.menuForeground)
     }
     
     @ViewBuilder
@@ -114,7 +115,8 @@ extension SSPKEditorView {
         .padding(.horizontal, 16)
         .padding(.top, 8)
         .frame(maxWidth: .infinity)
-        .background()
+        .background(config.theme.menuBackground)
+        .foregroundStyle(config.theme.menuForeground)
         .opacity(model.shouldShowTabBar ? 1: 0)
         .animation(.easeInOut, value: model.shouldShowTabBar)
     }

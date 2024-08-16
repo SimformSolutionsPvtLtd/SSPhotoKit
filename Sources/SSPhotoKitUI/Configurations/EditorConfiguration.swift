@@ -5,14 +5,18 @@
 //  Created by Krunal Patel on 12/01/24.
 //
 
+import SwiftUI
+
 public struct EditorConfiguration {
     
     // MARK: - Vars & Lets
     public var allowedEditors: AllowedEditorOptions
+    public var theme: Theme
     
     // MARK: - Initializer
-    public init(allowedEditors: AllowedEditorOptions = .all) {
+    public init(allowedEditors: AllowedEditorOptions = .all, theme: Theme = .init()) {
         self.allowedEditors = allowedEditors
+        self.theme = theme
     }
 }
 
@@ -33,6 +37,21 @@ extension EditorConfiguration {
         
         public init(rawValue: UInt32) {
             self.rawValue = rawValue
+        }
+    }
+}
+
+// MARK: - Theme
+extension EditorConfiguration {
+    
+    public struct Theme {
+        let menuBackground: AnyShapeStyle
+        let menuForeground: AnyShapeStyle
+        
+        // MARK: - Initializer
+        public init(menuBackground: some ShapeStyle = .black, menuForeground: some ShapeStyle = .white) {
+            self.menuBackground = AnyShapeStyle(menuBackground)
+            self.menuForeground = AnyShapeStyle(menuForeground)
         }
     }
 }

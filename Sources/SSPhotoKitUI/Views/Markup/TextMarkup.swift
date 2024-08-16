@@ -12,9 +12,10 @@ import SSPhotoKitEngine
 
 struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
     
+    // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @EnvironmentObject private var model: MarkupEditorViewModel
     
-    // MARK: - Vars & Lets
     private let rearrangeMenu: Menu?
     private let onSelect: (Markup, Int) -> Void
     private let content: Content
@@ -122,7 +123,8 @@ extension TextMarkup {
         }
         .buttonStyle(.primary)
         .padding(.horizontal, 16)
-        .background()
+        .background(editorConfig.theme.menuBackground)
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder
@@ -155,7 +157,8 @@ extension TextMarkup {
             }
         }
         .frame(maxWidth: .infinity, minHeight: 56)
-        .background()
+        .background(editorConfig.theme.menuBackground.opacity(0.6))
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder

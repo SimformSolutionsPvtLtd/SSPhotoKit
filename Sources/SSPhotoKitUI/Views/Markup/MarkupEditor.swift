@@ -13,6 +13,7 @@ import SSPhotoKitEngine
 struct MarkupEditor: View {
     
     // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @Environment(\.markupConfiguration) private var config: MarkupConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
@@ -63,7 +64,7 @@ extension MarkupEditor {
             } label: {
                 Image(systemName: "arrow.up.to.line")
             }
-            .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue: .gray)
+            .foregroundStyle(markupViewModel.canArrange(.moveUp) ? .blue : .gray)
             .disabled(!markupViewModel.canArrange(.moveUp))
         }
         .padding(.horizontal, 24)
@@ -92,7 +93,8 @@ extension MarkupEditor {
                 model.resetEditor()
             }
         }
-        .background()
+        .background(editorConfig.theme.menuBackground.opacity(0.6))
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder

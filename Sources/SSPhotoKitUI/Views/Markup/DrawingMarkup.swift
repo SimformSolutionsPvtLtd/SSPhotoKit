@@ -12,9 +12,10 @@ import SSPhotoKitEngine
 
 struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
     
+    // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @EnvironmentObject private var model: MarkupEditorViewModel
     
-    // MARK: - Vars & Lets
     private let rearrangeMenu: Menu?
     private let onSelect: (Markup, Int) -> Void
     private let content: Content
@@ -24,7 +25,7 @@ struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
     @State private var strokeWidth: CGFloat = 10
     @State private var isInitial: Bool = true
     @State private var isEraser: Bool = false
-    @State private var isStrokeVisible: Bool = true
+    @State private var isStrokeVisible: Bool = false
     
     // MARK: - Body
     var body: some View {
@@ -102,7 +103,8 @@ extension DrawingMarkup {
         }
         .padding(.horizontal, 16)
         .frame(width: bounds.width - 100, height: 80)
-        .background(.gray.opacity(0.8))
+        .background(editorConfig.theme.menuBackground.opacity(0.6))
+        .foregroundStyle(editorConfig.theme.menuForeground)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
@@ -131,7 +133,8 @@ extension DrawingMarkup {
         }
         .buttonStyle(.primary)
         .padding(.horizontal, 16)
-        .background()
+        .background(editorConfig.theme.menuBackground)
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
 }
 
