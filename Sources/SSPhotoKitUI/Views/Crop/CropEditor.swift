@@ -115,7 +115,7 @@ extension CropEditor {
 extension CropEditor {
     
     private var dragGesture: some Gesture {
-        DragGesture(coordinateSpace: .global)
+        DragGesture(coordinateSpace: .local)
             .onChanged { value in
                 // Calculation - ((image size - frame size / scale) / 2) - abs(offset) > 0
                 var centerOffset = cropViewModel.lastOffset + (value.translation / cropViewModel.scale)
@@ -123,13 +123,10 @@ extension CropEditor {
                 let scaledFrameSize = cropViewModel.size / cropViewModel.scale
                 let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
                 
-                if availableOffset.width - abs(centerOffset.width) < 0 {
-                    centerOffset.width = cropViewModel.offset.width
-                }
-                
-                if availableOffset.height - abs(centerOffset.height) < 0 {
-                    centerOffset.height = cropViewModel.offset.height
-                }
+                // Clamp the offset to ensure it stays within bounds
+                centerOffset.width = min(max(centerOffset.width, -availableOffset.width), availableOffset.width)
+                centerOffset.height = min(max(centerOffset.height, -availableOffset.height), availableOffset.height)
+              
                 cropViewModel.offset = centerOffset
             }
             .onEnded { _ in
@@ -140,28 +137,55 @@ extension CropEditor {
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
-                let newScale = (CGSize(width: value - 1, height: value - 1) * cropViewModel.lastScale)
-                let newValue = cropViewModel.lastScale + newScale
-                // No validation need when zooming in
-                if value > 1 {
-                    cropViewModel.scale = newValue
-                    return
-                }
-                
-                // Validate scaled image boundaries
-                let imageOffset = cropViewModel.lastOffset
-                let imageSize = engine.previewPlatformImage!.size
-                let scaledFrameSize = cropViewModel.size / newValue
-                let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
-                guard availableOffset.width - abs(imageOffset.width) >= 0 ||
-                    availableOffset.height - abs(imageOffset.height) >= 0 else {
-                    return
-                }
-                
-                cropViewModel.scale = newValue
+                let newScale = CGSize(width: value - 1, height: value - 1) * cropViewModel.lastScale
+                cropViewModel.scale = cropViewModel.lastScale + newScale
             }
             .onEnded { _ in
                 cropViewModel.lastScale = CGSize(width: cropViewModel.scale.width, height: cropViewModel.scale.height)
+                adjustScale()
+                adjustOffset()
             }
+    }
+}
+
+// MARK: - Methods
+extension CropEditor {
+    
+    /// Adjusts the scale of the crop view. If the scaled frame size exceeds
+    /// the original image width, the scale is reset to 1.0 to fit the image properly.
+    ///
+    /// This method ensures the crop frame does not exceed the image size, which
+    /// could lead to undesired scaling artifacts.
+    private func adjustScale() {
+        let scaledFrameSize = cropViewModel.size / cropViewModel.scale
+        
+        // Check if the scaled frame size exceeds the original image size.
+        if scaledFrameSize.width > engine.previewPlatformImage!.size.width {
+            withAnimation {
+                cropViewModel.scale = .one
+                cropViewModel.lastScale = .one
+            }
+        }
+    }
+    
+    /// Adjusts the crop view's offset to ensure it remains within the bounds of the image.
+    ///
+    /// This method calculates the maximum available offset based on the image and scaled
+    /// frame size, and clamps the offset to prevent the crop area from moving outside the image.
+    private func adjustOffset() {
+        var centerOffset = cropViewModel.lastOffset
+        let imageSize = engine.previewPlatformImage!.size
+        let scaledFrameSize = cropViewModel.size / cropViewModel.scale
+        let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 2, height: 2)
+        
+        // Clamp the offset to ensure it stays within bounds
+        centerOffset.width = min(max(centerOffset.width, -availableOffset.width), availableOffset.width)
+        centerOffset.height = min(max(centerOffset.height, -availableOffset.height), availableOffset.height)
+        
+        // Animate the adjustment of the offset
+        withAnimation {
+            cropViewModel.offset = centerOffset
+            cropViewModel.lastOffset = centerOffset
+        }
     }
 }
