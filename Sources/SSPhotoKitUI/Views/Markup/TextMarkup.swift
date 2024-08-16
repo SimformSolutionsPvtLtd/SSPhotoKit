@@ -25,6 +25,7 @@ struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
     @State private var lastOrigin: CGPoint = .zero
     @State private var currentFontName = "ChalkboardSE-Regular"
     @State private var currentColor: Color = .white
+    @State private var editorBackground: Color = .black
     
     // MARK: - Body
     var body: some View {
@@ -92,7 +93,7 @@ extension TextMarkup {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.black.opacity(0.8))
+        .background(editorBackground.opacity(0.8))
         .opacity(isFocused ? 1: 0)
     }
     
@@ -146,6 +147,9 @@ extension TextMarkup {
                         .labelsHidden()
                         .onChange(of: currentColor) { value in
                             $model.dirtyLayers[index].text.color.wrappedValue = value
+                            withAnimation {
+                                editorBackground = getContrastingBackgroundColor(for: value)
+                            }
                         }
                 }
             }
@@ -248,5 +252,14 @@ extension TextMarkup {
     private func save() {
         model.commit()
         model.reset()
+    }
+    
+    private func getContrastingBackgroundColor(for textColor: Color) -> Color {
+        let uiColor = UIColor(textColor)
+        var white: CGFloat = 0
+        uiColor.getWhite(&white, alpha: nil)
+        
+        // If the text color is dark, use a light background; otherwise, use a dark background.
+        return white < 0.5 ? .white : .black
     }
 }

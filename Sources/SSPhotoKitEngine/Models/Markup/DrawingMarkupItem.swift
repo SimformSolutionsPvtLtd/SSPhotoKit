@@ -67,13 +67,9 @@ public struct DrawingMarkupItem: MarkupItem {
                     if inverting {
                         let newOffset = (($0.toCGSize() - center) * scale) + center + offset
                         point = newOffset.toCGPoint()
-//                        point.x = ($0.x * scale.width) + offset.width
-//                        point.y = ($0.y * scale.height) + offset.height
                     } else {
                         let newOffset = (($0.toCGSize() - center - offset) / scale) + center
                         point = newOffset.toCGPoint()
-//                        point.x = ($0.x - offset.width) / scale.width
-//                        point.y = ($0.y - offset.height) / scale.height
                     }
                     return point
                 }
