@@ -26,7 +26,7 @@ struct AdjustmentEditor: View {
     var body: some View {
         
         ZStack {
-            ImagePreview(imageSource: .coreImage($adjustmentViewModel.currentImage), gesturesEnabled: false)
+            ImagePreview(imageSource: .coreImage($adjustmentViewModel.currentImage))
         }
         .overlay(alignment: .bottom) {
             footerView
