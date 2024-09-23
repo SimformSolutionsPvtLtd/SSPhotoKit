@@ -26,8 +26,10 @@ public struct SSPKEditorView: View {
         ZStack {
             Color.black
             
-            previewView
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if let previewImage = engine.previewImage {
+                previewView(with: previewImage)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
             
             if model.isLoading {
                 Color.black.opacity(0.4)
@@ -65,17 +67,17 @@ public struct SSPKEditorView: View {
 extension SSPKEditorView {
     
     @ViewBuilder
-    private var previewView: some View {
+    private func previewView(with image: CIImage) -> some View {
         ZStack {
             switch model.currentEditor {
             case .crop:
                 CropEditor()
             case .adjustment:
-                AdjustmentEditor(image: engine.previewImage)
+                AdjustmentEditor(image: image)
             case .filter:
-                FilterEditor(image: engine.previewImage)
+                FilterEditor(image: image)
             case .detail:
-                DetailEditor(image: engine.previewImage)
+                DetailEditor(image: image)
             case .markup:
                 MarkupEditor()
             case .none:

@@ -13,7 +13,7 @@ public class SSPhotoKitEngine: ObservableObject {
     // MARK: - Vars & Lets
     public let originalImage: CIImage
     public var configuration: EngineConfiguration
-    @Published public private(set) var previewImage: CIImage!
+    @Published public private(set) var previewImage: CIImage?
     @Published public private(set) var previewCGImage: CGImage?
     @Published public private(set) var previewPlatformImage: PlatformImage?
     
@@ -35,7 +35,7 @@ public class SSPhotoKitEngine: ObservableObject {
     
     private var editingStack = EditingCommandStack()
     private var redoStack = EditingCommandStack()
-    public var originalPreviewImage: CIImage!
+    public var originalPreviewImage: CIImage?
     
     private lazy var ciContext: CIContext = {
         if let device = MTLCreateSystemDefaultDevice() {
@@ -74,7 +74,11 @@ public class SSPhotoKitEngine: ObservableObject {
     }
     
     public func createImage() async -> CIImage {
-        let scale = originalImage.size / originalPreviewImage.size
+        let scale: CGSize = if let originalPreviewSize = originalPreviewImage?.size {
+            originalImage.size / originalPreviewSize
+        } else {
+            .one
+        }
         var commands = editingStack.commands
         for index in commands.indices {
             commands[index].scale = scale
@@ -99,6 +103,7 @@ public class SSPhotoKitEngine: ObservableObject {
     }
     
     private func updateImages() async {
+        guard let previewImage else { return }
         if let cgImage = previewImage.cgImage ?? ciContext.createCGImage(previewImage, from: previewImage.extent) {
             previewCGImage = cgImage
             previewPlatformImage = PlatformImage(cgImage: cgImage)
@@ -110,7 +115,9 @@ public class SSPhotoKitEngine: ObservableObject {
     private func updatePreviewImage() async {
         previewImage = originalPreviewImage
         await editingStack.commands.asyncForEach { command in
-            await previewImage = command.apply(to: previewImage)
+            if let previewImage {
+                await self.previewImage = command.apply(to: previewImage)
+            }
         }
         await updateImages()
     }

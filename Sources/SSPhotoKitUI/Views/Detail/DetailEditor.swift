@@ -17,10 +17,6 @@ struct DetailEditor: View {
     @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var detailViewModel: DetailEditorViewModel
     
-    private var imageSize: CGSize {
-        engine.previewImage.extent.size
-    }
-    
     // MARK: - Body
     var body: some View {
         

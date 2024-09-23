@@ -18,10 +18,6 @@ struct AdjustmentEditor: View {
     @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var adjustmentViewModel: AdjustmentEditorViewModel
     
-    private var imageSize: CGSize {
-        engine.previewImage.extent.size
-    }
-    
     // MARK: - Body
     var body: some View {
         

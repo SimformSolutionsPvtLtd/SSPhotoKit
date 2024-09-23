@@ -20,11 +20,7 @@ struct MarkupEditor: View {
     
     @State private var isInitial = true
     private var isMarkupEditor: Bool { markupViewModel.currentMarkup != .none }
-    
-    private var previewSize: CGSize {
-        engine.previewImage.extent.size
-    }
-    
+
     // MARK: - Body
     var body: some View {
         ZStack {

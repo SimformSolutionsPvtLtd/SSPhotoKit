@@ -65,9 +65,10 @@ struct CropEditor: View {
                         .frame(height: 20)
                     
                     FooterMenu("Crop & Rotation") {
-                        if let newSize = engine.previewPlatformImage?.size {
+                        if let originalSize = engine.originalPreviewImage?.size,
+                            let newSize = engine.previewPlatformImage?.size {
                             Task {
-                                await engine.apply(cropViewModel.createCommand(for: engine.originalPreviewImage.size, with: newSize))
+                                await engine.apply(cropViewModel.createCommand(for: originalSize, with: newSize))
                                 model.isInitial = true
                                 model.resetEditor()
                             }
