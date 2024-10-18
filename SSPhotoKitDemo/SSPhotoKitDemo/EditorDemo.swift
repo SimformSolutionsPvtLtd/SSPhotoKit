@@ -12,10 +12,11 @@ import SSPhotoKit
 struct EditorDemo: View {
     
     // MARK: - Vars & Lets
-    @State private var image: PlatformImage = .numbers
+    @State private var image: PlatformImage = .snape
     @State private var pickerItem: PhotosPickerItem?
     @State private var isEditorPresent = true
     @State private var isPickerPresent = false
+    private let stickers: [PlatformImage] = [.framedGhost, .ghost, .joker, .skull, .witch, .witch2]
     
     // MARK: - Body
     var body: some View {
@@ -23,6 +24,7 @@ struct EditorDemo: View {
             if isEditorPresent {
                 GeometryReader { proxy in
                     SSPKEditorView(image: $image, isPresented: $isEditorPresent, previewSize: proxy.size)
+                        .markupConfig(stickers: stickers, stickerOptions: .all)
                 }
             } else {
                 VStack(alignment: .center) {

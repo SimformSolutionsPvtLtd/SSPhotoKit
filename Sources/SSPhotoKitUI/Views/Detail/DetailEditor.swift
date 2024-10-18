@@ -44,6 +44,7 @@ extension DetailEditor {
             
             detailControls
                 .frame(maxHeight: 130)
+                .padding(.horizontal, 12)
             
             Divider()
                 .frame(height: 20)

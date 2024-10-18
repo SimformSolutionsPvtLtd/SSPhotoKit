@@ -16,11 +16,7 @@ class MarkupEditorViewModel: ObservableObject {
     @Published var layers: [MarkupLayer] = []
     @Published var currentMarkup: Markup = .none
     @Published var currentLayerIndex: Int?
-    @Published var dirtyLayers: [MarkupLayer] = [] {
-        didSet {
-            print(dirtyLayers)
-        }
-    }
+    @Published var dirtyLayers: [MarkupLayer] = []
     
     var containerSize: CGSize = .zero
     var scale: CGSize = .one

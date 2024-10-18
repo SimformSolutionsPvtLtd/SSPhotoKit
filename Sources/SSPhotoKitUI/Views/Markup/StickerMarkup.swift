@@ -117,11 +117,14 @@ extension StickerMarkup {
     private var customStickersView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 24) {
+                Spacer()
+                    .frame(width: 6)
+                
                 if config.stickerOptions.contains(.gallery) {
                     Button {
                         isPhotoPickerOpen = true
                     } label: {
-                        Image(platformImage: PlatformImage(systemName: "photo.on.rectangle")!)
+                        Image(platformImage: PlatformImage(systemName: "photo.badge.plus")!)
                             .resizable()
                             .renderingMode(.template)
                             .frame(width: 60, height: 60)
@@ -138,8 +141,13 @@ extension StickerMarkup {
                             .frame(width: 80, height: 80)
                     }
                 }
+                
+                Spacer()
+                    .frame(width: 6)
             }
         }
+        .padding(.top, 12)
+        .background(.black.opacity(0.5))
     }
 }
 
@@ -198,8 +206,11 @@ extension StickerMarkup {
         case .delete:
             if let index = model.currentLayerIndex {
                 model.dirtyLayers.remove(at: index)
+                model.currentLayerIndex = nil
+                if model.dirtyLayers.count == model.layers.count {
+                    model.reset()
+                }
             }
-            model.currentLayerIndex = nil
         case .edit:
             isEditing = true
             isPhotoPickerOpen = true
