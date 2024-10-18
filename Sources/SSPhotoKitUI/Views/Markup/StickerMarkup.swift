@@ -14,6 +14,7 @@ import SSPhotoKitEngine
 struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
     
     // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @Environment(\.markupConfiguration) private var config: MarkupConfiguration
     @EnvironmentObject private var model: MarkupEditorViewModel
     
@@ -110,7 +111,8 @@ extension StickerMarkup {
         }
         .buttonStyle(.primary)
         .padding(.horizontal, 16)
-        .background()
+        .background(editorConfig.theme.menuBackground)
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder
@@ -147,7 +149,8 @@ extension StickerMarkup {
             }
         }
         .padding(.top, 12)
-        .background(.black.opacity(0.5))
+        .background(editorConfig.theme.menuBackground.opacity(0.5))
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
 }
 

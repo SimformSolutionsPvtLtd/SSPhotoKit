@@ -12,7 +12,8 @@ import SSPhotoKitEngine
 
 struct CropMenu: View {
     
-    // MARK: - Vars & Lets
+    // MARK: - Vars & Lets    
+    @Environment(\.editorConfiguration) var editorConfig: EditorConfiguration
     @Environment(\.cropConfiguration) private var config: CropConfiguration
     let cropRatios: [AspectRatio]
     @Binding var isInverted: Bool
@@ -29,7 +30,7 @@ struct CropMenu: View {
                         .resizable()
                         .frame(width: 28, height: 28)
                 }
-                .foregroundStyle(isInverted ? .gray: .white)
+                .foregroundStyle(editorConfig.theme.menuForeground.opacity(isInverted ? 0.6 : 1))
                 
                 Button {
                     isInverted = true
@@ -39,10 +40,10 @@ struct CropMenu: View {
                         .frame(width: 28, height: 28)
                         .rotationEffect(.degrees(90))
                 }
-                .foregroundStyle(isInverted ? .white: .gray)
+                .foregroundStyle(editorConfig.theme.menuForeground.opacity(isInverted ? 1 : 0.6))
             }
             .buttonStyle(.primary)
-            .opacity(currentRatio.value == 1 ? 0: 1)
+            .opacity(currentRatio.value == 1 ? 0 : 1)
             
             ViewThatFits {
                     cropRatioViews
@@ -79,7 +80,7 @@ extension CropMenu {
                         }
                     }
                 }
-                .foregroundStyle(currentRatio == ratio ? .white: .gray)
+                .opacity(currentRatio == ratio ? 1 : 0.6)
             }
         }
     }

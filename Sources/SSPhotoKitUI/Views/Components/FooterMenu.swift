@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FooterMenu: View {
     
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
+    
     // MARK: - Vars & Lets
     let title: String
     let disableOptions: DisableOption
@@ -47,7 +49,7 @@ struct FooterMenu: View {
         .font(.system(.headline, weight: .medium))
         .padding(.horizontal, 24)
         .padding(.top, 8)
-        .background(.black)
+        .background(editorConfig.theme.menuBackground)
     }
     
     // MARK: - Initializer

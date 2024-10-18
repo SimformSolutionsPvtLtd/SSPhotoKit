@@ -13,6 +13,7 @@ import SSPhotoKitEngine
 struct DetailEditor: View {
     
     // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) private var editorConfig: EditorConfiguration
     @EnvironmentObject var model: EditorViewModel
     @EnvironmentObject var engine: SSPhotoKitEngine
     @StateObject var detailViewModel: DetailEditorViewModel
@@ -58,7 +59,8 @@ extension DetailEditor {
                 model.resetEditor()
             }
         }
-        .background(.black.opacity(0.5))
+        .background(editorConfig.theme.menuBackground.opacity(0.6))
+        .foregroundStyle(editorConfig.theme.menuForeground)
     }
     
     @ViewBuilder

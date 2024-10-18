@@ -14,8 +14,8 @@ import SSPhotoKitEngine
 extension View {
     
     // MARK: - Editor Configuration
-    public func editorConfig(allowedEditors: EditorConfiguration.AllowedEditorOptions = .all) -> some View {
-        environment(\.editorConfiguration, .init(allowedEditors: allowedEditors))
+    public func editorConfig(allowedEditors: EditorConfiguration.AllowedEditorOptions = .all, theme: EditorConfiguration.Theme = .init()) -> some View {
+        environment(\.editorConfiguration, .init(allowedEditors: allowedEditors, theme: theme))
     }
     
     // MARK: - Crop Configuration

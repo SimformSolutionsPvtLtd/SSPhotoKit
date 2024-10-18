@@ -13,6 +13,7 @@ import SSPhotoKitEngine
 struct CropEditor: View {
     
     // MARK: - Vars & Lets
+    @Environment(\.editorConfiguration) var editorConfig: EditorConfiguration
     @Environment(\.cropConfiguration) private var config: CropConfiguration
     @EnvironmentObject private var model: EditorViewModel
     @EnvironmentObject private var engine: SSPhotoKitEngine
@@ -77,6 +78,8 @@ struct CropEditor: View {
                         model.resetEditor()
                     }
                 }
+                .background(editorConfig.theme.menuBackground.opacity(0.6))
+                .foregroundStyle(editorConfig.theme.menuForeground)
             }
             .gesture(dragGesture)
             .gesture(magnificationGesture)
@@ -92,7 +95,7 @@ extension CropEditor {
         ScrollableTabBar(selection: $cropViewModel.currentEdit, items: Crop.getAllowedCrops(with: config.allowedCrops)) { edit in
             Text(edit.name)
                 .font(.system(size: 16, design: .rounded))
-                .foregroundStyle(.white.opacity(cropViewModel.currentEdit == edit ? 1: 0.6))
+                .foregroundStyle(editorConfig.theme.menuForeground.opacity(cropViewModel.currentEdit == edit ? 1 : 0.6))
         }
     }
     
