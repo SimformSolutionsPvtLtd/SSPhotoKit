@@ -53,6 +53,29 @@ public struct DrawingMarkupItem: MarkupItem {
         }
     }
     
+    public mutating func update(scale: CGSize = .one, offset: CGSize = .zero, center: CGSize = .zero, inverting: Bool = false) {
+        for index in lines.indices {
+            if inverting {
+                lines[index].brush.width *= scale.width
+            } else {
+                lines[index].brush.width /= scale.width
+            }
+            
+            lines[index].path = lines[index].path
+                .map {
+                    var point: CGPoint = .zero
+                    if inverting {
+                        let newOffset = (($0.toCGSize() - center) * scale) + center + offset
+                        point = newOffset.toCGPoint()
+                    } else {
+                        let newOffset = (($0.toCGSize() - center - offset) / scale) + center
+                        point = newOffset.toCGPoint()
+                    }
+                    return point
+                }
+        }
+    }
+    
     // MARK: - Initializer
     public init(lines: [Line] = []) {
         self.lines = lines

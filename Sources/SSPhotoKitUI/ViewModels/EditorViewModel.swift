@@ -21,7 +21,11 @@ class EditorViewModel: ObservableObject {
     @Published var previewScale: CGSize = .one
     @Published var previewOffset: CGSize = .zero
     @Published var previewFrame: CGRect = .zero
+    @Published var previewSize: CGSize = .zero
     @Published var isInitial = true
+    var lastOffset: CGSize = .zero
+    var lastScale: CGSize = .zero
+    var containerSize: CGSize = .zero
     
     var shouldShowTabBar: Bool {
         currentEditor == .none
@@ -32,5 +36,4 @@ class EditorViewModel: ObservableObject {
         currentEditor = .none
         objectWillChange.send()
     }
-    
 }

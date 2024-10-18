@@ -47,12 +47,10 @@ public struct SSPKEditorView: View {
             }
         }
         .confirmationDialog(engine.canDiscard ? "Discard changes": "Close Editor",
-                            isPresented: $showingConfirmation) {
-            discardDialog
-        }
-                            .preferredColorScheme(.dark)
-                            .environmentObject(model)
-                            .environmentObject(engine)
+                            isPresented: $showingConfirmation) { discardDialog }
+            .preferredColorScheme(.dark)
+            .environmentObject(model)
+            .environmentObject(engine)
     }
     
     // MARK: - Initializer
