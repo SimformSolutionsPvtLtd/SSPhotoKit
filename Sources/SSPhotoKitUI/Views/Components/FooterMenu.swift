@@ -46,6 +46,7 @@ struct FooterMenu: View {
         }
         .font(.system(.headline, weight: .medium))
         .padding(.horizontal, 24)
+        .padding(.top, 8)
         .background(.black)
     }
     

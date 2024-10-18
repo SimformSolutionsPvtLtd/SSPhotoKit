@@ -18,6 +18,7 @@ struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
     @EnvironmentObject private var model: MarkupEditorViewModel
     
     private let rearrangeMenu: Menu?
+    private let onSelect: (Markup, Int) -> Void
     private let content: Content
     
     @State private var isPhotoPickerOpen: Bool = false
@@ -34,7 +35,7 @@ struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
             content
                 .overlay {
                     if model.canEditCurrentLayer {
-                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex) {
+                        MarkupLayerView(layers: model.dirtyLayers, selection: model.currentLayerIndex, onSelect: onSelect) {
                             if let index = model.currentLayerIndex {
                                 SelectionOverlay(currentRotation: $model.dirtyLayers[index].sticker.rotation,
                                                  currentSize: $model.dirtyLayers[index].sticker.size,
@@ -68,14 +69,16 @@ struct StickerMarkup<Content, Menu>: View where Content: View, Menu: View {
     }
     
     // MARK: - Initializer
-    init(@ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
+    init(onSelect: @escaping (Markup, Int) -> Void, @ViewBuilder content: () -> Content, @ViewBuilder menu: () -> Menu) {
         self.content = content()
         self.rearrangeMenu = menu()
+        self.onSelect = onSelect
     }
     
-    init(@ViewBuilder content: () -> Content) where Menu == EmptyView {
+    init(onSelect: @escaping (Markup, Int) -> Void, @ViewBuilder content: () -> Content) where Menu == EmptyView {
         self.rearrangeMenu = nil
         self.content = content()
+        self.onSelect = onSelect
     }
 }
 

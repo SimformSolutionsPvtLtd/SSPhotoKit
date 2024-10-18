@@ -23,16 +23,30 @@ struct DrawingMarkup<Content, Menu>: View where Content: View, Menu: View {
     @State private var strokeWidth: CGFloat = 10
     @State private var isInitial: Bool = true
     @State private var isEraser: Bool = false
+    @State private var isStrokeVisible: Bool = true
     
     // MARK: - Body
     var body: some View {
-        
         ZStack {
             content
                 .overlay {
                     MarkupLayerView(layers: model.dirtyLayers)
                 }
                 .highPriorityGesture(drawGesture)
+            
+            if isStrokeVisible {
+                Circle()
+                    .fill()
+                    .frame(width: strokeWidth, height: strokeWidth)
+                    .background(color.opacity(0.8))
+                    .clipShape(.circle)
+                    .overlay(alignment: .topTrailing) {
+                        Image(systemName: isEraser ? "eraser.fill" : "pencil")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .offset(x: 20, y: -20)
+                    }
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .top) {
@@ -79,7 +93,9 @@ extension DrawingMarkup {
             .buttonStyle(.borderedProminent)
             .tint(isEraser ? .blue: .gray)
             
-            SSSlider(value: $strokeWidth, in: 1...100)
+            SSSlider(value: $strokeWidth, in: 1...100) { isEditing in
+                isStrokeVisible = isEditing
+            }
         }
         .padding(.horizontal, 16)
         .frame(width: bounds.width - 100, height: 80)
@@ -144,7 +160,7 @@ extension DrawingMarkup {
         model.reset()
     }
     
-    private func save() {        
+    private func save() {
         model.commit()
         model.reset()
     }

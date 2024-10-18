@@ -12,9 +12,9 @@ import SSPhotoKit
 struct EditorDemo: View {
     
     // MARK: - Vars & Lets
-    @State private var image: PlatformImage = .snape
+    @State private var image: PlatformImage = .numbers
     @State private var pickerItem: PhotosPickerItem?
-    @State private var isEditorPresent = false
+    @State private var isEditorPresent = true
     @State private var isPickerPresent = false
     
     // MARK: - Body

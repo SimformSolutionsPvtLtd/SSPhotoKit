@@ -13,13 +13,14 @@ import SSPhotoKitEngine
 class CropEditorViewModel: ObservableObject {
     
     // MARK: - Vars & Lets
+    var imageSize: CGSize = .zero
     @Published var size: CGSize = .zero
     @Published var currentEdit: Crop = .aspect
     
     @Published var offset: CGSize = .zero
     @Published var scale: CGSize = .one
     @Published var lastOffset: CGSize = .zero
-    @Published var lastScale: CGSize = .zero
+    @Published var lastScale: CGSize = .one
     
     @Published var rotation: CGFloat = .zero
     @Published var horizontalFlipped: Bool = false
@@ -27,15 +28,21 @@ class CropEditorViewModel: ObservableObject {
     
     var frameSize: CGSize = .zero
     var currentRatio: AspectRatio = .defaults[0] {
-        didSet { updateSize() }
+        didSet {
+            updateSize()
+            resizeAndCenterImage()
+        }
     }
     var isInverted: Bool = false {
-        didSet { updateSize() }
+        didSet {
+            updateSize()
+            resizeAndCenterImage()
+        }
     }
     
     var flipScale: CGSize {
-        CGSize(width: horizontalFlipped ? -1: 1,
-               height: verticalFlipped ? -1: 1)
+        CGSize(width: horizontalFlipped ? -1 : 1,
+               height: verticalFlipped ? -1 : 1)
     }
     
     // MARK: - Methods
@@ -46,15 +53,32 @@ class CropEditorViewModel: ObservableObject {
         
         if ratio.height > ratio.width {
             let scale = CGFloat(ratio.width) / CGFloat(ratio.height)
-            
-            size = CGSize(width: minSize * scale - 32, height: minSize)
+            size = CGSize(width: minSize * scale /*- 32*/, height: minSize)
         } else {
             let scale = CGFloat(ratio.height) / CGFloat(ratio.width)
-            size = CGSize(width: minSize - 32, height: minSize * scale)
+            size = CGSize(width: minSize /*- 32*/, height: minSize * scale)
         }
     }
     
-    func createCommand(for imageSize: CGSize) -> CropEditingCommand {
+    func resizeAndCenterImage(shouldScale: Bool = false) {
+        if shouldScale {
+            let ratio = frameSize / imageSize
+            let minScale = min(ratio.width, ratio.height)
+            scale = CGSize(width: minScale, height: minScale)
+            lastScale = scale
+        }
+        
+        // Validate scaled image boundaries
+        let imageOffset = lastOffset
+        let imageSize = imageSize
+        let scaledFrameSize = size / scale
+        let availableOffset = (imageSize - scaledFrameSize) / CGSize(width: 4, height: 4)
+        
+        offset += (availableOffset - imageOffset)
+        lastOffset = offset
+    }
+    
+    func createCommand(for imageSize: CGSize, with newSize: CGSize) -> CropEditingCommand {
         
         let ratio: CGFloat
         
@@ -67,8 +91,8 @@ class CropEditorViewModel: ObservableObject {
         let cropWidth: CGFloat = size.width * ratio / scale.width
         let cropHeight: CGFloat = size.height * ratio / scale.height
         
-        let startX = CGFloat(imageSize.width / 2) - (cropWidth / 2) - (offset.width * ratio)
-        let startY = CGFloat(imageSize.height / 2 ) - (cropHeight / 2) + (offset.height * ratio)
+        let startX = CGFloat(newSize.width / 2) - (cropWidth / 2) - (offset.width * ratio)
+        let startY = CGFloat(newSize.height / 2 ) - (cropHeight / 2) + (offset.height * ratio)
         
         let rect = CGRect(x: startX, y: startY, width: cropWidth, height: cropHeight)
         var command = CropEditingCommand(rect: rect)

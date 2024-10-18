@@ -22,6 +22,8 @@ struct TextMarkup<Content, Menu>: View where Content: View, Menu: View {
     @State private var showFonts: Bool = false
     @FocusState private var isFocused: Bool
     @State private var lastOrigin: CGPoint = .zero
+    @State private var currentFontName = "ChalkboardSE-Regular"
+    @State private var currentColor: Color = .white
     
     // MARK: - Body
     var body: some View {
@@ -76,6 +78,9 @@ extension TextMarkup {
             TextField(text: $text) {
                 Text("Type something")
             }
+            .font(.custom(currentFontName, size: 18))
+            .foregroundStyle(.white)
+            .colorMultiply(currentColor)
             .focused($isFocused)
             .multilineTextAlignment(.center)
             .onSubmit {
@@ -134,8 +139,11 @@ extension TextMarkup {
                 
                 if let index = model.currentLayerIndex,
                    model.canEditCurrentLayer {
-                    ColorPicker("", selection: $model.dirtyLayers[index].text.color)
+                    ColorPicker("", selection: $currentColor)
                         .labelsHidden()
+                        .onChange(of: currentColor) { value in
+                            $model.dirtyLayers[index].text.color.wrappedValue = value
+                        }
                 }
             }
         }
@@ -156,6 +164,7 @@ extension TextMarkup {
                                 showFonts = false
                                 if let index = model.currentLayerIndex {
                                     model.dirtyLayers[index].text.fontName = font
+                                    currentFontName = font
                                 }
                             }
                     }
@@ -227,7 +236,7 @@ extension TextMarkup {
         model.reset()
     }
     
-    private func save() {        
+    private func save() {
         model.commit()
         model.reset()
     }
