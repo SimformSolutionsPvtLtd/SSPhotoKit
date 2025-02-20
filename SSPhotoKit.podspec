@@ -8,10 +8,8 @@
 
 Pod::Spec.new do |s|
     s.name              = 'SSPhotoKit'
-    s.version           = '0.0.1'
+    s.version           = '1.0.0'
     s.summary           = 'Integrate profile listing and story view with customizable components.'
-    s.readme            = 'https://github.com/SimformSolutionsPvtLtd/SSPhotoKit/blob/master/README.md'
-
     s.description       = <<-DESC
     Unleash the full visual potential of your SwiftUI apps with SSPhotoKit, a comprehensive image editing toolkit designed for seamless integration. Its powerful engine delivers real-time, non-destructive editing through a suite of customizable UI components, empowering you to effortlessly craft stunning visuals with intuitive controls and boundless creative freedom.
                          DESC
