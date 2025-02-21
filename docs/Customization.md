@@ -8,10 +8,12 @@ To customize the Editor view you can use `editorConfig` view modifier.
 SSPKImagePicker(image: $image) {
     labelView
 }
-.editorConfig(allowedEditors: [.all])
+.editorConfig(allowedEditors: [.all],
+              theme: EditorConfiguration.Theme(menuBackground: .gray, menuForeground: .white))
 ```
 
-`editorConfig` takes options for allowed editors. By default all editors are allowed.
+- **allowdEditors**: Options for allowed editors to be showd. By default all editors are allowed.
+- **theme**: Configure background and foreground color for the editor.
 
 ## Crop Configuration
 

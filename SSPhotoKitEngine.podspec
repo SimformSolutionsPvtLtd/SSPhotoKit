@@ -8,10 +8,8 @@
 
 Pod::Spec.new do |s|
     s.name              = 'SSPhotoKitEngine'
-    s.version           = '0.0.1'
+    s.version           = '1.0.0'
     s.summary           = 'Integrate profile listing and story view with customizable components.'
-    s.readme            = 'https://github.com/SimformSolutionsPvtLtd/SSPhotoKit/blob/master/README.md'
-
     s.description       = <<-DESC
     Unleash your vision and transform ordinary photos into stunning image with SSPhotoKitEngine. It empowers real-time image editing, preserving a non-destructive workflow with maintaining editing history.
                          DESC
